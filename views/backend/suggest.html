@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>客戶意見管理</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" media="screen" href="main.css" />
+    <script src="main.js"></script>
+</head>
+<body>
+    <main>
+        <h2>客戶意見管理</h2>
+            <div>
+                <form action="">
+                    <input type="text"><input type="submit" value="查詢">
+                </form>
+            </div>
+            <section>
+                <!-- 新增日期欄位做排序，最新的日期排在最上面 -->
+                <h3>客戶意見列表</h3>
+                <ul>
+                    <li>
+                        <span>新增日期</span>
+                        <span>處理情況</span>
+                        <span>最後回覆時間</span>
+                        <span>姓名</span>
+                        <span>意見內容</span>
+                        <button>詳細資訊</button>
+                    </li>
+                    <li>
+                        <span id="date"></span>
+                        <span id="status"></span>
+                        <span id="lasttime"></span>
+                        <span id="name"></span>
+                        <span id="content"></span>
+                        <button id="detail">詳細資訊</button>
+                    </li>
+                </ul>
+            </section>
+            <section>
+                <h3>客戶意見詳細資訊</h3>
+                <ul>
+                    <li>
+                        <span>時間</span>
+                        <span>處理情況</span>
+                        <span>姓名</span>
+                        <span>電話</span>
+                        <span>手機號碼</span>
+                        <span>E-mail</span>
+                        <span>意見內容</span>
+                        <div>
+                            <h4>回覆情況</h4>                           
+                            <span>回覆方式</span>
+                            <span>回覆時間</span>
+                            <span>回覆內容</span>
+                        </div>
+                    </li>
+                    <li>
+                        <span id="time"></span>
+                        <span id="status"></span>
+                        <span id="name"></span>
+                        <span id="phone"></span>
+                        <span id="cellphone"></span>
+                        <span id="email"></span>
+                        <span id="content"></span>
+                        <div>
+                            <h4>回覆情況</h4>
+                            <span id="remethod"></span>
+                            <span id="retime"></span>
+                            <span id="recontent"></span>
+                        </div>
+                    </li>
+                </ul>
+            </section>
+    </main>
+</body>
+</html>
