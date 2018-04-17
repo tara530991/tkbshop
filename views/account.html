@@ -5,18 +5,17 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>編輯基本資料</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" type="text/css" media="screen" href="main.css" />
-    <script src="main.js"></script>
 </head>
 <body>
     <main>
     	<h2></h2>
     	<section>
-            <form action="">
-                <span>中文全名：</span><input type="text" id="name"><br>
-    		    <span>E-mail：</span><input type="text" id="email" disabled="true"><br>
-    		    <span>市內電話：</span><input type="text" id="phone"><br>
-    		    <span>地址：</span><input type="text" id="adress">
+            <form action="/account" method="post">
+                <span>中文全名：</span><input type="text" name="name"><br>
+    		    <span>E-mail：</span><input type="text" name="email" disabled="true"><br>
+    		    <span>市內電話：</span><input type="text" name="phone"><br>
+    		    <span>地址：</span><input type="text" name="address"><br>
+                <input type="submit" value="送出">
             </form>     
     	</section>
     </main>
