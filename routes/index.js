@@ -1,5 +1,14 @@
 var express = require('express');
 var router = express.Router();
+var http = require('http');
+var mysql = require('mysql');
+
+var con = mysql.createConnection({
+  host: "localhost",
+  user: "admin",
+  password: "admin",
+  database: "tkbshop",
+});
 
 // 在每一個請求被處理之前都會執行的middleware
 router.use(function (req, res, next) {
@@ -10,25 +19,59 @@ router.use(function (req, res, next) {
 });
 
 /* GET home page. */
-router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
-});
-
-
-router.post('/account', function (req, res) {
-  console.log(req.body.name);
-  console.log(req.body.email);
-  console.log(req.body.phone);
-  console.log(req.body.address);
-});
+// router.get('/', function(req, res, next) {
+//   res.type('html');
+//   res.render('index');
+// });
 
 /* GET page router. */
 //前端
-router.get('/app', function (req, res) {
-  res.render('app');
-});
+// router.get('/app', function (req, res) {
+//   res.render('app');
+// });
+
+// var rows;
+
+// console.log(member.rows);
+// console.log(data.address);
+// con.query('SELECT * FROM member', function (err, rows) {
+//     if (err) {
+//       console.error(err);
+//     }
+//     // var data = JSON.stringify(rows);
+//       // console.log(data);
+//       // return data;
+//       // var username = rows.username;
+//       // console.log(data);
+//           res.render('index', {
+//       title: 'Express',
+//       loginStatus: false,
+//       username: name
+//      });
+// });
+
+
 router.get('/', function (req, res) {
-  res.render('index');
+  // res.render('index', {});
+      // res.render('index', {
+    //   title: 'Express',
+    //   loginStatus: false,
+    //   username: name
+    //  });
+  // var cmd = 'SELECT * FROM member WHERE username = ?';
+  var cmd = 'SELECT username FROM member';  
+    con.query(cmd, function (err, rows) {
+      // var data = rows;
+      if (err) {
+        console.error(err);
+      }     
+      // console.log(row);
+    res.render('index', {
+      loginStatus: false,
+      // username: cmd,
+    });
+  });
+    
 });
 router.get('/account', function (req, res) {
   res.render('account');
@@ -39,11 +82,14 @@ router.get('/cart', function (req, res) {
 router.get('/check', function (req, res) {
   res.render('check');
 });
+router.get('/checkover', function (req, res) {
+  res.render('checkover');
+});
 router.get('/contact', function (req, res) {
   res.render('contact');
 });
 router.get('/member', function (req, res) {
-  res.render('member');
+  res.render('member.ejs');
 });
 router.get('/news', function (req, res) {
   res.render('news');
@@ -60,11 +106,34 @@ router.get('/product', function (req, res) {
 router.get('/qa', function (req, res) {
   res.render('qa');
 });
-router.get('/signin', function (req, res) {
-  res.render('signin');
+router.get('/login', function (req, res) {
+  res.render('login');
 });
+router.get('/logout', function (req, res) {
+  res.render('logout');
+}); 
 router.get('/register', function (req, res) {
   res.render('register');
+  var db = req.con;
+  var sql = {
+    username: req.body.username,
+    email: req.body.email,
+    tel: req.body.tel,
+    birth: req.body.birth,
+    address: req.body.address,
+    account:req.body.account,
+    password: req.body.password,
+    password2: req.body.password2,
+    allow: req.body.allow,
+  };
+  console.log(sql);
+  var query = db.query('INSERT INTO member', sql, function (err, rows) {
+    if (err) {
+      console.log(err);
+    }
+    res.setHeader('Content-Type', 'application/json');
+    res.redirect('/');
+  });
 });
 //管理端
 router.get('/admin', function (req, res) {
@@ -97,8 +166,10 @@ router.get('/admin/product/add', function (req, res) {
 router.get('/admin/suggest/list', function (req, res) {
   res.render('backend/suggest');
 });
-router.get('我是在網址上出現的名稱', function (req, res) {
-  res.render('我是');
-});
+// router.get('我是在網址上出現的route名稱', function (req, res) {
+//   res.render('我是view目錄下面的路徑位址');
+// });
 
+
+con.end();
 module.exports = router;
