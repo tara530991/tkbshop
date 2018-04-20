@@ -16,7 +16,48 @@ var app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
-app.set( 'view engine', 'ejs' ); 
+app.set( 'view engine', 'ejs' );
+
+//session
+// app.use(session({secret: 'an',resave: false,saveUninitialized: true}));
+var session = require('express-session');
+// var identityKey = 'skey';
+var expiryDate = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
+// app.use(session({
+//   name: 'session',
+//   keys: ['key1', 'key2'],
+//   cookie: {
+//     secure: true,
+//     httpOnly: true,
+//     domain: 'localhost',
+//     path: '/',
+//     expires: expiryDate
+//   }
+// }));
+
+// app.use(session({
+//   secret: 'sessiontest',//与cookieParser中的一致
+//   resave: true,
+//   saveUninitialized: true
+// }));
+
+// app.get("/test", function (req, res) {
+//   req.render('test.html');
+//   console.info(req.session.item);
+//   req.session.item = 'Hello World';
+//   return res.send('Hello SESSION');
+// });
+
+// app.use(session({
+//   name: identityKey,
+//   secret: 'chyingp',  // 用来对session id相关的cookie进行签名
+//   store: new session,  // 本地存储session（文本文件，也可以选择其他store，比如redis的）
+//   saveUninitialized: false,  // 是否自动保存未初始化的会话，建议false
+//   resave: false,  // 是否每次都重新保存会话，建议false
+//   cookie: {
+//     maxAge: 10 * 1000  // 有效期，单位是毫秒
+//   }
+// }));
 
 app.use(logger('dev'));
 app.use(express.json());
@@ -42,73 +83,5 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
-
-
-// var con = mysql.createConnection({
-//   host: "localhost",
-//   user: "admin",
-//   password: "admin",
-//   database: "tkbshop",
-// });
-/*
-con.connect(function(err) {  //建立con連線物件，並利用connet進行連線
-    // if (err) throw err;
-    var result = "";
-    //連接資料庫
-    if (err) {
-        console.log("Connecting error.");
-        return;
-    }
-    console.log("Connecting success.");
-});
-*/
-/*
-    //查詢資料
-    con.query('SELECT * FROM accountlist',function(err,result){
-        if (err) {
-            console.log("Select error.");
-            return;
-        }
-        console.log(result);
-    });
-    // 修改資料
-    con.query('UPDATE accountlist SET password = ? where account = "tara530991"','cb5449',function(err,result){
-        if(err){
-            console.log("Update error.");
-            return;
-        }
-        console.log(result);        
-    });
-    // var sql = 'INSERT INTO account(account,password) VALUE ?';
-    // var value = [account.body.account,account.body.password];
-    // con.sql(sql,value,function(err,result){
-      //     if(err) throw err;
-      //     console.log("Number of records inserted:" + result.affectedRows);
-      // })
-      */
-// con.end();
-
-// //index 登入
-// var isLogin = false;
-// var checkLoginStatus = function (req, res) {
-//   isLogin = false;
-//   if (req.signedCookies.userid && req.signedCookies.password) {
-//     isLogin = true;
-//   }
-// };
-// exports.index = function (req, res) {
-//   checkLoginStatus(req, res);
-//   res.render('index', { loginStatus: isLogin });
-// };
-
-// //signIn
-// router.get('/signin', function (req, res) {
-//   console.log(req.body['account']);
-//   console.log(req.body['password']);
-//   res.render('signin');
-
-
-// });
-
 
 module.exports = app;

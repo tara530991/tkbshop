@@ -13,22 +13,22 @@
             <li><a href="/login">登入</a></li>
             <li><a href="/register">註冊</a></li>
             <% } else { %>
-                <li><span><% username %></span>，您好</li>            
+                <li><span><%= member[0].username %></span>，您好</li>            
                 <li><a href="/logout">登出</a></li>
                 <% } %>
     </div>
     <main>
-        <div class="logo"><a href="/index"><img src="./images/logo.gif" alt="logo"></a></div>
+        <div class="logo"><a href="/"><img src="./images/logo.gif" alt="logo"></a></div>
         <nav>
             <ul>
-                <li><a href="">最新消息</a></li>
-                <li><a href="">產品類別</a></li>
+                <li><a href="/news">最新消息</a></li>
+                <li><a href="/product">產品類別</a></li>
                 <li><a href="">訂購說明</a></li>
-                <li><a href="">訂單查詢</a></li>
-                <li><a href="">會員登入</a></li>
-                <li><a href="">連絡我們</a></li>
+                <li><a href="/order">訂單查詢</a></li>
+                <li><a href="/login">會員登入</a></li>
+                <li><a href="/contact">連絡我們</a></li>
             </ul>
         </nav>
     </main>
 </body>
-</html>
+</html> 
