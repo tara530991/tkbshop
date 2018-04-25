@@ -8,6 +8,11 @@ var ejs = require('ejs');
 var jquery = require('jquery');
 var qs = require('querystring');
 var router = express.Router();
+var session = require('express-session');
+var bodyParser = require('body-parser');
+var passport = require('passport');
+var flash = require('connect-flash');
+var bcrypt = require('bcrypt-nodejs');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -18,55 +23,36 @@ var app = express();
 app.set('views', path.join(__dirname, 'views'));
 app.set( 'view engine', 'ejs' );
 
-//session
-// app.use(session({secret: 'an',resave: false,saveUninitialized: true}));
-var session = require('express-session');
-// var identityKey = 'skey';
-var expiryDate = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
-// app.use(session({
-//   name: 'session',
-//   keys: ['key1', 'key2'],
-//   cookie: {
-//     secure: true,
-//     httpOnly: true,
-//     domain: 'localhost',
-//     path: '/',
-//     expires: expiryDate
-//   }
-// }));
-
-// app.use(session({
-//   secret: 'sessiontest',//与cookieParser中的一致
-//   resave: true,
-//   saveUninitialized: true
-// }));
-
-// app.get("/test", function (req, res) {
-//   req.render('test.html');
-//   console.info(req.session.item);
-//   req.session.item = 'Hello World';
-//   return res.send('Hello SESSION');
-// });
-
-// app.use(session({
-//   name: identityKey,
-//   secret: 'chyingp',  // 用来对session id相关的cookie进行签名
-//   store: new session,  // 本地存储session（文本文件，也可以选择其他store，比如redis的）
-//   saveUninitialized: false,  // 是否自动保存未初始化的会话，建议false
-//   resave: false,  // 是否每次都重新保存会话，建议false
-//   cookie: {
-//     maxAge: 10 * 1000  // 有效期，单位是毫秒
-//   }
-// }));
-
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+// Use the session middleware
+app.use(session({ secret: 'keyboard cat', cookie: { maxAge: 60000 } }));
+
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+// app.use(passport.initialize());
+// app.use(passport.session());
+
+// app.use(session({
+//   secret: 'your secret key',
+//   resave: false,
+//   saveUninitialized: false
+// }));
+
+// app.post('/login1',
+//   passport.authenticate('local', {
+//     successRedirect: '/',
+//     failureRedirect: '/login',
+//     failureFlash: true
+//   })
+// );
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

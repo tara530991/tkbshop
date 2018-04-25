@@ -12,14 +12,15 @@
     <main>
         <h2>新增最新消息</h2>
         <section>
-            <form action="">
-                <label for="">日期：<input type="date"></label>
-                <label for="">標題：<input type="text"></label>
-                <label for="">圖片：<input type="file"></label>
-                <label for="">內容：</label>
-                    <textarea name="content" id="content" cols="30" rows="10"></textarea>
+            <form action="/admin/news-add1" method="POST">
+                <label for="">標題：<input type="text" name="title" id="title"></label><br>
+                <label for="">日期：<input type="date" name="date" id="date"></label><br>
+                <label for="">圖片：<input type="file"></label><br>
+                <label for="">內容：</label><br>
+                    <textarea name="content" id="content" cols="80" rows="20"></textarea><br>
                 <input type="submit" value="送出">            
             </form>
+            <%- message %>
         </section>
     </main>
 </body>

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>產品管理</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" media="screen" href="main.css" />
+    <script src="main.js"></script>
+</head>
+<body>
+    <main>
+        <h2>產品管理</h2>
+        <div>
+            <span id="add">新增</span><br>
+            <form action="">
+                <input type="text">
+                <input type="submit" value="查詢">
+            </form>
+        </div>
+        <section>
+             <!-- 以商品排序欄位做排序(若有置頂以置頂優先) -->
+            <h3>產品資訊列表</h3>
+                <ul>
+                    <li>
+                        <span>產品名稱</span>
+                        <span>產品單價</span>
+                        <span>產品數量</span>
+                        <span>產品上架時間</span>
+                        <span>產品下架時間</span>
+                        <span>產品描述</span>
+                        <span>產品圖片</span>
+                        <span>產品新增日期</span>
+                        <span>產品修改日期</span>
+                        <span>產品編號</span>
+                        <span>排序</span>
+                        <span>產品分類</span>
+                        <button>修改</button>
+                        <button>刪除</button>
+                    </li>
+                    <li>
+                        <span id="product"></span>
+                        <span id="price"></span>
+                        <span id="number"></span>
+                        <span id="uptime"></span>
+                        <span id="downtime"></span>
+                        <span id="description"></span>
+                        <span id="img"></span>
+                        <span id="addtime"></span>
+                        <span id="changetime"></span>
+                        <span id="no"></span>
+                        <span id="sorting"></span>
+                        <span id="category"></span>
+                        <button id="change">修改</button>
+                        <button id="delete">刪除</button>
+                    </li>
+                </ul>
+        </section>
+    </main>
+</body>
+</html>

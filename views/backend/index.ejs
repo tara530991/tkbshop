@@ -12,13 +12,13 @@
     <main>
         <h2>後台管理</h2>
         <div>
-            <h3>歡迎您 管理者</h3>
-            <span>帳號：</span><input type="text" id="account"><br>
-            <span>密碼：</span><input type="password" id="password"><br>
-            <form action="">
+            <form action="/admin1" method="POST">
+                <h3>請登入</h3>
+                <span>帳號：</span><input type="text" name="account" id="account"><br>
+                <span>密碼：</span><input type="password" name="password" id="password"><br>
                 <input type="submit" value="登入">
             </form>
-            
+            <%- message %>
         </div>
     </main>
 </body>

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>編輯最新消息</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" media="screen" href="main.css" />
+    <script src="main.js"></script>
+</head>
+<body>
+    <main>
+        <h2>編輯最新消息</h2>
+        <div>
+            <span id="add">新增</span><br>
+            <form action="/news_list" method="get">
+                <input type="text">
+                <input type="submit" value="查詢"> 
+            </form>
+        </div>
+        <section>
+            <ul>
+                <li>
+                    <span>日期</span>
+                    <span>標題</span>
+                    <span>圖片</span>
+                    <span>內容</span>
+                    <button>修改</button>
+                    <button>刪除</button>
+                </li>
+                <li>
+                    <span id="date"><% rows[i].date %></span>
+                    <span id="title"><% rows[i].title %></span>
+                    <span id="img"><img src=<% rows[i].pic %> alt=""></span>
+                    <span id="content"><% rows[i].content %></span>
+                    <button id="change">修改</button>
+                    <button id="delete">刪除</button>
+                </li>
+            </ul>
+        </section>
+    </main>
+     <!-- 列表每頁最多顯示30筆資料 -->
+</body>
+</html>
