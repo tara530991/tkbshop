@@ -13,6 +13,9 @@ var bodyParser = require('body-parser');
 var passport = require('passport');
 var flash = require('connect-flash');
 var bcrypt = require('bcrypt-nodejs');
+var multer = require('multer');
+var upload = multer({ dest: 'upload/' });
+var fs = require('fs');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -30,7 +33,8 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Use the session middleware
-app.use(session({ secret: 'keyboard cat', cookie: { maxAge: 60000 } }));
+app.use(session({ secret: 'keyboard cat', cookie: { maxAge: 1000000 } }));
+//maxAge：多久後session與相對應的cookie會失效，單位為毫秒（1秒=100毫秒）
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);

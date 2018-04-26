@@ -8,14 +8,17 @@
 </head>
 <body>
     <main>
-        <nav>
+        <% if (loginStatus == false) { %>
+            <span>請先登入<br>按我<a href="/login">登入</a></span>
+        <% } else if(loginStatus == true) { %>
+        <div>
             <ul>
-                <li><a href="">編輯基本資料</a></li>
-                <li><a href="">修改密碼</a></li>
+                <li><a href="/member-edit">編輯基本資料</a></li>
+                <li><a href="/newpass">修改密碼</a></li>
                 <li><a href="">編輯收件人地址</a></li>
                 <li><a href="">訂單查詢</a></li>
             </ul>
-        </nav>
+        </div>
         <section>
             <span id="name">中文全名：<%= data[0].username %></span><br>
             <span id="email">E-mail：<%= data[0].email %></span><br>
@@ -23,6 +26,7 @@
             <span id="birth">生日：<%= data[0].birth %></span><br>
             <span id="address">地址：<%= data[0].address %></span>
         </section>
+        <% } %>
     </main>
 </body>
 </html>

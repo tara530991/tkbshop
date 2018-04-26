@@ -44,6 +44,7 @@
                     <div class="panel-body">
                         <form role="form" action="/login1" method="POST">
                             <fieldset>
+                                <% if (loginStatus == false) { %>
                                 <div class="form-group">
                                     <input class="form-control" placeholder="帳號（E-mail）" name="email" type="email" autofocus>
                                 </div>
@@ -55,9 +56,13 @@
                                         <input name="remember" type="checkbox" value="Remember Me">Remember Me
                                     </label>
                                 </div> -->
-                                <div><% message %></div>
+                                <input type="submit" value="登入" class="btn btn-lg btn-success btn-block">
+                                <% } else if(loginStatus == true){ %>
+                                <input type="submit" value="登出" class="btn btn-lg btn-success btn-block">
+                                <% } %>
+
                                 <!-- Change this to a button or input when using this as a form -->
-                                <a href="/" class="btn btn-lg btn-success btn-block">登入</a>
+                                <div><%- message %></div>
                             </fieldset>
                         </form>
                     </div>
