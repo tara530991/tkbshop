@@ -345,14 +345,23 @@ router.post('/admin1', function (req, res) {
     });
   }
 });
-router.get('/admin/category/list', function (req, res) {
+router.get('/admin/category-list', function (req, res) {
   res.render('backend/category');
 });
 router.get('/admin/category/add', function (req, res) {
   res.render('backend/categoryadd');
 });
-router.get('/admin/member/list', function (req, res) {
-  res.render('backend/member');
+router.get('/admin/member-list', function (req, res) {
+  con.query('SELECT * FROM member',function(err,rows){
+    if(err){
+      console.log(err);
+    }
+    var data = rows;
+    res.render('backend/member',{
+      data:data,
+    });
+  })
+  
 }); 
 router.get('/admin/news-list', function (req, res) {
   con.query('SELECT * FROM news',function(err,rows){
@@ -388,7 +397,7 @@ router.post('/admin/news-add1', urlencodedParser, function (req, res) {
     });
   });
 }); 
-router.get('/admin/order/list', function (req, res) {
+router.get('/admin/order-list', function (req, res) {
   res.render('backend/order');
 });
 router.get('/admin/product-list', function (req, res) {
@@ -397,10 +406,6 @@ router.get('/admin/product-list', function (req, res) {
     if(err){
       console.log(err);
     }
-    console.log(data[0].uptime);
-    // data.uptime = con.query("DATE_FORMAT(" + data.uptime + ", '%Y %m %d')",function(err,rows){
-
-    // });
     res.render('backend/product',{
       data: data,
     });
