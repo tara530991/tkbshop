@@ -15,7 +15,7 @@ var flash = require('connect-flash');
 var bcrypt = require('bcrypt-nodejs');
 var multer = require('multer');
 var upload = multer({ dest: 'upload/' });
-var fs = require('fs');
+// var expressLayouts = require('express-ejs-layouts');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -31,6 +31,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+// app.use(expressLayouts);
 
 // Use the session middleware
 app.use(session({ secret: 'keyboard cat', cookie: { maxAge: 1000000 } }));
@@ -43,20 +44,6 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 // app.use(passport.initialize());
 // app.use(passport.session());
-
-// app.use(session({
-//   secret: 'your secret key',
-//   resave: false,
-//   saveUninitialized: false
-// }));
-
-// app.post('/login1',
-//   passport.authenticate('local', {
-//     successRedirect: '/',
-//     failureRedirect: '/login',
-//     failureFlash: true
-//   })
-// );
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

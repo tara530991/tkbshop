@@ -18,6 +18,10 @@ var con = mysql.createConnection({
   database: "tkbshop",
 }),slice = [].slice;  
 
+app.set("view options", {
+  "layout": true,
+});
+
 // 在每一個請求被處理之前都會執行的middleware
 router.use(function (req, res, next) {
   // 輸出記錄訊息至終端機
@@ -38,7 +42,7 @@ router.get('/', function (req, res) {
     loginStatus = true;
   } 
   var user = req.session.username;
-  res.render('index', {
+  res.render('index', { 
     loginStatus: loginStatus,
     data: user,
   });
@@ -46,16 +50,19 @@ router.get('/', function (req, res) {
 });
 router.get('/login', function (req, res) {
   var loginStatus = false;
+  req.session.views = 1;  
   if (req.session.email) {
     loginStatus = true;
   }
   res.render('login',{
+    loginStatus: loginStatus,     
+    views: req.session.views,                     
     message:"",
   });
 });
 router.post('/login1', function (req, res) {
   var loginStatus = false;
-  if (req.session.email) {
+  if (req.session.email) {    
     loginStatus = true;
   }
   var sql = {
@@ -65,73 +72,100 @@ router.post('/login1', function (req, res) {
   if (loginStatus == false){
     con.query("SELECT * FROM member WHERE email='" + sql.email + "'",sql,function(err,rows){
       var data = rows;
-      // console.log(data.length);
+      console.log(loginStatus);
       if (data.length > 0 && data[0].email && data[0].password){
         var email = data[0].email;
         var pass = data[0].password;
         var username = data[0].username;
-        req.session.views = 1;
         if (email==sql.email && pass==sql.password){
             req.session.views = 2;
             req.session.email = email;
             req.session.username = username;          
             res.render('login', {
-              message: "<span>成功登入<br>" + username +" 歡迎你</span>",
+              loginStatus: true,
+              views: req.session.views,
+              message: "<div><span>成功登入<br>" + username +" 歡迎你</span></div>",
             });
-        }      
-        else{
+        }else{
           req.session.views = 1;
           res.render('login', {
+            loginStatus: false,  
+            views: req.session.views,                      
             message: "<span>輸入錯誤</span>",
           });
         }
       }else{
         req.session.views = 1;
         res.render('login', {
+          loginStatus: false,           
+          views: req.session.views,                     
           message: "<span>帳號不存在</span>",
         });      
       }
-      console.log(req.session.views);
     });
-  } else if (loginStatus == ture){
-    req.session.views = 0;
+  } else if (loginStatus == true){
+    res.render('login',
+     {
+      loginStatus: true,
+      views: req.session.views,      
+      message: "<span>已經是登入狀態囉</span>",
+    }); 
   }
+  console.log(req.session.views);
+  console.log(loginStatus);
 });
-  
+router.get('/logout', function (req, res) {
+  loginStatus = false;
+  // 產生新的session
+  req.session.regenerate(function (err) {
+    if (err) {
+      console.log(err);
+      res.render('error');
+    }
+    req.session.views = 0;  
+    res.render('index');
+  });
+});
 router.get('/account', function (req, res) {
   var loginStatus = false;
   if (req.session.email) {
     loginStatus = true;
   }
-  res.render('account');
+  res.render('account',{
+  });
 });
 router.get('/cart', function (req, res) {
   var loginStatus = false;
   if (req.session.email) {
     loginStatus = true;
   }
-  res.render('cart');
+  res.render('cart',{
+
+  });
 });
 router.get('/check', function (req, res) {
   var loginStatus = false;
   if (req.session.email) {
     loginStatus = true;
   }
-  res.render('check');
+  res.render('check',{
+  });
 });
 router.get('/checkover', function (req, res) {
   var loginStatus = false;
   if (req.session.email) {
     loginStatus = true;
   }
-  res.render('checkover');
+  res.render('checkover',{
+  });
 });
 router.get('/contact', function (req, res) {
   var loginStatus = false;
   if (req.session.email) {
     loginStatus = true;
   }
-  res.render('contact');
+  res.render('contact',{
+  });
 });
 router.get('/member', function (req, res) {
   var loginStatus = false;
@@ -158,7 +192,7 @@ router.get('/member-edit', function (req, res) {
     loginStatus = true;
   }else{
     res.render('memberedit',{
-      loginStatus: loginStatus,      
+      loginStatus: loginStatus,     
     });
   }
   con.query("SELECT * FROM member WHERE username='" + req.session.username + "'", function (err, rows) {
@@ -187,6 +221,7 @@ router.post('/member-edit1', function (req, res) {
       console.log(err);
     }
     res.render('memberedit',{
+      loginStatus: loginStatus,           
       message:"<sapn>成功更新資料</span>",
     })
   }); 
@@ -200,6 +235,7 @@ router.get('/news', function (req, res) {
   con.query('SELECT * FROM news',function(err,rows){
     var data = rows;
     res.render('news',{
+      loginStatus: loginStatus,           
       data:data,
     });
   });
@@ -210,7 +246,13 @@ router.get('/order', function (req, res) {
   if (req.session.email) {
     loginStatus = true;
   }
-  res.render('order');
+  con.query('SELECT * FROM order', function (err, rows) {
+    var data = rows;
+    res.render('order', {
+      loginStatus: loginStatus,           
+      data: data,
+    });
+  });
 });
 router.get('/newpass', function (req, res) {
   var loginStatus = false;
@@ -226,12 +268,15 @@ router.get('/newpass', function (req, res) {
   } else if (loginStatus){
     res.render('newpassword',{
       loginStatus: loginStatus,
-      message:''
+      message:'',
     });
   }
 });
 router.post('/newpass1', function (req, res) {
-  // var confirm;
+  var loginStatus = false;
+  if (req.session.email) {
+    loginStatus = true;
+  } 
   var sql = {
     oldpass: req.body.oldpass,
     newpass: req.body.newpass,
@@ -249,7 +294,6 @@ router.post('/newpass1', function (req, res) {
     res.render('newpassword', {
       message: '<span>已成功變更密碼！</span>'
     });
-    // res.redirect("/index");
   } else {
     res.render('newpassword', {
       message: '<sapn>新密碼與確認密碼不一致喔！<br/>麻煩你再重新輸入一次</span>'
@@ -258,14 +302,35 @@ router.post('/newpass1', function (req, res) {
   }
 });
 router.get('/product', function (req, res) {
-  res.render('product');
+  var loginStatus = false;
+  if (req.session.email) {
+    loginStatus = true;
+  } 
+  con.query('SELECT * FROM product',function(err,rows){
+    var data = rows;
+    res.render('product',{
+      loginStatus: loginStatus,     
+      data : data,
+    });
+  })
 });
 router.get('/qa', function (req, res) {
-  res.render('qa');
+  var loginStatus = false;
+  if (req.session.email) {
+    loginStatus = true;
+  }
+  res.render('qa',{
+    loginStatus: loginStatus,    
+  });
 });
 
 router.get('/register', function (req, res) {
+  var loginStatus = false;
+  if (req.session.email) {
+    loginStatus = true;
+  } 
   res.render('register',{
+    loginStatus: loginStatus,        
     message: "",
   });
 });
