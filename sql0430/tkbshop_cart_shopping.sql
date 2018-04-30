@@ -1,6 +1,6 @@
 -- MySQL dump 10.13  Distrib 5.7.22, for Linux (x86_64)
 --
--- Host: localhost    Database: tkbshop
+-- Host: 127.0.0.1    Database: tkbshop
 -- ------------------------------------------------------
 -- Server version	5.7.22-0ubuntu0.16.04.1
 
@@ -16,31 +16,28 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `order`
+-- Table structure for table `cart_shopping`
 --
 
-DROP TABLE IF EXISTS `order`;
+DROP TABLE IF EXISTS `cart_shopping`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `order` (
-  `num` int(10) NOT NULL,
-  `date` date DEFAULT NULL,
-  `buyer` varchar(10) DEFAULT NULL,
-  `total` int(10) DEFAULT NULL,
-  `status` varchar(5) DEFAULT NULL,
-  `bankcode` int(5) DEFAULT NULL,
-  `bankaccount` varchar(20) DEFAULT NULL,
-  PRIMARY KEY (`num`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+CREATE TABLE `cart_shopping` (
+  `ID` int(11) NOT NULL AUTO_INCREMENT,
+  `PRODUCT_ID` int(11) DEFAULT NULL,
+  `PRODUCT_AMOUNT` varchar(5) DEFAULT NULL,
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=48 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `order`
+-- Dumping data for table `cart_shopping`
 --
 
-LOCK TABLES `order` WRITE;
-/*!40000 ALTER TABLE `order` DISABLE KEYS */;
-/*!40000 ALTER TABLE `order` ENABLE KEYS */;
+LOCK TABLES `cart_shopping` WRITE;
+/*!40000 ALTER TABLE `cart_shopping` DISABLE KEYS */;
+INSERT INTO `cart_shopping` VALUES (1,8,'4'),(2,8,'8'),(3,8,'1'),(4,7,NULL),(5,8,NULL),(6,7,NULL),(7,9,NULL),(8,8,NULL),(9,8,NULL),(10,7,NULL),(11,7,NULL),(12,8,NULL),(13,10,NULL),(14,10,NULL),(15,10,NULL),(16,7,NULL),(17,10,NULL),(18,8,NULL),(19,8,NULL),(20,8,NULL),(21,8,NULL),(22,8,NULL),(23,8,NULL),(24,8,NULL),(25,8,NULL),(26,7,NULL),(27,7,NULL),(28,7,NULL),(29,7,NULL),(30,7,NULL),(31,7,NULL),(32,8,NULL),(33,8,NULL),(34,8,NULL),(35,8,NULL),(36,8,NULL),(37,8,NULL),(38,7,NULL),(39,9,NULL),(40,8,NULL),(41,8,NULL),(42,8,NULL),(43,8,NULL),(44,8,NULL),(45,7,NULL),(46,9,NULL),(47,9,NULL);
+/*!40000 ALTER TABLE `cart_shopping` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -52,4 +49,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-04-26 18:22:40
+-- Dump completed on 2018-04-30 18:14:13

@@ -1,6 +1,6 @@
 -- MySQL dump 10.13  Distrib 5.7.22, for Linux (x86_64)
 --
--- Host: localhost    Database: tkbshop
+-- Host: 127.0.0.1    Database: tkbshop
 -- ------------------------------------------------------
 -- Server version	5.7.22-0ubuntu0.16.04.1
 
@@ -16,30 +16,31 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `news`
+-- Table structure for table `order`
 --
 
-DROP TABLE IF EXISTS `news`;
+DROP TABLE IF EXISTS `order`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `news` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `title` varchar(25) DEFAULT NULL,
+CREATE TABLE `order` (
+  `num` int(10) NOT NULL,
   `date` date DEFAULT NULL,
-  `pic` varchar(45) DEFAULT NULL,
-  `content` text,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+  `buyer` varchar(10) DEFAULT NULL,
+  `total` int(10) DEFAULT NULL,
+  `status` varchar(5) DEFAULT NULL,
+  `bankcode` int(5) DEFAULT NULL,
+  `bankaccount` varchar(20) DEFAULT NULL,
+  PRIMARY KEY (`num`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `news`
+-- Dumping data for table `order`
 --
 
-LOCK TABLES `news` WRITE;
-/*!40000 ALTER TABLE `news` DISABLE KEYS */;
-INSERT INTO `news` VALUES (2,'哈囉大家好','2018-04-12','','hohohoh\r\n');
-/*!40000 ALTER TABLE `news` ENABLE KEYS */;
+LOCK TABLES `order` WRITE;
+/*!40000 ALTER TABLE `order` DISABLE KEYS */;
+/*!40000 ALTER TABLE `order` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -51,4 +52,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-04-26 18:22:40
+-- Dump completed on 2018-04-30 18:14:13

@@ -1,6 +1,6 @@
 -- MySQL dump 10.13  Distrib 5.7.22, for Linux (x86_64)
 --
--- Host: localhost    Database: tkbshop
+-- Host: 127.0.0.1    Database: tkbshop
 -- ------------------------------------------------------
 -- Server version	5.7.22-0ubuntu0.16.04.1
 
@@ -23,7 +23,7 @@ DROP TABLE IF EXISTS `member`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `member` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `MEMBER_ID` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `username` varchar(10) DEFAULT NULL,
   `email` varchar(45) DEFAULT NULL,
   `password` varchar(15) DEFAULT NULL,
@@ -32,7 +32,7 @@ CREATE TABLE `member` (
   `birth` date DEFAULT NULL,
   `address` varchar(45) DEFAULT NULL,
   `allow` varchar(45) DEFAULT NULL,
-  PRIMARY KEY (`id`),
+  PRIMARY KEY (`MEMBER_ID`),
   UNIQUE KEY `email_UNIQUE` (`email`),
   UNIQUE KEY `password_UNIQUE` (`password`)
 ) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
@@ -57,4 +57,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-04-26 18:22:40
+-- Dump completed on 2018-04-30 18:14:13

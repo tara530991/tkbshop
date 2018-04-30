@@ -1,6 +1,6 @@
 -- MySQL dump 10.13  Distrib 5.7.22, for Linux (x86_64)
 --
--- Host: localhost    Database: tkbshop
+-- Host: 127.0.0.1    Database: tkbshop
 -- ------------------------------------------------------
 -- Server version	5.7.22-0ubuntu0.16.04.1
 
@@ -16,38 +16,27 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `product`
+-- Table structure for table `productCategory`
 --
 
-DROP TABLE IF EXISTS `product`;
+DROP TABLE IF EXISTS `productCategory`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `product` (
+CREATE TABLE `productCategory` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `product` varchar(20) DEFAULT NULL,
-  `price` int(10) DEFAULT NULL,
-  `amount` int(10) DEFAULT NULL,
-  `uptime` date DEFAULT NULL,
-  `downtime` date DEFAULT NULL,
-  `description` varchar(45) DEFAULT NULL,
-  `pic` varchar(45) DEFAULT NULL,
-  `addtime` date DEFAULT NULL,
-  `changetime` date DEFAULT NULL,
-  `ident` varchar(10) DEFAULT NULL,
+  `category` varchar(10) DEFAULT NULL,
   `sort` varchar(5) DEFAULT NULL,
-  `category` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `product`
+-- Dumping data for table `productCategory`
 --
 
-LOCK TABLES `product` WRITE;
-/*!40000 ALTER TABLE `product` DISABLE KEYS */;
-INSERT INTO `product` VALUES (7,'重乳酪蛋糕',50,2,'2018-03-21','2018-05-03','濃醇香','cheese.jpg','2018-04-06','2018-04-15','AA00001','2','蛋糕'),(8,'重乳酪蛋糕',50,2,'2018-04-25','2018-04-21','濃醇香','cheese.jpg','2018-04-04','2018-04-19','AA00001','2','蛋糕'),(9,'重乳酪蛋糕',50,2,'2018-04-04','2018-04-21','濃醇香','cheese.jpg','2018-04-12','2018-04-28','AA00001','2','蛋糕');
-/*!40000 ALTER TABLE `product` ENABLE KEYS */;
+LOCK TABLES `productCategory` WRITE;
+/*!40000 ALTER TABLE `productCategory` DISABLE KEYS */;
+/*!40000 ALTER TABLE `productCategory` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -59,4 +48,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-04-26 18:22:40
+-- Dump completed on 2018-04-30 18:14:13
