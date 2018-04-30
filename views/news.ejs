@@ -40,7 +40,7 @@
                                     <% for(var i=0 ; i < data.length;i++) { %>
                                         <tr class="odd gradeX">
                                             <td>
-                                                <%=data[i].date %>
+                                                <%=moment(data[i].date).format('YYYY-MM-DD')%>
                                             </td>
                                             <td>
                                                 <%=data[i].title %>

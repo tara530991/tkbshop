@@ -21,16 +21,18 @@
         </section>
         <section>
             <h2>客戶反應意見欄</h2>
-            <form action="">
+            <form action="contact1" method="POST">
                 <span>姓名：</span><input type="text" id="name"><br>
-                <span>電話：</span><input type="text" id="phone"><br>
+                <span>電話：</span><input type="text" id="tel"><br>
                 <span>手機：</span><input type="text" id="cell"><br>
                 <span>Email：</span><input type="email" id="email"><br>
-                <span>地址：</span><input type="text" id="adress"><br>
+                <span>地址：</span><input type="text" id="address"><br>
                 <span>內容：</span>
                 <textarea name="content" id="content" cols="30" rows="10"></textarea>
                 <div></div><span>驗證碼：</span><input type="text" id="verify">
+                <input type="submit" value="送出">
             </form>
+            <%- message %>
         </section>
          <!-- 自動回信
             親愛的小綠您好： 謝謝您寶貴的建議，我們會盡速與您連繫並回覆您的意見 TKB購物平台 感謝您 -->

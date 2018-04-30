@@ -16,7 +16,7 @@
                         <fieldset>
                             <% if (loginStatus == false && views > 0) { %>
                                 <% if (views == 1) {%>
-                                <form role="form" action="/login1" method="POST">
+                                <form role="form" action="/member/login1" method="POST">
                                     <div class="form-group">
                                     <input class="form-control" placeholder="帳號（E-mail）" name="email" type="email" autofocus>
                                     </div>
@@ -29,24 +29,21 @@
                                         </label>
                                     </div> -->
                                     <input type="submit" value="登入" class="btn btn-lg btn-success btn-block">
+                                    <div><%- message %></div>
                                 </form>
                                     <% } else if(views == 2) { %>
                                         <div><%- message %></div>
-                                        <form action="/logout" method="get">
+                                        <form action="/member/logout" method="get">
                                             <input type="submit" value="登出" class="btn btn-lg btn-warning btn-block">
-                                            <button class="btn btn-lg btn-primary btn-block">
-                                            <a href="/member">會員中心</a>
-                                            </button>
+                                            <button class="btn btn-lg btn-primary btn-block"><a href="/member">會員中心</a></button>
                                             <button class="btn btn-lg btn-primary btn-block"><a href="/">回到首頁</a></button>
                                         </form>
                                     <% }%>
                                 <% } else if(loginStatus == true){ %>
                                 <div><%- message %></div>
-                                    <form action="/logout" method="get">
+                                    <form action="/member/logout" method="get">
                                         <input type="submit" value="登出" class="btn btn-lg btn-warning btn-block">
-                                        <button class="btn btn-lg btn-primary btn-block">
-                                            <a href="/member">會員中心</a>
-                                        </button>
+                                        <button class="btn btn-lg btn-primary btn-block"><a href="/member">會員中心</a></button>
                                         <button class="btn btn-lg btn-primary btn-block"><a href="/">回到首頁</a></button>
                                     </form>
                                 <% } %>
@@ -57,18 +54,6 @@
             </div>
         </div>
     </div>
-
-    <!-- jQuery -->
-    <script src="/vendor/jquery/jquery.min.js"></script>
-
-    <!-- Bootstrap Core JavaScript -->
-    <script src="/vendor/bootstrap/js/bootstrap.min.js"></script>
-
-    <!-- Metis Menu Plugin JavaScript -->
-    <script src="/vendor/metisMenu/metisMenu.min.js"></script>
-
-    <!-- Custom Theme JavaScript -->
-    <script src="/dist/js/sb-admin-2.js"></script>
 
 </body>
 

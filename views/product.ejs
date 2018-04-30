@@ -21,45 +21,49 @@
                         DataTables Advanced Tables
                     </div>
                     <!-- /.panel-heading -->
-                    <div class="panel-body">
-                        <table width="100%" class="table table-striped table-bordered table-hover" id="dataTables-example">
-                            <thead>
-                                <tr>
-                                    <th>圖片</th>
-                                    <th>品名</th>
-                                    <th>產品說明</th>
-                                    <th>售價</th>
-                                    <th>存貨狀況</th>
-                                    <th>放入購物車</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <% for(var i=0 ; i < data.length;i++) { %>
-                                    <tr class="odd gradeX">
-                                        <td><img id="img" src="" alt="" />
-                                            <%=data[i].pic %>
-                                        </td>
-                                        <td>
-                                            <%=data[i].product %>
-                                        </td>
-                                        <td>
-                                            <%=data[i].description %>
-                                        </td>
-                                        <td>
-                                            <%=data[i].price %>
-                                        </td>
-                                        <td>
-                                            <%=data[i].stock %>
-                                        </td>
-                                        <td>
-                                            <button id="buy"></button>
-                                        </td>
+                    <form action="/product/addTocart" method="POST">
+                        <input type="hidden" id="product" name="productId" />
+                        <div class="panel-body">
+                            <table width="100%" class="table table-striped table-bordered table-hover" id="dataTables-example">
+                                <thead>
+                                    <tr>
+                                        <th>圖片</th>
+                                        <th>品名</th>
+                                        <th>產品說明</th>
+                                        <th>售價</th>
+                                        <th>存貨狀況</th>
+                                        <th>放入購物車</th>
                                     </tr>
-                                    <%} %>
-                            </tbody>
-                        </table>
-                        <!-- /.table-responsive -->
-                    </div>
+                                </thead>
+                                <tbody>
+                                    <% for(var i=0 ; i < data.length;i++) { %>
+                                        <tr class="odd gradeX">
+                                            <td><img id="img" src="" alt="" />
+                                                <%=data[i].pic %>
+                                            </td>
+                                            <td>
+                                                <%=data[i].product %>
+                                            </td>
+                                            <td>
+                                                <%=data[i].description %>
+                                            </td>
+                                            <td>
+                                                <%=data[i].price %>
+                                            </td>
+                                            <td>
+                                                <%=data[i].stock %>
+                                            </td>
+                                            <td>
+                                                <button id="buy" onclick="addToCart(<%=data[i].id %>)">加入購物車</button>
+                                            </td>
+                                        </tr>
+                                    <% } %>
+                                </tbody>
+                            </table>
+                            <!-- /.table-responsive -->
+        
+                        </div>
+                    </form>
                     <!-- /.panel-body -->
                 </div>
                 <!-- /.panel -->
@@ -67,6 +71,13 @@
             <!-- /.col-lg-12 -->
         </div>
         <!-- /.row -->
+        <script>
+            $(function () {
 
+            });
+            function addToCart(productId){
+                $("#product").val(productId);
+            }
+        </script>
 </body>
 </html>

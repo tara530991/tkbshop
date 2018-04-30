@@ -11,16 +11,91 @@
 </head>
 
 <body>
-    <main>
-        <h2>新增產品分類</h2>
-        <section>
-            <form action="">
-                <label for="">產品分類名稱：<input type="text"></label>
-                <label for="">排序：<input type="text"></label>
-                <input type="submit" value="送出">
-            </form>
-        </section>
-    </main>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    新增產品
+                </div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <form role="form" action="/admin/product-add1" method="POST">
+                                <div class="form-group">
+                                    <label>產品名稱：</label>
+                                    <input class="form-control" name="product" id="product">
+                                    <!-- <p class="help-block">xampEle block-level help text here.</p> -->
+                                </div>
+                                <div class="form-group">
+                                    <label>產品單價：</label>
+                                    <input class="form-control" name="price" id="price">
+                                </div>
+                                <div class="form-group">
+                                    <label>產品數量：</label>
+                                    <input class="form-control" name="amount" id="amount">
+                                </div>
+                                <div class="form-group">
+                                    <label>產品分類</label>
+                                    <select class="form-control" name="category" id="category">
+                                        <option>1</option>
+                                        <option>2</option>
+                                        <option>3</option>
+                                        <option>4</option>
+                                        <option>5</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>產品編號：</label>
+                                    <input class="form-control" name="ident" id="ident">
+                                </div>
+                                <div class="form-group">
+                                    <label>產品上架時間：</label>
+                                    <input class="form-control" name="uptime" id="uptime">
+                                </div>
+                                <div class="form-group">
+                                    <label>產品下架時間：</label>
+                                    <input class="form-control" name="downtime" id="downtime">
+                                </div>
+                                <div class="form-group">
+                                    <label>產品描述：</label>
+                                    <textarea class="form-control" rows="3"></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label>產品圖片：</label>
+                                    <input class="form-control" name="pic" id="pic">
+                                </div>
+                                <div class="form-group">
+                                    <label>產品新增日期：</label>
+                                    <input class="form-control" name="addtime" id="addtime">
+                                </div>
+                                <div class="form-group">
+                                    <label>產品修改日期：</label>
+                                    <input class="form-control" name="changetime" id="changetime">
+                                </div>
+                                <div class="form-group">
+                                    <label>排序：</label>
+                                    <input class="form-control" name="sort" id="sort">
+                                </div>
+                                <button type="submit" class="btn btn-default">Submit Button</button>
+                                <button type="reset" class="btn btn-default">Reset Button</button>
+                                <select id="select" class="form-control">
+                            </form>
+                        </div>
+                        <!-- /.col-lg-6 (nested) -->
+                    </div>
+                    <!-- /.row (nested) -->
+                </div>
+                <!-- /.panel-body -->
+            </div>
+            <!-- /.panel -->
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+    <!-- /.row -->
+    </div>
+    <!-- /#page-wrapper -->
+    
+    <%- message %>
 </body>
 
 </html>
