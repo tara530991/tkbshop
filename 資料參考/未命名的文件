@@ -1,0 +1,10 @@
+mysql 已開啟（3306port被佔用）
+node mysql套件已灌好
+node首頁可開啟
+status 500
+mysql 中存在node連接使用的使用者
+答：user未授權
+
+CREATE USER 'someusr'@'localhost' IDENTIFIED BY 'password';
+GRANT ALL PRIVILEGES ON somedb.* TO 'someusr'@'localhost';
+FLUSH PRIVILEGES;

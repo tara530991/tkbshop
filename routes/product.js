@@ -48,7 +48,7 @@ router.post('/addTocart', function (req, res) {
     
   })
   //product.product,product.price,product.category,
-  var cartIDsame = 'SELECT * WHERE (PRODUCT_ID,PRODUCT_ID) IN (SELECT * FROM cart_shopping DISTINCT PRODUCT_ID GROUP BY PRODUCT_ID);';
+  var cartIDsame = 'SELECT * WHERE (PRODUCT_ID) IN (SELECT * FROM cart_shopping DISTINCT PRODUCT_ID GROUP BY PRODUCT_ID);';
   con.query(cartIDsame,function(err,rows){
     var data = rows;
     console.log(data);    
