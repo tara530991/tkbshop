@@ -29,13 +29,13 @@
                                             <th>品名</th>
                                             <th>售價</th>
                                             <th>購買數量</th>
-                                            <div ></div>
+                                            <th>更改購買數量</th>
+                                            <th>合計金額</th>
+                                            <th>刪除產品</th>
                                         </tr>
                                     </thead>
                                     <form action="/deleteproduct" method="GET">
                                     <% if (loginStatus == false) { %>
-                                        <%- message %>
-                                    <% } else if(loginStatus == true) { %>
                                         <tbody>
                                         <% for(var i=0 ; i < data.length;i++) { %>
                                             <tr class="odd gradeX">
@@ -45,12 +45,15 @@
                                                 <td>
                                                     <%=data[i].price %>
                                                 </td>
-                                                <td>
+                                                <td id="ammount">
                                                     <%=data[i].PRODUCT_AMOUNT %>
                                                 </td>
                                                 <td>
                                                     <button id="add" onclick="add(<%=data[i].PRODUCT_AMOUNT %>)">+</button>
                                                     <button id="cut" onclick="cut(<%=data[i].PRODUCT_AMOUNT %>)">-</button>
+                                                </td>
+                                                <td id="subtotal">
+                                                    <%=data[i].subtotal %>                                                    
                                                 </td>
                                                 <td>
                                                     <button type="submit" onclick="deleteProduct(<%=data[i].id %>)">刪除</button>
@@ -61,8 +64,11 @@
                                     </tbody>
                                     </form>
                                 </table>
-                                <div><span id="total">總價：</span></div>
-                                <button type="submit" id="check">進入結帳</button>
+                                <form action="/product/check" method="POST">
+                                   <div><span id="total">總價：<%=data[i].total %></span></div>
+                                    <button type="submit" id="check">進入結帳</button> 
+                                </form>
+                                
                                 <!-- /.table-responsive -->
                             </div>
                         <!-- /.panel-body -->
@@ -76,8 +82,18 @@
                 $(function () {
 
                 });
-                function addToCart(productId) {
-                    $("#product").val(productId);
+                // function addToCart(productId) {
+                //     $("#product").val(productId);
+                // }
+                function add(PRODUCT_AMOUNT){
+                    var ammount = $('#ammount');
+                    this.ammount = ammount + 1;
+                    console.log(ammount);
+                }
+                function cut(PRODUCT_AMOUNT) {
+                    var ammount = $('#ammount');
+                    this.ammount = ammount - 1;
+                    console.log(ammount);
                 }
             </script>
     </main>

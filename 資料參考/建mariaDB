@@ -1,0 +1,30 @@
+建立 maria DB
+$ sudo apt-get update
+$ sudo apt-get install mariadb-server
+安裝完成後, 執行以下指令啟動 MariaDB:
+$ sudo service mysql start
+
+mysql的client就是connector J
+
+建立資料庫時一併設定編碼
+CREATE DATABASE 'database_name'  DEFAULT CHARACTER SET utf8  DEFAULT COLLATE utf8_general_ci;
+
+---------------------------------------------------------------------------------------------------
+如果一開始沒定編碼，修改my.cnf
+路徑： /etc/mysql/my.cnf
+
+指令
+cd /etc/mysql/
+sudo vim my.cnf
+找到下面兩個位置加入下列語法
+[mysqld]
+    character-set-server=utf8
+    collation-server=utf8_general_ci
+    init-connect='SET NAMES utf8'
+
+[client]
+    default-character-set=utf8
+
+按esc->輸入 『:wq』
+
+重啟mysql server 

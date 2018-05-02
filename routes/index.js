@@ -46,7 +46,7 @@ router.get('/news', function (req, res) {
   if (req.session.email) {
     loginStatus = true;
   }
-  con.query('SELECT * FROM news LIMIT 5',function(err,rows){
+  con.query('SELECT * FROM news LIMIT 10',function(err,rows){
     var data = rows;     
       res.render('news',{
       loginStatus: loginStatus,           
@@ -75,10 +75,13 @@ router.post('/contact1', function (req, res) {
   var sql = {
     name: req.body.name,
     email: req.body.email,
+    tel: req.body.tel,
+    cell: req.body.cell,
+    address: req.body.address,
     content: req.body.content,
   };
-  var querySQL = 'INSERT INTO suggest(name,email,content,uptime) VALUES(?,?,?,NOW())';
-  con.query(querySQL, [sql.name, sql.email, sql.content], function (err, rows) {
+  var querySQL = 'INSERT INTO suggest(name,email,tel,cell,address,content,uptime) VALUES(?,?,?,?,?,?,NOW())';
+  con.query(querySQL, [sql.name, sql.tel, sql.cell, sql.address, sql.email, sql.content], function (err, rows) {
     if (err) { console.log(err); }
     res.render('contact', {
       loginStatus: loginStatus,    

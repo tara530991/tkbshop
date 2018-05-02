@@ -1,0 +1,143 @@
+mysql 相關指令
+
+
+*** mysql 步驟
+
+1. 進入mysql
+mysql -u root -p
+--一開始沒設密碼時按enter即可進入
+
+mysql -u tkbprog password yxul4dj4ej03xu3
+
+2. 設定密碼
+mysqladmin -u root password 'yxul4dj4ej03xu3'; 滋廖褲管裡
+
+3. 新增資料庫
+CREATE DATABASE bookSeat DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci;
+
+4. 新增使用者
+新增使用者，設定密碼
+CREATE USER 'admin'@'localhost' IDENTIFIED BY 'admin';
+
+並給予所有權限(設定mysql允許外部連線)
+GRANT ALL ON *.* TO 'admin'@'localhost' IDENTIFIED BY 'admin' WITH GRANT OPTION;
+FLUSH PRIVILEGES;
+
+mysql> GRANT 權限 ON 資料庫(或資料表) TO 帳號@主機 IDENTIFIED BY '密碼';
+
+5.修改mysql語系
+進入  /etc/my.cnf
+
+增加
+character-set-server=utf8
+collation-server=utf8_unicode_ci
+
+6. 重啟mysql
+sudo service mysql restart
+
+
+7. /etc/hosts
+
+
+
+
+***mysql其他指令
+
+*啟動mysql
+sudo service mysql start
+
+*停止mysql
+sudo service mysql stop
+
+
+
+
+
+
+
+###以下為進入到 MySQL 後的終端機指令：
+
+*列出所有資料庫，不同權限的帳號看到的結果不同
+show databases;
+
+*列出某資料庫裡所有的資料表
+show tables;
+
+*建立一個資料庫
+create database phpmysql;
+
+*刪除一個資料庫
+drop database phpmysql;
+
+*建立一個資料表
+create table phpmysql.bowler;
+
+*刪除一張資料表
+drop table phpmysql.bowler;
+
+*建立資料庫
+CREATE DATABASE tkbshop DEFAULT CHARSET utf8 COLLATE utf8_general_ci;
+
+*新增一筆資料
+INSERT INTO table_name ( field1, field2,...fieldN ) VALUES ( value1, value2,...valueN );
+
+*修改一筆資料
+UPDATE `table` SET `name` = 'newaurora'  WHERE `id` = '12'  ;
+
+*查看使用者資訊
+SELECT User,Host FROM mysql.user;
+
+*刪除使用者
+DROP USER tkb0003256@172.16.131.21;
+
+*更新資料庫資料(建議做完任何動作都要做這個)
+FLUSH PRIVILEGES;
+
+*取得檢索結果的隨機順序：
+SELECT * FROM tbl_name ORDER BY RAND();
+
+*可以使用ORDER BY RAND()結合 LIMIT 達到從資料行中隨機取樣：
+SELECT * FROM table1, table2 WHERE a=b AND c<d ORDER BY RAND() LIMIT 1000;
+
+注意，在WHERE語句中，WHERE每執行一次，RAND()就會被再計算一次。
+
+RAND()不能當作一個完美的亂數產生器(永遠不會重覆)，而是在不同MySQL版本平台之間可相容，可以快速產生ad hoc亂數的產生器。
+
+
+1. 資料表查詢
+SELECT  `欄位` FROM `資料表`;
+一般用法： SELECT * FROM `table` ;
+翻譯：選擇table這個資料表所有欄位的資料(就是全選啦!!)
+備註：星號代表所有欄位，在sql語法、指令中星號代表全部
+
+2. 資料表查詢 + 排序
+SELECT  `欄位` FROM `資料表` ORDER BY  `特定欄位` DESC ;
+一般用法： SELECT  `id`,`name`  FROM `table` ORDER BY  `特定欄位` DESC ;
+翻譯： 選取table資料表內的 id 和 name 這兩個欄位，並根據id這欄位做降冪排序(由高而低、由大到小、由z到a)
+備註：ASC則是(由低而高、由小到大、由a到z)，與DESC相反
+
+3. 資料表查詢 + 查詢條件
+SELECT  `欄位` FROM `資料表` WHERE  `特定欄位` = 數字 ;
+一般用法： SELECT  *  FROM `table` WHERE  `id` = 363 ;
+翻譯： 在table資料表內的尋找 id 欄位的內容是 363 且將 所有欄位的資料都取出來
+SELECT  `欄位` FROM `資料表` WHERE  `特定欄位` LIKE  字串 ;
+一般用法： SELECT  `id`,`name`  FROM `table` WHERE  `name` LIKE  'admin' ;
+ 翻譯： 在table資料表內的尋找 name 欄位的內容是 admin 且將 id 和 name 這兩個欄位都取出來
+SELECT  `欄位` FROM `資料表` WHERE  `特定欄位` LIKE  %字串% ;
+一般用法： SELECT  `id`,`name`  FROM `table` WHERE  `name` LIKE  %'adm'% ;
+翻譯： 在table資料表內的尋找 name 欄位的內容包含 adm ( admin 符合、administrator 也符合) 且將 id 和 name 這兩個欄位都取出來
+
+備註：數字形態比對用 = (也可以用 > 、 < 、 >= 、 <=) ; 字串形態比對是使用 LIKE (LIKE 使用的是完全比對);字串如果需要模糊比對需要使用 %
+
+4. 新增(插入)一筆資料
+INSERT INTO `資料表`(`欄位1`,`欄位2`) VALUES ( '資料1' , '資料2' );
+一般用法： INSERT INTO `table`(`id`,`name`) VALUES ( '12' , 'stanley' );
+翻譯： 在 table 資料表內新增一筆資料 在 id 欄位內填入 12 ，在 name 欄位內填入 stanley
+備註：在新增一筆資料時，必須將所有欄位和值都填上，預設是空值的欄位值可改成''，且須注意資料表本身的欄位結構、儲存型態，例如： id 欄位禁止存入字串、設有primary屬性的欄位不得輸入空值
+
+5. 更新(修改)一筆資料
+UPDATE `資料表` SET `欄位2` = '資料2'  WHERE `欄位1` = '資料1'  ;
+一般用法：UPDATE `table` SET `name` = 'newaurora'  WHERE `id` = '12'  ;
+翻譯： 在 table 資料表內找出 id = 12 的資料，並將 name 欄位內的資料修改為 newaurora
+備註：更新資料時必須確定條件設定是否正確，如上例，會把資料表內 id 欄位裡是 12 的資料都找出來並修改成newaurora ，因此使用前必須注意條件判斷
+

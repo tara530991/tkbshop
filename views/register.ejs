@@ -2,10 +2,16 @@
 <html>
 <head>
     <title>註冊新會員</title>
+    <style>
+        #form {margin-left:400px;}
+        #form h2 {margin:0 0 2rem;}
+        #form span {display:inline-block;margin:0.5rem;}
+    </style>
 </head>
 <% include header %>
 <body>
-    <main>
+    <div></div>
+    <div id="form">
         <h2>註冊</h2>
         <div>
             <form action="/register1" method="POST">
@@ -26,6 +32,6 @@
             </form>
             <%- message %>
         </div>
-    </main>
+    </div>
 </body>
 </html>

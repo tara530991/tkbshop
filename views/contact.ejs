@@ -1,16 +1,19 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>聯絡我們</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" type="text/css" media="screen" href="main.css" />
-    <script src="main.js"></script>
+    <style>
+        #contact h2 {margin:0;}
+        #contact section{margin:0 250px;}
+        #contact>section>:last-child{margin:1rem 0 5rem;}
+        #suggest span {display:inline-block;margin:0.5rem;}        
+    </style>
 </head>
+<% include header %>
 <body>
     <main>
-        <section>
+    <div id="contact">
+        <section id="info">
             <h2>店家資訊</h2>
             <div class="map"></div>
             <div>
@@ -19,23 +22,55 @@
                 <span>營業時間：10：00-22：00</span>          
             </div>
         </section>
-        <section>
+        <section id="suggest">
             <h2>客戶反應意見欄</h2>
             <form action="contact1" method="POST">
-                <span>姓名：</span><input type="text" id="name"><br>
-                <span>電話：</span><input type="text" id="tel"><br>
-                <span>手機：</span><input type="text" id="cell"><br>
-                <span>Email：</span><input type="email" id="email"><br>
-                <span>地址：</span><input type="text" id="address"><br>
+                <span>姓名：</span><input type="text" id="name" name="name"><br>
+                <span>電話：</span><input type="text" id="tel" name="tel"><br>
+                <span>手機：</span><input type="text" id="cell" name="cell"><br>
+                <span>Email：</span><input type="email" id="email" name="email"><br>
+                <span>地址：</span><input type="text" id="address" name="address"><br>
                 <span>內容：</span>
                 <textarea name="content" id="content" cols="30" rows="10"></textarea>
-                <div></div><span>驗證碼：</span><input type="text" id="verify">
-                <input type="submit" value="送出">
+                <div id="code"></div><span>驗證碼：</span><input type="text" id="verify"><br>
+                <input id="sub" type="submit" value="送出">
             </form>
             <%- message %>
         </section>
          <!-- 自動回信
             親愛的小綠您好： 謝謝您寶貴的建議，我們會盡速與您連繫並回覆您的意見 TKB購物平台 感謝您 -->
+         </div>
     </main>
+    <script>
+        var code ; //在全局定义验证码
+//产生验证码
+window.onload = function createCode(){
+    code = "";
+    var codeLength = 4;//验证码的长度
+    var checkCode = document.getElementById("code");
+    var random = [0,1,2,3,4,5,6,7,8,9,'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R',
+        'S','T','U','V','W','X','Y','Z'];//随机数
+    for(var i = 0; i < codeLength; i++) {//循环操作
+        var index = Math.floor(Math.random()*36);//取得随机数的索引（0~35）
+        code += random[index];//根据索引取得随机数加到code上
+    }
+    checkCode.value = code;//把code值赋给验证码
+};
+//校验验证码
+function validate(){
+    var inputCode = document.getElementById("sub").value.toUpperCase(); //取得输入的验证码并转化为大写
+    if(inputCode.length <= 0) { //若输入的验证码长度为0
+        alert("请输入验证码！"); //则弹出请输入验证码
+    }
+    else if(inputCode != code ) { //若输入的验证码与产生的验证码不一致时
+        alert("验证码输入错误"); //则弹出验证码输入错误
+        createCode();//刷新验证码
+        document.getElementById("input").value = "";//清空文本框
+    }
+    else { //输入正确时
+        alert("^-^"); //弹出^-^
+    }
+}
+    </script>
 </body>
 </html>

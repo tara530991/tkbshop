@@ -25,7 +25,7 @@ router.post('/admin1', function (req, res) {
   req.session.admin = 1;
   if(account == admin){
     if (pass == admin){
-      req.session.admin++;
+      req.session.admin = 2;
       res.render('backend/index', {
         message: '<span>歡迎你，管理者</span>',
       });     
