@@ -40,19 +40,19 @@
                                         <% for(var i=0 ; i < data.length;i++) { %>
                                             <tr class="odd gradeX">
                                                 <td>
-                                                    <%=data[i].product %>
+                                                    <%=data[i].product_name %>
                                                 </td>
                                                 <td>
                                                     <%=data[i].price %>
                                                 </td>
-                                                <td id="ammount">
-                                                    <%=data[i].PRODUCT_AMOUNT %>
+                                                <td class="ammount">
+                                                    <%=data[i].amount %>
                                                 </td>
                                                 <td>
-                                                    <button id="add" onclick="add(<%=data[i].PRODUCT_AMOUNT %>)">+</button>
-                                                    <button id="cut" onclick="cut(<%=data[i].PRODUCT_AMOUNT %>)">-</button>
+                                                    <button class="add" onclick="add(<%=data[i].PRODUCT_AMOUNT %>)">+</button>
+                                                    <button class="cut" onclick="cut(<%=data[i].PRODUCT_AMOUNT %>)">-</button>
                                                 </td>
-                                                <td id="subtotal">
+                                                <td class="subtotal">
                                                     <%=data[i].subtotal %>                                                    
                                                 </td>
                                                 <td>
@@ -65,7 +65,7 @@
                                     </form>
                                 </table>
                                 <form action="/product/check" method="POST">
-                                   <div><span id="total">總價：<%=data[i].total %></span></div>
+                                   <div><span id="total">總價：</span></div>
                                     <button type="submit" id="check">進入結帳</button> 
                                 </form>
                                 
@@ -81,20 +81,68 @@
             <script>
                 $(function () {
 
-                });
+                
                 // function addToCart(productId) {
                 //     $("#product").val(productId);
                 // }
+                // var subtotal = 
+                var subPriceValue = $('.subtotal');
+                var subPriceString = subPriceValue.textContent;
+                var subPrice = new Array(subPriceString);
+                    console.log(subPriceString);   
+                
+                // for (var i = 0; i < subPriceValue.length; i++) {
+                //     var subPriceString = subPriceValue[i].textContent;
+                //     // var subPriceInt = parseInt(subPriceString);
+                //     var subPrice = new Array(subPriceString.length);
+                //     subPrice[i] = subPriceString[i];
+                //     var total = 0;
+                //     console.log(subPriceString);   
+                // }    
+                    
+                    // console.log(subPriceInt);
+                    // for(var i = 0; i < subPrice.length; i++){
+                    //     total += subPrice[i];
+                    //     console.log(total);   
+                    // }   
+                
+
+                function priceTotal(subtotal) {
+                    for (var i = 0; i < subtotal.length; i++) {
+                        var subtotal = new Array('.subtotal');
+                        total += subtotal;
+                    }
+                    return 
+                    console.log("total" + total);
+                }
+                // function priceTotal(subtotal){
+                //     var subtotal = $('.subtotal');
+                //     var total = 0;
+                //     for(var i=0 ;i < subtotal.length;i++){
+                //      total += subtotal;   
+                //     }
+
+                // }
+
+                // Array.prototype.sum = function () {
+                //         return this.reduce(function (partial, value) {
+                //             return partial + value;
+                //         })
+                //     };
+                //     [1, 4, 7, 2, 10].sum(); // 24
+
                 function add(PRODUCT_AMOUNT){
-                    var ammount = $('#ammount');
+                    var ammount = $('.ammount');
                     this.ammount = ammount + 1;
                     console.log(ammount);
                 }
                 function cut(PRODUCT_AMOUNT) {
-                    var ammount = $('#ammount');
+                    var ammount = $('.ammount');
                     this.ammount = ammount - 1;
                     console.log(ammount);
                 }
+                priceTotal();
+                });
             </script>
     </main>
 </body>

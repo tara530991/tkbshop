@@ -29,33 +29,26 @@ router.post('/addTocart', function (req, res) {
   var sql = {
     productId: req.body.productId,
   };
-  con.query('INSERT INTO cart_shopping (PRODUCT_ID) VALUE(?)', sql.productId, function (err, rows) {
+  var cartAdd = 'INSERT INTO cart_shopping (PRODUCT_ID) VALUE(?);';
+  con.query(cartAdd, sql.productId, function (err, rows) {
     var data = rows;
     if (err) {console.log(err);}
   })
   //合併顯示購物車與產品列表（檢視表）
-  var cartlist = 'SELECT ch.*,pd.* FROM cart_shopping ch LEFT JOIN tkbshop.product pd on ch.PRODUCT_ID = pd.id;';
-  con.query(cartlist, function (err, rows) {
+  var cartList = 'SELECT SUM(CH.PRODUCT_AMOUNT) AS amount , SUM(CH.PRODUCT_AMOUNT) * PD.price AS subtotal , PD.price, PD.product_name FROM cart_shopping CH LEFT JOIN product PD on CH.PRODUCT_ID = PD.id GROUP BY CH.PRODUCT_ID;';
+  con.query(cartList, function (err, rows) {
     var data = rows;
     console.log(data);
     if (err) {console.log(err);}
-   })
-  var cartsubtotal = 'SELECT SUM(PRODUCT_AMOUNT) as subtotal FROM cart_shopping GROUP BY PRODUCT_ID;';
-  con.query(cartsubtotal,function(err,rows){
-    var data = rows;
-    console.log(data);
-    if(err){console.log(err);}
-    
-  })
-  //product.product,product.price,product.category,
-  var cartIDsame = 'SELECT * WHERE (PRODUCT_ID,PRODUCT_ID) IN (SELECT * FROM cart_shopping DISTINCT PRODUCT_ID GROUP BY PRODUCT_ID);';
-  con.query(cartIDsame,function(err,rows){
-    var data = rows;
-    console.log(data);    
-    if (err) { console.log(err); }
+    // con.query('SELECT SUM(subtotal) AS total;', function (err, rows) {
+    //   // var total = rows;
+    //   // return total;
+    //   console.log(rows);
+    // });
     res.render('cart', {
       loginStatus: loginStatus,
       data: data,
+      // total:total,
       message: '',
     });
   });
