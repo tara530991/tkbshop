@@ -1,48 +1,77 @@
 var express = require('express');
 var router = express.Router();
-var mysql = require('mysql');
+var con = require('./sql');
 var events = require('events');
 var bodyParser = require('body-parser');
 var urlencodedParser = bodyParser.urlencoded({ extended: false });
 var multer = require('multer');
 var upload = multer({ dest: './public/upload/' });
+var moment = require('moment');
 
 //管理端
 router.get('/', function (req, res) {
+  var loginStatus = false;
+    req.session.admin = 1;  
+    if (req.session.admin > 1) {
+      loginStatus = true;
+    }
   res.render('backend/index',{
     message: "",
   });
 });
-router.post('/admin1', function (req, res) {
+
+router.post('/admin/login', function (req, res) {
+  var loginStatus = false;
+    req.session.admin = 1;  
+    if (req.session.admin > 1) {
+      loginStatus = true;
+    }
   var sql = {
     account: req.body.account,
     password: req.body.password,
   };
   console.log(sql);
-  var account = sql.account;
-  var pass = sql.password;
-  var admin = "admin";
-  req.session.admin = 1;
-  if(account == admin){
-    if (pass == admin){
+  if(sql.account == "admin"){
+    if (sql.password == "admin"){
       req.session.admin = 2;
       res.render('backend/index', {
+        loginStatus:loginStatus,
         message: '<span>歡迎你，管理者</span>',
       });     
-    }else{
+    }else if(sql.password !== "admin"){
       req.session.admin = 1;
       res.render('backend/index', {
+        loginStatus:loginStatus,        
         message: '<span>密碼錯誤</span>',
       });     
     }
-  }else{
+  }else if (sql.account !== "admin"){
     req.session.admin = 1;
     res.render('backend/index',{
+      loginStatus:loginStatus,      
       message: '<span>若非管理者，請離開</span>',
     });
   }
 });
+router.get('/admin/logout', function (req, res) {
+  loginStatus = false;
+  // 產生新的session
+  req.session.regenerate(function (err) {
+    if (err) {
+      console.log(err);
+      res.render('error');
+    }
+    req.session.admin = 0;  
+    res.render('backend/index');
+  });
+});
+
 router.get('/news-list', function (req, res) {
+  var loginStatus = false;
+    req.session.admin = 1;  
+    if (req.session.admin > 1) {
+      loginStatus = true;
+    }
   con.query('SELECT * FROM news',function(err,rows){
     var data = rows;
     if(err){
@@ -50,15 +79,26 @@ router.get('/news-list', function (req, res) {
     }
     res.render('backend/news',{
       data:data,
+      moment: moment,
     });
   });
 }); 
 router.get('/news-add', function (req, res) {
+  var loginStatus = false;
+    req.session.admin = 1;  
+    if (req.session.admin > 1) {
+      loginStatus = true;
+    }
   res.render('backend/newsadd',{
     message: '',
   });
 }); 
 router.post('/news-add1', urlencodedParser, function (req, res) {
+  var loginStatus = false;
+    req.session.admin = 1;  
+    if (req.session.admin > 1) {
+      loginStatus = true;
+    }
   var sql = {
     title: req.body.title,
     date: req.body.date,
@@ -76,8 +116,16 @@ router.post('/news-add1', urlencodedParser, function (req, res) {
     });
   });
 }); 
-router.get('/suggest/list', function (req, res) {
-  res.render('backend/suggest');
+router.get('/suggest-list', function (req, res) {
+  var loginStatus = false;
+    req.session.admin = 1;  
+    if (req.session.admin > 1) {
+      loginStatus = true;
+    }
+  res.render('backend/suggest',{
+    moment: moment,
+    message: '',    
+  });
 });
 
 module.exports = router;

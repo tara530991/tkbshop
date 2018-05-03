@@ -1,21 +1,30 @@
 var express = require('express');
 var router = express.Router();
-var mysql = require('mysql');
+var con = require('./sql');
 var events = require('events');
 var bodyParser = require('body-parser');
 var urlencodedParser = bodyParser.urlencoded({ extended: false });
 var multer = require('multer');
 var upload = multer({ dest: './public/upload/' });
-
+var moment = require('moment');
 
 //管理端
 router.get('/category-list', function (req, res) {
-  res.render('backend/category');
+    con.query('SELECT * FROM product_category ',function(err,rows){
+        var data = rows;
+        if(err){
+            console.log(err);
+        }
+        res.render('backend/category',{
+            data: data,
+            moment: moment,
+        });
+    });
 });
-router.get('/admin/category/add', function (req, res) {
+router.get('/category-add', function (req, res) {
   res.render('backend/categoryadd');
 });
-router.get('/admin/product-list', function (req, res) {
+router.get('/product-list', function (req, res) {
     con.query('SELECT * FROM product',function(err,rows){
         var data = rows;
         if(err){
@@ -23,6 +32,7 @@ router.get('/admin/product-list', function (req, res) {
         }
         res.render('backend/product',{
             data: data,
+            moment: moment,
         });
     });
 });
