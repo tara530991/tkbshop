@@ -6,6 +6,8 @@ var bodyParser = require('body-parser');
 var urlencodedParser = bodyParser.urlencoded({ extended: false });
 var multer = require('multer');
 var upload = multer({ dest: './public/upload/' });
+var moment = require('moment');
+
 
 //前端
 
@@ -115,6 +117,7 @@ router.get('/', function (req, res) {
       loginStatus: loginStatus,
       views: req.session.views,                             
       data: data,
+      moment:moment,
     });
   });  
 });

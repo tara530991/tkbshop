@@ -1,85 +1,16 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>訂單查詢</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" type="text/css" media="screen" href="main.css" />
-    <script src="main.js"></script>
+    <title>訂單查詢-後台管理</title>
 </head>
+<% include backheader %>
 <body>
-    <main>
-        <h2>訂單查詢</h2>
-         <!-- 預設的查詢結果以訂購日期排序，最新的訂單顯示在最上方 -->
-        <div>
-            <h3>查詢條件</h3>
-            <select name="factor" id="factor">
-                <option value="date">日期</option>
-                <option value="no">訂單編號</option>
-                <option value="buyer">訂購人</option>
-                <option value="recipient">收件人</option>
-            </select>
-            <form action="">
-                <input type="text">
-                <input type="submit" value="查詢">
-            </form>
+    <div class="col-lg-2 center">
+        <div class="panel panel-yellow">
+            <div class="panel-heading">
+                Coming soon
+            </div>
         </div>
-        <section>
-            <h3>訂單明細</h3>
-            <ul>
-                <li>
-                    <span>訂單編號</span>
-                    <span>訂購日期</span>
-                    <span>訂購人</span>
-                    <span>金額</span>
-                    <span>狀態</span>
-                    <button>商品明細</button>
-                    <button>付款資訊</button>
-                    <button>刪除</button>                 
-                </li>
-                <li>
-                    <span id="no"></span>
-                    <span id="date"></span>
-                    <span id="buyer"></span>
-                    <span id="total"></span>
-                    <span id="status"></span>
-                    <button>商品明細</button>
-                    <button>付款資訊</button>
-                    <button>刪除</button>
-                </li>
-            </ul>
-        </section>
-        <section>
-            <h3>商品明細</h3>
-            <ul>
-                <li>
-                    <span>商品名稱</span>
-                    <span>規格</span>
-                    <span>單價</span>
-                    <span>數量</span>
-                </li>
-                <li>
-                    <span id="product">商品名稱</span>
-                    <span id="format">規格</span>
-                    <span id="price">單價</span>
-                    <span id="amount">數量</span>
-                </li>
-            </ul>
-        </section>
-        <section>
-            <h3>付款資訊</h3>
-            <ul>
-                <li>
-                    <sapn>總行代號</sapn>
-                    <sapn>帳號</sapn>
-                </li>
-                <li>
-                    <span id="bankcode"></span>
-                    <span id="bankaccount"></span>
-                </li>
-            </ul>
-        </section>        
-    </main>
+    </div>
 </body>
 </html>

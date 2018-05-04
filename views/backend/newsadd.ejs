@@ -1,15 +1,11 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>新增最新消息</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" type="text/css" media="screen" href="main.css" />
-    <script src="main.js"></script>
+    <title>新增消息-後台管理</title>
 </head>
+<% include backheader %>
 <body>
-    <main>
+    <div class="addform">
         <h2>新增最新消息</h2>
         <section>
             <form action="/admin/news-add1" method="POST">
@@ -22,6 +18,6 @@
             </form>
             <%- message %>
         </section>
-    </main>
+    </div>
 </body>
 </html>

@@ -40,13 +40,12 @@ router.post('/addTocart', function (req, res) {
     var data = rows;
     console.log(data);
     if (err) {console.log(err);}
-<<<<<<< HEAD
+
     // con.query('SELECT SUM(subtotal) AS total;', function (err, rows) {
     //   // var total = rows;
     //   // return total;
     //   console.log(rows);
-    // });
-=======
+    // })
    })
   var cartsubtotal = 'SELECT SUM(PRODUCT_AMOUNT) as subtotal FROM cart_shopping GROUP BY PRODUCT_ID;';
   con.query(cartsubtotal,function(err,rows){
@@ -61,7 +60,6 @@ router.post('/addTocart', function (req, res) {
     var data = rows;
     console.log(data);    
     if (err) { console.log(err); }
->>>>>>> 4a573a59511599162d8529dadef5b0d2c1cf7f84
     res.render('cart', {
       loginStatus: loginStatus,
       data: data,
@@ -76,7 +74,6 @@ router.get('/cart', function (req, res) {
   if (req.session.email) {
     loginStatus = true;
   }
-  
   var cartlist = 'SELECT ch.*,pd.product,pd.price,pd.category FROM tkbshop.cart_shopping ch LEFT JOIN tkbshop.product pd on ch.PRODUCT_ID = pd.id;'
   con.query(cartlist,function(err,rows){
     var data = rows;
