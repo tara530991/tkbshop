@@ -35,17 +35,17 @@
                                         <div><%- message %></div>
                                         <form action="/member/logout" method="get">
                                             <input type="submit" value="登出" class="btn btn-lg btn-warning btn-block">
+                                        </form>
                                             <button class="btn btn-lg btn-primary btn-block"><a href="/member">會員中心</a></button>
                                             <button class="btn btn-lg btn-primary btn-block"><a href="/">回到首頁</a></button>
-                                        </form>
                                     <% }%>
                                 <% } else if(loginStatus == true){ %>
                                 <div><%- message %></div>
                                     <form action="/member/logout" method="get">
                                         <input type="submit" value="登出" class="btn btn-lg btn-warning btn-block">
+                                    </form>
                                         <button class="btn btn-lg btn-primary btn-block"><a href="/member">會員中心</a></button>
                                         <button class="btn btn-lg btn-primary btn-block"><a href="/">回到首頁</a></button>
-                                    </form>
                                 <% } %>
                                 <!-- Change this to a button or input when using this as a form -->
                             </fieldset>

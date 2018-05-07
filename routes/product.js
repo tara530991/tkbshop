@@ -6,6 +6,7 @@ var bodyParser = require('body-parser');
 var urlencodedParser = bodyParser.urlencoded({ extended: false });
 var multer = require('multer');
 var upload = multer({ dest: './public/upload/' });
+var loginStatus = false;
 
 //前端
 router.get('/', function (req, res) {
@@ -17,6 +18,7 @@ router.get('/', function (req, res) {
     var data = rows;
     res.render('product',{
       loginStatus: loginStatus,     
+      username: req.session.username,                                          
       data : data,
     });
   })
@@ -62,6 +64,7 @@ router.post('/addTocart', function (req, res) {
     if (err) { console.log(err); }
     res.render('cart', {
       loginStatus: loginStatus,
+      username: req.session.username,                                          
       data: data,
       // total:total,
       message: '',
@@ -81,6 +84,7 @@ router.get('/cart', function (req, res) {
     if(err){console.log(err);}
     res.render('cart',{
       loginStatus: loginStatus,
+      username: req.session.username,                                          
       message: '<sapn>尚未登入，請先進行<a href="/member/login">登入</a></sapn>',       
       data:data,
     });
@@ -113,6 +117,7 @@ router.get('/order', function (req, res) {
     var data = rows;
     res.render('order', {
       loginStatus: loginStatus,           
+      username: req.session.username,                                          
       data: data,
     });
   });

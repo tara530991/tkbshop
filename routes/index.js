@@ -8,6 +8,7 @@ var urlencodedParser = bodyParser.urlencoded({ extended: false });
 var multer = require('multer');
 var upload = multer({ dest: './public/upload/' });
 var moment = require('moment');
+var loginStatus = false;
 
 // 在每一個請求被處理之前都會執行的middleware
 router.use(function (req, res, next) {
@@ -23,11 +24,6 @@ router.use(function (req, res, next) {
 //   res.render('app');
 // });
 
-
-module.exports = function (app) {
-  require('./product')(app);
-
-};
 router.get('/', function (req, res) { 
   var loginStatus = false ;
   if (req.session.email){
@@ -35,9 +31,9 @@ router.get('/', function (req, res) {
   } 
   res.render('index', { 
     loginStatus: loginStatus,
-    views: req.session.views,
-    data: req.session.username,
+    username: req.session.username,
   });
+
   console.log(req.session.username);
   console.log(req.session.views);
 });
@@ -46,6 +42,7 @@ router.get('/news', function (req, res) {
   if (req.session.email) {
     loginStatus = true;
   }
+  console.log(loginStatus);
   con.query('SELECT * FROM news LIMIT 10',function(err,rows){
     var data = rows;     
       res.render('news',{
@@ -53,6 +50,7 @@ router.get('/news', function (req, res) {
       views: req.session.views,
       data:data,
       moment: moment,
+      username:req.session.username,
       });
     })
 });
