@@ -21,10 +21,17 @@
                         DataTables Advanced Tables
                     </div>
                     <!-- /.panel-heading -->
-                    <form action="/product/addTocart" method="POST">
+                    <form action="/product/addToCart" method="POST">
                         <input type="hidden" id="product" name="productId" />
                         <div class="panel-body">
                             <table width="100%" class="table table-striped table-bordered table-hover" id="dataTables-example">
+                                <div>
+                                    <span>排序方式</span>
+                                    <select name="sort" id="sort">
+                                        <option value="priceToUp">售價(由低至高)</option>
+                                        <option value="priceToDown">售價(由高至低)</option>
+                                    </select>
+                                </div>
                                 <thead>
                                     <tr>
                                         <th>圖片</th>
@@ -42,7 +49,7 @@
                                                 <%=data[i].pic %>
                                             </td>
                                             <td>
-                                                <%=data[i].product %>
+                                                <%=data[i].product_name %>
                                             </td>
                                             <td>
                                                 <%=data[i].description %>

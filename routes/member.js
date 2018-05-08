@@ -60,12 +60,12 @@ router.post('/login1', function (req, res) {
             // return req.session.email;          
             console.log("登入資訊：" + req.session.views);            
             console.log("登入帳戶：" + email);            
-            res.render('toList', {
+            res.render('toIndex', {
               loginStatus: true,
               username: req.session.username,              
               views: req.session.views,              
               data: data,
-              message: username +" 歡迎你",
+              message: "登入成功\n" + username + "歡迎你",
             });
           console.log("登入狀態：" + loginStatus);
         } else if (data.length > 0){
@@ -91,12 +91,12 @@ router.post('/login1', function (req, res) {
     console.log("已經為登入狀態");
     con.query("SELECT * FROM member WHERE email='" + sql.email + "'", sql, function (err, rows) {    
       var data = rows;      
-      res.render('toList', {
+      res.render('toIndex', {
       loginStatus: true,        
       username: req.session.username,                      
       views: req.session.views,      
       data:data,
-      message: "<span>已經是登入狀態囉</span>",
+      message: "已經是登入狀態囉",
       }); 
     }); 
   }
@@ -110,7 +110,7 @@ router.get('/logout', function (req, res) {
       res.render('error');
     }
     req.session.views = 0;
-    res.render('toList',{
+    res.render('toIndex',{
       loginStatus : false,
       message: '已成功登出',      
     });
@@ -167,7 +167,7 @@ router.post('/edit1', function (req, res) {
     if(err){
       console.log(err);
     }
-    res.render('toList',{
+    res.render('toIndex',{
       loginStatus: loginStatus,           
       username: req.session.username,                                                        
       message:"成功更新資料",
@@ -209,7 +209,7 @@ router.post('/newpass1', function (req, res) {
         if (err) {
           console.log(err);
         }
-        res.render('toList', {
+        res.render('toIndex', {
           loginStatus: loginStatus,
           username: req.session.username,                                                        
           message: '已成功變更密碼！'

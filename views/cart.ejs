@@ -2,6 +2,9 @@
 <html>
 <head></head>
     <title>購物車</title>
+    <style>
+        #total,#total+span{font-size:2rem;}
+    </style>
 </head>
 <% include header %>
 <body>
@@ -14,14 +17,14 @@
                 <!-- /.col-lg-12 -->
             </div>
             <!-- /.row -->
-            <div class="row">
+            <div class="row wrap1280">
                 <div class="col-lg-12">
                     <div class="panel panel-default">
                         <div class="panel-heading">
-                            
+                             DataTables Advanced Tables
                         </div>
                         <!-- /.panel-heading -->
-                            <input type="hidden" id="product" name="productId" />
+                            <input type="hidden" id="productId" name="productId" />
                             <div class="panel-body">
                                 <table width="100%" class="table table-striped table-bordered table-hover" id="dataTables-example">
                                     <thead>
@@ -34,7 +37,7 @@
                                             <th>刪除產品</th>
                                         </tr>
                                     </thead>
-                                    <form action="/deleteproduct" method="GET">
+                                    <form id="mainForm" action="/deleteproduct" method="GET">
                                     <% if (loginStatus == false) { %>
                                         <tbody>
                                         <% for(var i=0 ; i < data.length;i++) { %>
@@ -45,30 +48,25 @@
                                                 <td>
                                                     <%=data[i].price %>
                                                 </td>
-                                                <td class="ammount">
+                                                <td class="amount">
                                                     <%=data[i].amount %>
                                                 </td>
                                                 <td>
-                                                    <button class="add" onclick="add(<%=data[i].PRODUCT_AMOUNT %>)">+</button>
-                                                    <button class="cut" onclick="cut(<%=data[i].PRODUCT_AMOUNT %>)">-</button>
+                                                    <input type="button" class="add" value="+" onclick="add("+<%=data[i].id %>+")" \>
+                                                    <input type="button" class="add" value="-" onclick="cut(this)">
                                                 </td>
-                                                <td class="subtotal">
-                                                    <%=data[i].subtotal %>                                                    
-                                                </td>
+                                                <td class="subtotal"><%=data[i].subtotal %></td>
                                                 <td>
-                                                    <button type="submit" onclick="deleteProduct(<%=data[i].id %>)">刪除</button>
+                                                    <input type="button" id="delete" onclick="deleteAction()" value="刪除">
                                                 </td>
                                             </tr>
                                         <% } %>
                                     <% } %>
                                     </tbody>
-                                    </form>
                                 </table>
-                                <form action="/product/check" method="POST">
-                                   <div><span id="total">總價：</span></div>
-                                    <button type="submit" id="check">進入結帳</button> 
+                                   <div><span id="total">總價：</span><span>元</span></div>
+                                    <button type="submit" id="check" onclick="checkAction()">進入結帳</button>
                                 </form>
-                                
                                 <!-- /.table-responsive -->
                             </div>
                         <!-- /.panel-body -->
@@ -78,72 +76,73 @@
                 <!-- /.col-lg-12 -->
             </div>
             <!-- /.row -->
-            <script>
-                $(function () {
+    <script>
+        $(function () {
+            var totalAdd = 0;
+            //取值方法2
+            // console.log(mathScore);
+            // for(var i=0;i<mathScore.length;i++){
+            //     console.log(mathScore[i]);
+            // }
+            $(".subtotal").each(function(i){
+                totalAdd += parseInt($(this).text());
+                // var total = [];
+                return totalAdd;     
+            });
+            $("#total").append("<span>" + totalAdd + "</span>");
+            console.log($("#productId").text());
+        });
 
-                
-                // function addToCart(productId) {
-                //     $("#product").val(productId);
-                // }
-                // var subtotal = 
-                var subPriceValue = $('.subtotal');
-                var subPriceString = subPriceValue.textContent;
-                var subPrice = new Array(subPriceString);
-                    console.log(subPriceString);   
-                
-                // for (var i = 0; i < subPriceValue.length; i++) {
-                //     var subPriceString = subPriceValue[i].textContent;
-                //     // var subPriceInt = parseInt(subPriceString);
-                //     var subPrice = new Array(subPriceString.length);
-                //     subPrice[i] = subPriceString[i];
-                //     var total = 0;
-                //     console.log(subPriceString);   
-                // }    
-                    
-                    // console.log(subPriceInt);
-                    // for(var i = 0; i < subPrice.length; i++){
-                    //     total += subPrice[i];
-                    //     console.log(total);   
-                    // }   
-                
+        function add(i) {
+            // console.log(amount);
+            // console.log($(i).parent().parent());
+            console.log($(i).parent().parent().find('.amount').text());
+            $(i).parent().parent().find('.amount').text().replace(' ','');
+            console.log($(i).parent().parent().find('.amount').text().replace(' ', ''));
+            amount = 　parseInt($(i).parent().parent().find('.amount').text())+1;
+            console.log(amount);
+            $(i).parent().parent().find('.amount').text(amount);
+            // for(var i =0;i < data.length;i++){
+            //     var amount = $('.amount').eq(i);
 
-                function priceTotal(subtotal) {
-                    for (var i = 0; i < subtotal.length; i++) {
-                        var subtotal = new Array('.subtotal');
-                        total += subtotal;
-                    }
-                    return 
-                    console.log("total" + total);
-                }
-                // function priceTotal(subtotal){
-                //     var subtotal = $('.subtotal');
-                //     var total = 0;
-                //     for(var i=0 ;i < subtotal.length;i++){
-                //      total += subtotal;   
-                //     }
+            // }
+            // console.log(parseInt($('.amount').text()));
 
-                // }
+            // console.log(amount);
+            
+            // amount =　amount + 1;
+            // $('.amount').text(amount);
+        }
 
-                // Array.prototype.sum = function () {
-                //         return this.reduce(function (partial, value) {
-                //             return partial + value;
-                //         })
-                //     };
-                //     [1, 4, 7, 2, 10].sum(); // 24
+        function cut() {
 
-                function add(PRODUCT_AMOUNT){
-                    var ammount = $('.ammount');
-                    this.ammount = ammount + 1;
-                    console.log(ammount);
-                }
-                function cut(PRODUCT_AMOUNT) {
-                    var ammount = $('.ammount');
-                    this.ammount = ammount - 1;
-                    console.log(ammount);
-                }
-                priceTotal();
-                });
-            </script>
-    </main>
+        }
+
+        function deleteAction() {
+            $("#mainForm").attr("action","deleteproduct");
+        }
+        function checkAction() {
+            $("#mainForm").attr("action","check");
+            $("#mainForm").attr("method","post");
+        }
+        function addProduct(id){
+            
+        }
+        
+        $.ajax({
+            url:"/product/addToCart",
+            data:$("#productId").text(),
+            type:"POST",
+            dataType:"json",
+            success:function(message){
+                alert(message);
+            },
+            error:function(xhr,ajaxOptions,thrownError){
+                alert(xhr.status);
+                alert(thrownError);
+            }
+        })
+
+    </script>
 </body>
 </html>

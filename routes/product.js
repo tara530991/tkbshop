@@ -23,7 +23,7 @@ router.get('/', function (req, res) {
     });
   })
 });
-router.post('/addTocart', function (req, res) {
+router.post('/addToCart', function (req, res) {
   var loginStatus = false;
   if (req.session.email) {
     loginStatus = true;
@@ -37,36 +37,19 @@ router.post('/addTocart', function (req, res) {
     if (err) {console.log(err);}
   })
   //合併顯示購物車與產品列表（檢視表）
-  var cartList = 'SELECT SUM(CH.PRODUCT_AMOUNT) AS amount , SUM(CH.PRODUCT_AMOUNT) * PD.price AS subtotal , PD.price, PD.product_name FROM cart_shopping CH LEFT JOIN product PD on CH.PRODUCT_ID = PD.id GROUP BY CH.PRODUCT_ID;';
+  var cartList = 'SELECT SUM(CH.PRODUCT_AMOUNT) '+
+  ' AS amount , SUM(CH.PRODUCT_AMOUNT) * PD.price AS subtotal '+
+  ' , PD.price, PD.product_name,PD.ID AS PD_ID FROM ' +
+  ' cart_shopping CH LEFT JOIN product PD '+ 
+  ' on CH.PRODUCT_ID = PD.id GROUP BY CH.PRODUCT_ID;';
   con.query(cartList, function (err, rows) {
     var data = rows;
     console.log(data);
     if (err) {console.log(err);}
-
-    // con.query('SELECT SUM(subtotal) AS total;', function (err, rows) {
-    //   // var total = rows;
-    //   // return total;
-    //   console.log(rows);
-    // })
-   })
-  var cartsubtotal = 'SELECT SUM(PRODUCT_AMOUNT) as subtotal FROM cart_shopping GROUP BY PRODUCT_ID;';
-  con.query(cartsubtotal,function(err,rows){
-    var data = rows;
-    console.log(data);
-    if(err){console.log(err);}
-    
-  })
-  //product.product,product.price,product.category,
-  var cartIDsame = 'SELECT * WHERE (PRODUCT_ID) IN (SELECT * FROM cart_shopping DISTINCT PRODUCT_ID GROUP BY PRODUCT_ID);';
-  con.query(cartIDsame,function(err,rows){
-    var data = rows;
-    console.log(data);    
-    if (err) { console.log(err); }
-    res.render('cart', {
+    res.render('toAddCart', {
       loginStatus: loginStatus,
-      username: req.session.username,                                          
+      username: req.session.username,
       data: data,
-      // total:total,
       message: '',
     });
   });
@@ -77,10 +60,10 @@ router.get('/cart', function (req, res) {
   if (req.session.email) {
     loginStatus = true;
   }
-  var cartlist = 'SELECT ch.*,pd.product,pd.price,pd.category FROM tkbshop.cart_shopping ch LEFT JOIN tkbshop.product pd on ch.PRODUCT_ID = pd.id;'
+  var cartlist = 'SELECT SUM(CH.PRODUCT_AMOUNT) AS amount , SUM(CH.PRODUCT_AMOUNT) * PD.price AS subtotal , PD.price, PD.product_name FROM cart_shopping CH LEFT JOIN product PD on CH.PRODUCT_ID = PD.id GROUP BY CH.PRODUCT_ID;';
   con.query(cartlist,function(err,rows){
     var data = rows;
-    console.log(data);
+    // console.log(data);
     if(err){console.log(err);}
     res.render('cart',{
       loginStatus: loginStatus,
@@ -89,8 +72,12 @@ router.get('/cart', function (req, res) {
       data:data,
     });
   })
-  
 });
+
+router.post('/deleteproduct', function (req, res) {
+
+});
+
 router.get('/check', function (req, res) {
   var loginStatus = false;
 
