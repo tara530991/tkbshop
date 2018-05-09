@@ -102,20 +102,15 @@
             amount = 　parseInt($(i).parent().parent().find('.amount').text())+1;
             console.log(amount);
             $(i).parent().parent().find('.amount').text(amount);
-            // for(var i =0;i < data.length;i++){
-            //     var amount = $('.amount').eq(i);
-
-            // }
-            // console.log(parseInt($('.amount').text()));
-
-            // console.log(amount);
-            
-            // amount =　amount + 1;
-            // $('.amount').text(amount);
         }
 
         function cut() {
-
+            console.log($(i).parent().parent().find('.amount').text());
+            $(i).parent().parent().find('.amount').text().replace(' ', '');
+            console.log($(i).parent().parent().find('.amount').text().replace(' ', ''));
+            amount = parseInt($(i).parent().parent().find('.amount').text()) - 1;
+            console.log(amount);
+            $(i).parent().parent().find('.amount').text(amount);
         }
 
         function deleteAction() {
@@ -125,16 +120,13 @@
             $("#mainForm").attr("action","check");
             $("#mainForm").attr("method","post");
         }
-        function addProduct(id){
-            
-        }
         
         $.ajax({
             url:"/product/addToCart",
             data:$("#productId").text(),
             type:"POST",
             dataType:"json",
-            success:function(message){
+            success:function(data,textStatus){
                 alert(message);
             },
             error:function(xhr,ajaxOptions,thrownError){

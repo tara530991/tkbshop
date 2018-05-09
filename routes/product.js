@@ -14,7 +14,14 @@ router.get('/', function (req, res) {
   if (req.session.email) {
     loginStatus = true;
   } 
-  con.query('SELECT * FROM product',function(err,rows){
+  console.log(req.query.sort);
+  sqlQuery = ' SELECT * FROM product ';
+  if (req.params.sort==1){
+    sqlQuery +=' ORDER BY price ASC ';
+  } else if (req.params.sort == 2){
+    sqlQuery += ' ORDER BY price DESC ';
+  }
+  con.query(sqlQuery,function(err,rows){
     var data = rows;
     res.render('product',{
       loginStatus: loginStatus,     
@@ -60,7 +67,12 @@ router.get('/cart', function (req, res) {
   if (req.session.email) {
     loginStatus = true;
   }
-  var cartlist = 'SELECT SUM(CH.PRODUCT_AMOUNT) AS amount , SUM(CH.PRODUCT_AMOUNT) * PD.price AS subtotal , PD.price, PD.product_name FROM cart_shopping CH LEFT JOIN product PD on CH.PRODUCT_ID = PD.id GROUP BY CH.PRODUCT_ID;';
+  var cartlist = 'SELECT SUM(CH.PRODUCT_AMOUNT) AS amount , ' +
+  ' SUM(CH.PRODUCT_AMOUNT) * PD.price AS subtotal , ' +
+  ' PD.price, PD.product_name FROM cart_shopping CH ' +
+  ' LEFT JOIN product PD on CH.PRODUCT_ID = PD.id ' +
+  ' GROUP BY CH.PRODUCT_ID;';
+
   con.query(cartlist,function(err,rows){
     var data = rows;
     // console.log(data);
