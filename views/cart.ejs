@@ -120,21 +120,6 @@
             $("#mainForm").attr("action","check");
             $("#mainForm").attr("method","post");
         }
-        
-        $.ajax({
-            url:"/product/addToCart",
-            data:$("#productId").text(),
-            type:"POST",
-            dataType:"json",
-            success:function(data,textStatus){
-                alert(message);
-            },
-            error:function(xhr,ajaxOptions,thrownError){
-                alert(xhr.status);
-                alert(thrownError);
-            }
-        })
-
     </script>
 </body>
 </html>

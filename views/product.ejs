@@ -23,13 +23,14 @@
                     <!-- /.panel-heading -->
                     <form id="mainForm" action="/product/addToCart" method="POST">
                         <input type="hidden" id="product" name="productId" />
-                        <div class="panel-body">
+                        <div id="panBody" class="panel-body">
                             <table id="product_list" width="100%" class="table table-striped table-bordered table-hover" id="dataTables-example">
                                 <div>
                                     <span>排序方式</span>
                                     <select name="sort" id="sort">
-                                        <option value="1"　onchange="sort()">售價(由低至高)</option>
-                                        <option value="2"　onchange="sort()">售價(由高至低)</option>
+                                        <option value="">請選擇條件</option>
+                                        <option value="1">售價(由低至高)</option>
+                                        <option value="2">售價(由高至低)</option>
                                     </select>
                                     <!-- <input hidden type="button" id="sortbtn" value="更改條件"> -->
                                 </div>
@@ -80,38 +81,32 @@
         </div>
         <!-- /.row -->
 <script>
-    $(function () {
+    $(function () {             
+        $("#sort").on("change",function(){
+            $.ajax({
+                url: "/product/ajaxProduct",
+                type: "GET",
+                dataType: "text",
+                data: { //傳router要判別用的值回去
+                    sort: $("#sort").val(),  
+                },
+                error:function (err) {
+                    console.log(err);
+                },
+                 success: function (data) {
+                    $("#product_list").remove();
+                    $("#panBody").append(data);
+                 }
+            })
+            // // 发送请求:
+            request.open('GET', '/product/ajaxProduct');
+            request.send();
+        })
 
     });
 
     function addToCart(productId){
         $("#product").val(productId);
-    }
-
-    function sort(){
-        // $("#mainForm").attr('action','/product');
-        // $("#mainForm").attr('method','GET');
-        // $("#sortbtn").submit();
-        console.log($("#sort>option").val());
-        
-        xmlhttp = new XMLHttpRequest();
-
-
-        // $('#mainform').ajaxForm({
-        $.ajax({
-            url:"/product",
-            type:"GET",
-            data:("#sort>option").val(),
-            dataType:"json",
-            seccess:function(data){
-                alert(data);
-            },
-            error:function(){
-                alert(err);
-            },
-        })
-        xmlhttp.open("GET", "/product?=t" + Math.random(), true);
-        xmlhttp.send();
     }
 
 </script>

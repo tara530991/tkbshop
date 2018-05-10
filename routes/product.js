@@ -16,11 +16,6 @@ router.get('/', function (req, res) {
   } 
   console.log(req.query.sort);
   sqlQuery = ' SELECT * FROM product ';
-  if (req.params.sort==1){
-    sqlQuery +=' ORDER BY price ASC ';
-  } else if (req.params.sort == 2){
-    sqlQuery += ' ORDER BY price DESC ';
-  }
   con.query(sqlQuery,function(err,rows){
     var data = rows;
     res.render('product',{
@@ -30,6 +25,29 @@ router.get('/', function (req, res) {
     });
   })
 });
+
+router.get('/ajaxProduct', function (req, res) {
+  var loginStatus = false;
+  if (req.session.email) {
+    loginStatus = true;
+  } 
+  // console.log(req.query.sort);
+  sqlQuery = ' SELECT * FROM product ';
+  if (req.query.sort==1){
+    sqlQuery +=' ORDER BY price ASC ';
+  } else if (req.query.sort == 2){
+    sqlQuery += ' ORDER BY price DESC ';
+  }
+  con.query(sqlQuery,function(err,rows){
+    var data = rows;
+    res.render('ajax_product',{
+      loginStatus: loginStatus,     
+      username: req.session.username,                                          
+      data : data,
+    });
+  })
+});
+
 router.post('/addToCart', function (req, res) {
   var loginStatus = false;
   if (req.session.email) {
