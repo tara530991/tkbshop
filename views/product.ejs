@@ -81,7 +81,8 @@
         </div>
         <!-- /.row -->
 <script>
-    $(function () {             
+    $(function () {        
+        var request = new XMLHttpRequest();     
         $("#sort").on("change",function(){
             $.ajax({
                 url: "/product/ajaxProduct",
@@ -90,13 +91,13 @@
                 data: { //傳router要判別用的值回去
                     sort: $("#sort").val(),  
                 },
+                success: function (data) {
+                    $("#product_list").remove();
+                    $("#panBody").append(data);
+                },
                 error:function (err) {
                     console.log(err);
                 },
-                 success: function (data) {
-                    $("#product_list").remove();
-                    $("#panBody").append(data);
-                 }
             })
             // // 发送请求:
             request.open('GET', '/product/ajaxProduct');

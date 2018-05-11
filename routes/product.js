@@ -56,8 +56,23 @@ router.post('/addToCart', function (req, res) {
   var sql = {
     productId: req.body.productId,
   };
-  var cartAdd = 'INSERT INTO cart_shopping (PRODUCT_ID) VALUE(?);';
-  con.query(cartAdd, sql.productId, function (err, rows) {
+  sqlQuery = ' SELECT PD.id, PD.product_name, PD.price, CH.PRODUCT_AMOUNT, ' +
+    ' CASE CH.PRODUCT_ID ' +
+    ' WHEN PD.id THEN "1" ' +
+    ' ELSE "0" ' +
+    ' END AS product_status, ' +
+    ' (PD.price * CH.PRODUCT_AMOUNT) AS subtotal ' +
+    ' FROM cart_shopping CH, product PD; ';
+  if ('product_status' == 0){
+    sqlQuery += 'INSERT INTO cart_shopping (PRODUCT_ID) VALUE(?);';
+  } else if ('product_status' == 1){
+    sqlQuery += 
+  }
+
+  // var cartCase = 'SELECT CASE PRODUCT_ID WHEN PRODUCT_ID=PRODUCT_ID THEN "true" ELSE "FALSE" FROM ;'
+  // var cartUpdate = 'SELECT PRODUCT_ID  FROM cart_shopping  '
+  
+  con.query(sqlQuery, sql.productId, function (err, rows) {
     var data = rows;
     if (err) {console.log(err);}
   })
@@ -100,6 +115,30 @@ router.get('/cart', function (req, res) {
       username: req.session.username,                                          
       message: '<sapn>尚未登入，請先進行<a href="/member/login">登入</a></sapn>',       
       data:data,
+    });
+  })
+});
+
+router.get('/ajaxCart', function (req, res) {
+  var loginStatus = false;
+  if (req.session.email) {
+    loginStatus = true;
+  }
+  var cartlist = 'SELECT SUM(CH.PRODUCT_AMOUNT) AS amount , ' +
+    ' SUM(CH.PRODUCT_AMOUNT) * PD.price AS subtotal , ' +
+    ' PD.price, PD.product_name FROM cart_shopping CH ' +
+    ' LEFT JOIN product PD on CH.PRODUCT_ID = PD.id ' +
+    ' GROUP BY CH.PRODUCT_ID;';
+
+  con.query(cartlist, function (err, rows) {
+    var data = rows;
+    // console.log(data);
+    if (err) { console.log(err); }
+    res.render('ajax_cart', {
+      loginStatus: loginStatus,
+      username: req.session.username,
+      message: '<sapn>尚未登入，請先進行<a href="/member/login">登入</a></sapn>',
+      data: data,
     });
   })
 });

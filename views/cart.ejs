@@ -25,10 +25,12 @@
                         </div>
                         <!-- /.panel-heading -->
                             <input type="hidden" id="productId" name="productId" />
-                            <div class="panel-body">
-                                <table width="100%" class="table table-striped table-bordered table-hover" id="dataTables-example">
+                            <div id="panBody" class="panel-body">
+                                <table id="cart_list" width="100%" class="table table-striped table-bordered table-hover" id="dataTables-example">
+                                    <form id="mainForm" action="/deleteproduct" method="GET">
                                     <thead>
                                         <tr>
+                                            <th>編號</th>
                                             <th>品名</th>
                                             <th>售價</th>
                                             <th>購買數量</th>
@@ -37,11 +39,14 @@
                                             <th>刪除產品</th>
                                         </tr>
                                     </thead>
-                                    <form id="mainForm" action="/deleteproduct" method="GET">
                                     <% if (loginStatus == false) { %>
                                         <tbody>
                                         <% for(var i=0 ; i < data.length;i++) { %>
+                                            
                                             <tr class="odd gradeX">
+                                                <td class="pd_id">
+                                                    <%=data[i].id%>
+                                                </td>
                                                 <td>
                                                     <%=data[i].product_name %>
                                                 </td>
@@ -51,8 +56,8 @@
                                                 <td class="amount">
                                                     <%=data[i].amount %>
                                                 </td>
-                                                <td>
-                                                    <input type="button" class="add" value="+" onclick="add("+<%=data[i].id %>+")" \>
+                                                <td id="amountBtn">
+                                                    <input type="button" class="add" value="+" onclick="add(this)" />
                                                     <input type="button" class="add" value="-" onclick="cut(this)">
                                                 </td>
                                                 <td class="subtotal"><%=data[i].subtotal %></td>
@@ -79,6 +84,7 @@
     <script>
         $(function () {
             var totalAdd = 0;
+            var request = new XMLHttpRequest();
             //取值方法2
             // console.log(mathScore);
             // for(var i=0;i<mathScore.length;i++){
@@ -91,28 +97,82 @@
             });
             $("#total").append("<span>" + totalAdd + "</span>");
             console.log($("#productId").text());
+         
+            // $('#amountBtn').on('click',function(){
+            //     var stringAmount = $('.amount').text().replace(/ /g, ',');
+            //     var changeAmount = 0;
+            //     for(var i = 0;i < stringAmount.length;i++){
+            //         changeAmount[i] = parseInt(stringAmount[i]);
+            //     }
+            //     console.log("change:" + changeAmount);
+            //     alert("change:" + changeAmount);
+            //     $.ajax({
+            //         url:'product/ajax_cart',
+            //         method:'GET',
+            //         dataType:'text',
+            //         data:{
+            //             amount:$('.amount').text().replace(/ /g,''),
+            //         },
+            //         success:function(){
+            //             $('#cart_list').remove(data);
+            //             $('#panBody').append(data);
+            //         },
+            //         err:function(){
+            //             console.log(err);
+            //         }
+            //     })
+            //     request.open('GET','/product/ajaxCart');
+            //     request.send();
+            // })            
+
         });
 
-        function add(i) {
+        function updateAmount(id,amount) {
+
+            $.ajax({
+                url: 'product/ajax_cart',
+                method: 'GET',
+                dataType: 'text',
+                data: {
+                    id:id,
+                    amount: amount
+                },
+                success: function () {
+                    $('#cart_list').remove(data);
+                    $('#panBody').append(data);
+                },
+                err: function () {
+                    console.log(err);
+                }
+            })
+            request.open('GET', '/product/ajaxCart');
+            request.send();
+        }
+
+        function add(id,i) {
             // console.log(amount);
             // console.log($(i).parent().parent());
             console.log($(i).parent().parent().find('.amount').text());
             $(i).parent().parent().find('.amount').text().replace(' ','');
             console.log($(i).parent().parent().find('.amount').text().replace(' ', ''));
-            amount = 　parseInt($(i).parent().parent().find('.amount').text())+1;
+            amount = parseInt($(i).parent().parent().find('.amount').text())+1;
             console.log(amount);
+            updateAmount(id, amount);
             $(i).parent().parent().find('.amount').text(amount);
+            
         }
 
-        function cut() {
+        function cut(id,i) {
             console.log($(i).parent().parent().find('.amount').text());
             $(i).parent().parent().find('.amount').text().replace(' ', '');
             console.log($(i).parent().parent().find('.amount').text().replace(' ', ''));
             amount = parseInt($(i).parent().parent().find('.amount').text()) - 1;
             console.log(amount);
+            updateAmount(id, amount);
             $(i).parent().parent().find('.amount').text(amount);
         }
 
+        //改變form的action與method，這樣一個檔案終究不會有多個form了
         function deleteAction() {
             $("#mainForm").attr("action","deleteproduct");
         }
