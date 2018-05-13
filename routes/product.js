@@ -56,43 +56,38 @@ router.post('/addToCart', function (req, res) {
   var sql = {
     productId: req.body.productId,
   };
-  sqlQuery = ' SELECT PD.id, PD.product_name, PD.price, CH.PRODUCT_AMOUNT, ' +
-    ' CASE CH.PRODUCT_ID ' +
-    ' WHEN PD.id THEN "1" ' +
-    ' ELSE "0" ' +
-    ' END AS product_status, ' +
-    ' (PD.price * CH.PRODUCT_AMOUNT) AS subtotal ' +
-    ' FROM cart_shopping CH, product PD; ';
-  if ('product_status' == 0){
-    sqlQuery += 'INSERT INTO cart_shopping (PRODUCT_ID) VALUE(?);';
-  } else if ('product_status' == 1){
-    sqlQuery += 
-  }
-
-  // var cartCase = 'SELECT CASE PRODUCT_ID WHEN PRODUCT_ID=PRODUCT_ID THEN "true" ELSE "FALSE" FROM ;'
-  // var cartUpdate = 'SELECT PRODUCT_ID  FROM cart_shopping  '
-  
-  con.query(sqlQuery, sql.productId, function (err, rows) {
+  console.log(sql.productId);
+  sqlQuery = 'SELECT * FROM cart_shopping WHERE PRODUCT_ID=(?);';
+  con.query(sqlQuery,sql.productId,function(err,rows){
     var data = rows;
-    if (err) {console.log(err);}
+    var length = data.length;
+    console.log("資料長度：" + length);    
+    if (length == 0){
+      sqlQuery = 'INSERT INTO cart_shopping (PRODUCT_ID) VALUE(?);';
+      con.query(sqlQuery,sql.productId,function(err,rows){
+        var data = rows;
+        if (err) {console.log(err);}
+        res.render('toAddCart', {
+          loginStatus: loginStatus,
+          username: req.session.username,
+          data: data,
+          message: '',
+        })
+      })
+    } else if (length > 0){
+      sqlQuery = 'UPDATE cart_shopping SET PRODUCT_AMOUNT=PRODUCT_AMOUNT+1 WHERE PRODUCT_ID=(?);'
+      con.query(sqlQuery,sql.productId,function(err,rows){
+        var data = rows;
+        if (err) {console.log(err);}
+        res.render('toAddCart', {
+          loginStatus: loginStatus,
+          username: req.session.username,
+          data: data,
+          message: '',
+        })
+      })   
+    }
   })
-  //合併顯示購物車與產品列表（檢視表）
-  var cartList = 'SELECT SUM(CH.PRODUCT_AMOUNT) '+
-  ' AS amount , SUM(CH.PRODUCT_AMOUNT) * PD.price AS subtotal '+
-  ' , PD.price, PD.product_name,PD.ID AS PD_ID FROM ' +
-  ' cart_shopping CH LEFT JOIN product PD '+ 
-  ' on CH.PRODUCT_ID = PD.id GROUP BY CH.PRODUCT_ID;';
-  con.query(cartList, function (err, rows) {
-    var data = rows;
-    console.log(data);
-    if (err) {console.log(err);}
-    res.render('toAddCart', {
-      loginStatus: loginStatus,
-      username: req.session.username,
-      data: data,
-      message: '',
-    });
-  });
 });
 
 router.get('/cart', function (req, res) {
