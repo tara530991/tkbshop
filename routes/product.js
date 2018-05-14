@@ -95,15 +95,13 @@ router.get('/cart', function (req, res) {
   if (req.session.email) {
     loginStatus = true;
   }
-  var cartlist = 'SELECT SUM(CH.PRODUCT_AMOUNT) AS amount , ' +
-  ' SUM(CH.PRODUCT_AMOUNT) * PD.price AS subtotal , ' +
-  ' PD.price, PD.product_name FROM cart_shopping CH ' +
-  ' LEFT JOIN product PD on CH.PRODUCT_ID = PD.id ' +
-  ' GROUP BY CH.PRODUCT_ID;';
-
-  con.query(cartlist,function(err,rows){
+  var sqlQuery = 'SELECT SUM(PD.price * CH.PRODUCT_AMOUNT) AS subtotal,' +
+    ' CH.PRODUCT_AMOUNT, PD.price, PD.product_name, PD.ID AS PD_ID' +
+    ' FROM cart_shopping CH LEFT JOIN product PD on CH.PRODUCT_ID=PD.id' +
+    ' GROUP BY CH.PRODUCT_ID, PD.id,CH.PRODUCT_AMOUNT;';
+  con.query(sqlQuery,function(err,rows){
     var data = rows;
-    // console.log(data);
+    console.log(data);
     if(err){console.log(err);}
     res.render('cart',{
       loginStatus: loginStatus,
@@ -114,32 +112,68 @@ router.get('/cart', function (req, res) {
   })
 });
 
-router.get('/ajaxCart', function (req, res) {
+router.get('/ajaxUpdateCart', function (req, res) {
   var loginStatus = false;
   if (req.session.email) {
     loginStatus = true;
   }
-  var cartlist = 'SELECT SUM(CH.PRODUCT_AMOUNT) AS amount , ' +
-    ' SUM(CH.PRODUCT_AMOUNT) * PD.price AS subtotal , ' +
-    ' PD.price, PD.product_name FROM cart_shopping CH ' +
-    ' LEFT JOIN product PD on CH.PRODUCT_ID = PD.id ' +
-    ' GROUP BY CH.PRODUCT_ID;';
-
-  con.query(cartlist, function (err, rows) {
+  var sql = {
+    amount: parseInt(req.query.amount),
+    productId: parseInt(req.query.productId),
+  }
+  console.log(sql.productId);
+  console.log(sql.amount);
+  var sqlQuery = 'UPDATE cart_shopping SET PRODUCT_AMOUNT = ? WHERE PRODUCT_ID= ? ;';
+  con.query(sqlQuery,[sql.amount, sql.productId], function (err, rows) {
     var data = rows;
-    // console.log(data);
     if (err) { console.log(err); }
-    res.render('ajax_cart', {
-      loginStatus: loginStatus,
-      username: req.session.username,
-      message: '<sapn>尚未登入，請先進行<a href="/member/login">登入</a></sapn>',
-      data: data,
+    var sqlQuery = 'SELECT SUM(PD.price * CH.PRODUCT_AMOUNT) AS subtotal,' +
+      ' CH.PRODUCT_AMOUNT, PD.price, PD.product_name, PD.ID AS PD_ID' +
+      ' FROM cart_shopping CH LEFT JOIN product PD on CH.PRODUCT_ID=PD.id' +
+      ' GROUP BY CH.PRODUCT_ID, PD.id,CH.PRODUCT_AMOUNT;';
+    con.query(sqlQuery, function (err, rows) {
+      var data = rows;
+      console.log(data);
+      if (err) { console.log(err); }
+      res.render('ajax_cart', {
+        loginStatus: loginStatus,
+        username: req.session.username,
+        message: '<sapn>尚未登入，請先進行<a href="/member/login">登入</a></sapn>',
+        data: data,
+      })
     });
   })
 });
 
-router.post('/deleteproduct', function (req, res) {
-
+router.post('/ajaxDeleteCart', function (req, res) {
+  var loginStatus = false;
+  if (req.session.email) {
+    loginStatus = true;
+  }
+  var sql = {
+    productId: req.body.productId,
+  }
+  console.log(typeof(sql.productId));
+  var sqlQuery = 'DELETE FROM cart_shopping WHERE PRODUCT_ID= ? ;';
+  con.query(sqlQuery, sql.productId, function (err, rows) {
+    var data = rows;
+    if (err) { console.log(err); }
+    var sqlQuery = 'SELECT SUM(PD.price * CH.PRODUCT_AMOUNT) AS subtotal,' +
+      ' CH.PRODUCT_AMOUNT, PD.price, PD.product_name, PD.ID AS PD_ID' +
+      ' FROM cart_shopping CH LEFT JOIN product PD on CH.PRODUCT_ID=PD.id' +
+      ' GROUP BY CH.PRODUCT_ID, PD.id,CH.PRODUCT_AMOUNT;';
+    con.query(sqlQuery, function (err, rows) {
+      var data = rows;
+      console.log(data);
+      if (err) { console.log(err); }
+      res.render('ajax_cart', {
+        loginStatus: loginStatus,
+        username: req.session.username,
+        message: '<sapn>尚未登入，請先進行<a href="/member/login">登入</a></sapn>',
+        data: data,
+      })
+    });
+  })
 });
 
 router.get('/check', function (req, res) {

@@ -29,17 +29,13 @@ router.post('/login1', function (req, res) {
   req.session.views = 1;
   if (req.session.email) {    
     loginStatus = true;
+    req.session.views++;
   }
   var sql = {
     email:req.body.email,
     password:req.body.password,
   };
-  // if (loginStatus == true && req.session.views == 2){
-  //   res.render('login', {
-  //     loginStatus: true,
-  //     data: data,
-  //     views: req.session.views,});
-  // }else 
+  console.log("views " + req.session.views);
   if (loginStatus == false){
     con.query("SELECT * FROM member WHERE email='" + sql.email + "'",sql,function(err,rows){
       var data = rows;
@@ -51,7 +47,7 @@ router.post('/login1', function (req, res) {
         var username = data[0].username;
         var password = data[0].password;
         if (email==sql.email && pass==sql.password){
-            req.session.views = 2;
+            req.session.views ++;
             loginStatus = true;
             req.session.email = email;          
             req.session.username = username;
@@ -110,6 +106,9 @@ router.get('/logout', function (req, res) {
       res.render('error');
     }
     req.session.views = 0;
+    loginStatus = false;
+    console.log(req.session.views);    
+    console.log(loginStatus);    
     res.render('toIndex',{
       loginStatus : false,
       message: '已成功登出',      
