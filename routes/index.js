@@ -25,10 +25,12 @@ router.use(function (req, res, next) {
 // });
 
 router.get('/', function (req, res) { 
-  var loginStatus = false ;
-  if (req.session.email){
+  if (req.session.email) {
     loginStatus = true;
-  } 
+    req.session.views++;
+  }else{
+    req.session.views = 1;
+  }
   res.render('index', { 
     loginStatus: loginStatus,
     username: req.session.username,
@@ -38,9 +40,11 @@ router.get('/', function (req, res) {
   console.log(req.session.views);
 });
 router.get('/news', function (req, res) {
-  var loginStatus = false;
   if (req.session.email) {
     loginStatus = true;
+    req.session.views++;
+  }else{
+    req.session.views = 1;
   }
   console.log(loginStatus);
   con.query('SELECT * FROM news LIMIT 10',function(err,rows){
@@ -55,9 +59,11 @@ router.get('/news', function (req, res) {
     })
 });
 router.get('/contact', function (req, res) {
-  var loginStatus = false;
   if (req.session.email) {
     loginStatus = true;
+    req.session.views++;
+  }else{
+    req.session.views = 1;
   }
   res.render('contact', {
     loginStatus: loginStatus,
@@ -89,9 +95,11 @@ router.post('/contact1', function (req, res) {
   })
 });
 router.get('/qa', function (req, res) {
-  var loginStatus = false;
   if (req.session.email) {
     loginStatus = true;
+    req.session.views++;
+  }else{
+    req.session.views = 1;
   }
   res.render('qa',{
     loginStatus: loginStatus,    

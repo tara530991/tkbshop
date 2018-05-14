@@ -10,10 +10,12 @@ var loginStatus = false;
 
 //前端
 router.get('/', function (req, res) {
-  var loginStatus = false;
   if (req.session.email) {
     loginStatus = true;
-  } 
+    req.session.views++;
+  }else{
+    req.session.views = 1;
+  }
   console.log(req.query.sort);
   sqlQuery = ' SELECT * FROM product ';
   con.query(sqlQuery,function(err,rows){
@@ -27,10 +29,12 @@ router.get('/', function (req, res) {
 });
 
 router.get('/ajaxProduct', function (req, res) {
-  var loginStatus = false;
   if (req.session.email) {
     loginStatus = true;
-  } 
+    req.session.views++;
+  }else{
+    req.session.views = 1;
+  }
   // console.log(req.query.sort);
   sqlQuery = ' SELECT * FROM product ';
   if (req.query.sort==1){
@@ -49,9 +53,11 @@ router.get('/ajaxProduct', function (req, res) {
 });
 
 router.post('/addToCart', function (req, res) {
-  var loginStatus = false;
   if (req.session.email) {
     loginStatus = true;
+    req.session.views++;
+  }else{
+    req.session.views = 1;
   }
   var sql = {
     productId: req.body.productId,
@@ -91,9 +97,11 @@ router.post('/addToCart', function (req, res) {
 });
 
 router.get('/cart', function (req, res) {
-  var loginStatus = false;
   if (req.session.email) {
     loginStatus = true;
+    req.session.views++;
+  }else{
+    req.session.views = 1;
   }
   var sqlQuery = 'SELECT SUM(PD.price * CH.PRODUCT_AMOUNT) AS subtotal,' +
     ' CH.PRODUCT_AMOUNT, PD.price, PD.product_name, PD.ID AS PD_ID' +
@@ -113,9 +121,11 @@ router.get('/cart', function (req, res) {
 });
 
 router.get('/ajaxUpdateCart', function (req, res) {
-  var loginStatus = false;
   if (req.session.email) {
     loginStatus = true;
+    req.session.views++;
+  }else{
+    req.session.views = 1;
   }
   var sql = {
     amount: parseInt(req.query.amount),
@@ -146,9 +156,11 @@ router.get('/ajaxUpdateCart', function (req, res) {
 });
 
 router.post('/ajaxDeleteCart', function (req, res) {
-  var loginStatus = false;
   if (req.session.email) {
     loginStatus = true;
+    req.session.views++;
+  }else{
+    req.session.views = 1;
   }
   var sql = {
     productId: req.body.productId,
@@ -177,18 +189,21 @@ router.post('/ajaxDeleteCart', function (req, res) {
 });
 
 router.get('/check', function (req, res) {
-  var loginStatus = false;
-
   if (req.session.email) {
     loginStatus = true;
+    req.session.views++;
+  }else{
+    req.session.views = 1;
   }
   res.render('check',{
   });
 });
 router.get('/checkover', function (req, res) {
-  var loginStatus = false;
   if (req.session.email) {
     loginStatus = true;
+    req.session.views++;
+  }else{
+    req.session.views = 1;
   }
   res.render('checkover',{
   });

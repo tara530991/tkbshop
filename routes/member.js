@@ -16,6 +16,9 @@ router.get('/login', function (req, res) {
   req.session.views = 1;  
   if (req.session.email) {
     loginStatus = true;
+    req.session.views++;
+  }else{
+    req.session.views = 1;
   }
   res.render('login',{
     loginStatus: loginStatus,     
@@ -27,9 +30,11 @@ router.get('/login', function (req, res) {
 
 router.post('/login1', function (req, res) {
   req.session.views = 1;
-  if (req.session.email) {    
+  if (req.session.email) {
     loginStatus = true;
     req.session.views++;
+  }else{
+    req.session.views = 1;
   }
   var sql = {
     email:req.body.email,
@@ -123,7 +128,10 @@ router.get('/', function (req, res) {
   console.log("登入者：" + req.session.username); 
   if (req.session.email) {
     loginStatus = true;
-  } 
+    req.session.views++;
+  }else{
+    req.session.views = 1;
+  }
   con.query("SELECT * FROM member WHERE email='" + req.session.email + "'", function (err, rows) {
     var data = rows;
     if (err) {
@@ -142,6 +150,9 @@ router.get('/', function (req, res) {
 router.get('/edit', function (req, res) {
   if (req.session.email) {
     loginStatus = true;
+    req.session.views++;
+  }else{
+    req.session.views = 1;
   }
   con.query("SELECT * FROM member WHERE email='" + req.session.email + "'", function (err, rows) {
     var data = rows;
@@ -177,6 +188,9 @@ router.post('/edit1', function (req, res) {
 router.get('/newpass', function (req, res) {
   if (req.session.email) {
     loginStatus = true;
+    req.session.views++;
+  }else{
+    req.session.views = 1;
   }
   console.log(req.session.password);
   if (!loginStatus) {
@@ -233,6 +247,9 @@ router.post('/newpass1', function (req, res) {
 router.get('/register', function (req, res) {
   if (req.session.email) {
     loginStatus = true;
+    req.session.views++;
+  }else{
+    req.session.views = 1;
   }
   res.render('register',{
     loginStatus: loginStatus,        
