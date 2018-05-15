@@ -16,31 +16,34 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `order`
+-- Table structure for table `product`
 --
 
-DROP TABLE IF EXISTS `order`;
+DROP TABLE IF EXISTS `product`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `order` (
-  `num` int(10) NOT NULL,
-  `date` date DEFAULT NULL,
-  `buyer` varchar(10) DEFAULT NULL,
-  `total` int(10) DEFAULT NULL,
-  `status` varchar(5) DEFAULT NULL,
-  `bankcode` int(5) DEFAULT NULL,
-  `bankaccount` varchar(20) DEFAULT NULL,
-  PRIMARY KEY (`num`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+CREATE TABLE `product` (
+  `product_id` int(11) NOT NULL AUTO_INCREMENT,
+  `product_name` varchar(20) DEFAULT NULL,
+  `price` int(10) DEFAULT NULL,
+  `stock` int(10) DEFAULT NULL,
+  `description` varchar(45) DEFAULT NULL,
+  `pic` varchar(45) DEFAULT NULL,
+  `ident` varchar(10) DEFAULT NULL,
+  `sort` varchar(5) DEFAULT NULL,
+  `category` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`product_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `order`
+-- Dumping data for table `product`
 --
 
-LOCK TABLES `order` WRITE;
-/*!40000 ALTER TABLE `order` DISABLE KEYS */;
-/*!40000 ALTER TABLE `order` ENABLE KEYS */;
+LOCK TABLES `product` WRITE;
+/*!40000 ALTER TABLE `product` DISABLE KEYS */;
+INSERT INTO `product` VALUES (7,'重乳酪蛋糕',50,2,'濃醇香','cheese.jpg','AA00001','2','蛋糕'),(8,'戚風蛋糕',70,26,'柔軟蓬鬆','cheese.jpg','AA00002','6','蛋糕'),(9,'黑森林蛋糕',40,18,'甜蜜滋味','cheese.jpg','AA00003','7','蛋糕'),(10,'紅絲絨',120,9,'高貴不貴','cheese.jpg','AA00004','4','蛋糕');
+/*!40000 ALTER TABLE `product` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -52,4 +55,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-05-11 17:59:53
+-- Dump completed on 2018-05-15 17:41:41

@@ -16,35 +16,35 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `suggest`
+-- Table structure for table `member`
 --
 
-DROP TABLE IF EXISTS `suggest`;
+DROP TABLE IF EXISTS `member`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `suggest` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `uptime` date DEFAULT NULL,
-  `status` varchar(5) DEFAULT NULL,
-  `lasttime` date DEFAULT NULL,
-  `name` varchar(10) DEFAULT NULL,
-  `content` varchar(200) DEFAULT NULL,
-  `tel` varchar(45) DEFAULT NULL,
+CREATE TABLE `member` (
+  `member_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `username` varchar(10) DEFAULT NULL,
   `email` varchar(45) DEFAULT NULL,
-  `cell` varchar(45) DEFAULT NULL,
+  `password` varchar(15) DEFAULT NULL,
+  `cell` varchar(15) DEFAULT NULL,
+  `tel` varchar(15) DEFAULT NULL,
+  `birth` date DEFAULT NULL,
   `address` varchar(45) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
+  `allow` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`member_id`),
+  UNIQUE KEY `email_UNIQUE` (`email`)
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `suggest`
+-- Dumping data for table `member`
 --
 
-LOCK TABLES `suggest` WRITE;
-/*!40000 ALTER TABLE `suggest` DISABLE KEYS */;
-INSERT INTO `suggest` VALUES (9,'2018-05-02',NULL,NULL,'孫小花','HEY JUDE','095456464','023333554','台東市長濱鄉','fofof@gmail.com');
-/*!40000 ALTER TABLE `suggest` ENABLE KEYS */;
+LOCK TABLES `member` WRITE;
+/*!40000 ALTER TABLE `member` DISABLE KEYS */;
+INSERT INTO `member` VALUES (1,'黃佳誼','tara530991@gmail.com','gg2254','0912345678','0211116666','1994-05-05','台北市','1'),(5,'呂博緯','sss@gmail.com','8989','0944555666','0233335555','1987-04-12','台北市內湖區','1'),(6,'王孟瑄','44455@gmail.com','123456','09545646','0233338888','1994-05-21','全家就是你家','1'),(7,'陳思妤','rrere@gmail.com','9348','09266565','08546566','1996-02-05','台北市中正區','1'),(8,'許家蓉','ferer@gmail.com','216','094655482','0245648625','2010-01-08','台北市松山區','1'),(9,'蕭誌成','hehe@gmail.com','987654','0954564613','0233336464','2018-05-06','新北市永和區','1'),(12,'多拉a夢','les8182377@gmail.com','123456','0912345678','0211112222','1992-08-23','這是我的生日','1');
+/*!40000 ALTER TABLE `member` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -56,4 +56,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-05-11 17:59:53
+-- Dump completed on 2018-05-15 17:41:41

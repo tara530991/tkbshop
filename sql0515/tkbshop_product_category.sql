@@ -16,28 +16,28 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `cart_shopping`
+-- Table structure for table `product_category`
 --
 
-DROP TABLE IF EXISTS `cart_shopping`;
+DROP TABLE IF EXISTS `product_category`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `cart_shopping` (
-  `ID` int(11) NOT NULL AUTO_INCREMENT,
-  `PRODUCT_ID` int(11) DEFAULT NULL,
-  `PRODUCT_AMOUNT` int(5) DEFAULT '1',
-  PRIMARY KEY (`ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=367 DEFAULT CHARSET=utf8;
+CREATE TABLE `product_category` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `category` varchar(10) DEFAULT NULL,
+  `sort` varchar(5) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `cart_shopping`
+-- Dumping data for table `product_category`
 --
 
-LOCK TABLES `cart_shopping` WRITE;
-/*!40000 ALTER TABLE `cart_shopping` DISABLE KEYS */;
-INSERT INTO `cart_shopping` VALUES (365,7,1),(366,10,1);
-/*!40000 ALTER TABLE `cart_shopping` ENABLE KEYS */;
+LOCK TABLES `product_category` WRITE;
+/*!40000 ALTER TABLE `product_category` DISABLE KEYS */;
+INSERT INTO `product_category` VALUES (1,'蛋糕','2'),(2,'餅乾','3');
+/*!40000 ALTER TABLE `product_category` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -49,4 +49,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-05-11 17:59:53
+-- Dump completed on 2018-05-15 17:41:41

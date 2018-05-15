@@ -63,7 +63,7 @@
                                                 <%=data[i].stock %>
                                             </td>
                                             <td>
-                                                <button id="buy" onclick="addToCart(<%=data[i].id %>)">加入購物車</button>
+                                                <button id="buy" onclick="addToCart(<%=data[i].product_id %>)">加入購物車</button>
                                             </td>
                                         </tr>
                                     <% } %>
@@ -100,11 +100,12 @@
                 },
             })
         })
-
+        
     });
 
     function addToCart(productId){
         $("#product").val(productId);
+        console.log($("#product").val(productId));
     }
 
 </script>

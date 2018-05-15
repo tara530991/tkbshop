@@ -19,6 +19,7 @@
                         </div>
                         <div class="panel-body">
                             <fieldset>
+                                
                                 <form role="form" action="/member/login1" method="POST">
                                     <div class="form-group">
                                         <input class="form-control" placeholder="帳號（E-mail）" name="email" type="email" autofocus>
@@ -51,11 +52,13 @@
             </ul>
         </section>
         <section>
-            <span id="name">中文全名：<%= data[0].username %></span><br>
-            <span id="email">E-mail：<%= data[0].email %></span><br>
-            <span id="tel">室內電話：<%= data[0].tel %></span><br>
-            <span id="birth">生日：<%= moment(data[0].birth).format('YYYY-MM-DD') %></span><br>
-            <span id="address">地址：<%= data[0].address %></span>
+            <% for(var i=0 ; i < data.length;i++) { %>
+            <span id="name">中文全名：<%= data[i].username %></span><br>
+            <span id="email">E-mail：<%= data[i].email %></span><br>
+            <span id="tel">室內電話：<%= data[i].tel %></span><br>
+            <span id="birth">生日：<%= moment(data[i].birth).format('YYYY-MM-DD') %></span><br>
+            <span id="address">地址：<%= data[i].address %></span>
+            <% } %>  
         </section>
         <% } %>
     </div>

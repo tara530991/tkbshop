@@ -11,7 +11,6 @@
                 <th>刪除產品</th>
             </tr>
         </thead>
-        <% if (loginStatus == false) { %>
             <tbody>
                 <% for(var i=0 ; i < data.length;i++) { %>
                     <tr class="odd gradeX">
@@ -37,7 +36,6 @@
                     </tr>
                     <% } %>
             </tbody>
-         <% } %>
     </table>
     <div>
         <span id="total">總價：</span>

@@ -16,30 +16,30 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `suggest_status`
+-- Table structure for table `news`
 --
 
-DROP TABLE IF EXISTS `suggest_status`;
+DROP TABLE IF EXISTS `news`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `suggest_status` (
-  `status_id` int(11) NOT NULL AUTO_INCREMENT,
-  `sort` varchar(45) DEFAULT NULL,
-  `method` varchar(45) DEFAULT NULL,
-  `date` varchar(45) DEFAULT NULL,
-  `content` varchar(45) DEFAULT NULL,
-  PRIMARY KEY (`status_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+CREATE TABLE `news` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `title` varchar(25) DEFAULT NULL,
+  `date` date DEFAULT NULL,
+  `pic` varchar(45) DEFAULT NULL,
+  `content` text,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `suggest_status`
+-- Dumping data for table `news`
 --
 
-LOCK TABLES `suggest_status` WRITE;
-/*!40000 ALTER TABLE `suggest_status` DISABLE KEYS */;
-INSERT INTO `suggest_status` VALUES (1,'1','email','2018-02-06','感謝您的回饋，我們將了解情況後在行通知');
-/*!40000 ALTER TABLE `suggest_status` ENABLE KEYS */;
+LOCK TABLES `news` WRITE;
+/*!40000 ALTER TABLE `news` DISABLE KEYS */;
+INSERT INTO `news` VALUES (2,'哈囉大家好','2018-04-12','','hohohoh\r\n'),(3,'你好','2018-05-16',NULL,'你好嗎');
+/*!40000 ALTER TABLE `news` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -51,4 +51,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-05-11 17:59:53
+-- Dump completed on 2018-05-15 17:41:42

@@ -16,36 +16,30 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `member`
+-- Table structure for table `suggest_status`
 --
 
-DROP TABLE IF EXISTS `member`;
+DROP TABLE IF EXISTS `suggest_status`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `member` (
-  `MEMBER_ID` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `username` varchar(10) DEFAULT NULL,
-  `email` varchar(45) DEFAULT NULL,
-  `password` varchar(15) DEFAULT NULL,
-  `cell` varchar(15) DEFAULT NULL,
-  `tel` varchar(15) DEFAULT NULL,
-  `birth` date DEFAULT NULL,
-  `address` varchar(45) DEFAULT NULL,
-  `allow` varchar(45) DEFAULT NULL,
-  PRIMARY KEY (`MEMBER_ID`),
-  UNIQUE KEY `email_UNIQUE` (`email`),
-  UNIQUE KEY `password_UNIQUE` (`password`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
+CREATE TABLE `suggest_status` (
+  `status_id` int(11) NOT NULL AUTO_INCREMENT,
+  `sort` varchar(45) DEFAULT NULL,
+  `method` varchar(45) DEFAULT NULL,
+  `date` varchar(45) DEFAULT NULL,
+  `content` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`status_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `member`
+-- Dumping data for table `suggest_status`
 --
 
-LOCK TABLES `member` WRITE;
-/*!40000 ALTER TABLE `member` DISABLE KEYS */;
-INSERT INTO `member` VALUES (1,'黃佳誼','tara530991@gmail.com','gg2254','0912345678','0211116666','1994-05-05','台北市','1'),(5,'呂博緯','sss@gmail.com','8989','0944555666','0233335555','1987-04-12','台北市內湖區','1'),(6,'王孟瑄','44455@gmail.com','123456','09545646','0233338888','1994-05-21','全家就是你家','1'),(7,'陳思妤','rrere@gmail.com','9348','09266565','08546566','1996-02-05','台北市中正區','1'),(8,'許家蓉','ferer@gmail.com','216','094655482','0245648625','2010-01-08','台北市松山區','1');
-/*!40000 ALTER TABLE `member` ENABLE KEYS */;
+LOCK TABLES `suggest_status` WRITE;
+/*!40000 ALTER TABLE `suggest_status` DISABLE KEYS */;
+INSERT INTO `suggest_status` VALUES (1,'1','email','2018-02-06','感謝您的回饋，我們將了解情況後在行通知');
+/*!40000 ALTER TABLE `suggest_status` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -57,4 +51,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-05-11 17:59:53
+-- Dump completed on 2018-05-15 17:41:42

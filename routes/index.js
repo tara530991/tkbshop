@@ -8,7 +8,7 @@ var urlencodedParser = bodyParser.urlencoded({ extended: false });
 var multer = require('multer');
 var upload = multer({ dest: './public/upload/' });
 var moment = require('moment');
-var loginStatus = false;
+var loginStatus;
 
 // 在每一個請求被處理之前都會執行的middleware
 router.use(function (req, res, next) {
@@ -29,24 +29,26 @@ router.get('/', function (req, res) {
     loginStatus = true;
     req.session.views++;
   }else{
-    req.session.views = 1;
+    loginStatus = false;
+    req.session.views = 1; 
   }
+  console.log("登入狀態：" + loginStatus);
+  console.log("登入次數：" + req.session.views); 
   res.render('index', { 
     loginStatus: loginStatus,
     username: req.session.username,
   });
-
-  console.log(req.session.username);
-  console.log(req.session.views);
 });
 router.get('/news', function (req, res) {
   if (req.session.email) {
     loginStatus = true;
     req.session.views++;
   }else{
+    loginStatus = false;
     req.session.views = 1;
   }
-  console.log(loginStatus);
+  console.log("登入狀態：" + loginStatus);
+  console.log("登入次數：" + req.session.views); 
   con.query('SELECT * FROM news LIMIT 10',function(err,rows){
     var data = rows;     
       res.render('news',{
@@ -63,19 +65,19 @@ router.get('/contact', function (req, res) {
     loginStatus = true;
     req.session.views++;
   }else{
+    loginStatus = false;
     req.session.views = 1;
   }
+  console.log("登入狀態：" + loginStatus);
+  console.log("登入次數：" + req.session.views); 
   res.render('contact', {
     loginStatus: loginStatus,
+    username: req.session.username,    
     views: req.session.views,
     message: "",
   });
 });
 router.post('/contact1', function (req, res) {
-  var loginStatus = false;
-  if (req.session.email) {
-    loginStatus = true;
-  }
   var sql = {
     name: req.body.name,
     email: req.body.email,
@@ -89,7 +91,8 @@ router.post('/contact1', function (req, res) {
     if (err) { console.log(err); }
     res.render('contact', {
       loginStatus: loginStatus,    
-      views: req.session.views,                                   
+      views: req.session.views,
+      username: req.session.username,                                         
       message: "十分感謝您的回復"
     });
   })
@@ -99,10 +102,14 @@ router.get('/qa', function (req, res) {
     loginStatus = true;
     req.session.views++;
   }else{
+    loginStatus = false;
     req.session.views = 1;
   }
+  console.log("登入狀態：" + loginStatus);
+  console.log("登入次數：" + req.session.views); 
   res.render('qa',{
-    loginStatus: loginStatus,    
+    loginStatus: loginStatus,
+    username: req.session.username,        
     views: req.session.views,
   });
 });

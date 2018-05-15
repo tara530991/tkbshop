@@ -13,13 +13,15 @@ var loginStatus = false;
 
 //===============登入登出===============
 router.get('/login', function (req, res) {
-  req.session.views = 1;  
   if (req.session.email) {
     loginStatus = true;
     req.session.views++;
   }else{
+    loginStatus = false;
     req.session.views = 1;
   }
+  console.log("登入狀態：" + loginStatus);
+  console.log("登入次數：" + req.session.views); 
   res.render('login',{
     loginStatus: loginStatus,     
     username: req.session.username,     
@@ -29,23 +31,14 @@ router.get('/login', function (req, res) {
 });
 
 router.post('/login1', function (req, res) {
-  req.session.views = 1;
-  if (req.session.email) {
-    loginStatus = true;
-    req.session.views++;
-  }else{
-    req.session.views = 1;
-  }
   var sql = {
     email:req.body.email,
     password:req.body.password,
   };
-  console.log("views " + req.session.views);
   if (loginStatus == false){
     con.query("SELECT * FROM member WHERE email='" + sql.email + "'",sql,function(err,rows){
       var data = rows;
-      console.log(data);
-      console.log("登入資訊筆數: " + data.length);
+      // console.log(data);
       if (data.length > 0 && data[0].email && data[0].password){
         var email = data[0].email;
         var pass = data[0].password;
@@ -56,10 +49,9 @@ router.post('/login1', function (req, res) {
             loginStatus = true;
             req.session.email = email;          
             req.session.username = username;
-            req.session.password = password;
-            // return req.session.username;          
-            // return req.session.email;          
-            console.log("登入資訊：" + req.session.views);            
+            req.session.password = password;      
+            console.log("登入狀態：" + loginStatus);
+            console.log("登入次數：" + req.session.views);         
             console.log("登入帳戶：" + email);            
             res.render('toIndex', {
               loginStatus: true,
@@ -68,7 +60,6 @@ router.post('/login1', function (req, res) {
               data: data,
               message: "登入成功\n" + username + "歡迎你",
             });
-          console.log("登入狀態：" + loginStatus);
         } else if (data.length > 0){
           req.session.views = 1;
           console.log("登入失敗");
@@ -112,8 +103,8 @@ router.get('/logout', function (req, res) {
     }
     req.session.views = 0;
     loginStatus = false;
-    console.log(req.session.views);    
-    console.log(loginStatus);    
+    console.log("登入狀態：" + loginStatus);
+    console.log("登入次數：" + req.session.views);     
     res.render('toIndex',{
       loginStatus : false,
       message: '已成功登出',      
@@ -130,8 +121,11 @@ router.get('/', function (req, res) {
     loginStatus = true;
     req.session.views++;
   }else{
+    loginStatus = false;
     req.session.views = 1;
   }
+  console.log("登入狀態：" + loginStatus);
+  console.log("登入次數：" + req.session.views); 
   con.query("SELECT * FROM member WHERE email='" + req.session.email + "'", function (err, rows) {
     var data = rows;
     if (err) {
@@ -152,8 +146,11 @@ router.get('/edit', function (req, res) {
     loginStatus = true;
     req.session.views++;
   }else{
+    loginStatus = false;
     req.session.views = 1;
   }
+  console.log("登入狀態：" + loginStatus);
+  console.log("登入次數：" + req.session.views); 
   con.query("SELECT * FROM member WHERE email='" + req.session.email + "'", function (err, rows) {
     var data = rows;
     res.render('memberedit',{
@@ -190,8 +187,11 @@ router.get('/newpass', function (req, res) {
     loginStatus = true;
     req.session.views++;
   }else{
+    loginStatus = false;
     req.session.views = 1;
   }
+  console.log("登入狀態：" + loginStatus);
+  console.log("登入次數：" + req.session.views); 
   console.log(req.session.password);
   if (!loginStatus) {
     res.render('newpassword', {
@@ -249,8 +249,11 @@ router.get('/register', function (req, res) {
     loginStatus = true;
     req.session.views++;
   }else{
+    loginStatus = false;
     req.session.views = 1;
   }
+  console.log("登入狀態：" + loginStatus);
+  console.log("登入次數：" + req.session.views); 
   res.render('register',{
     loginStatus: loginStatus,        
     username: req.session.username,                                                       
@@ -262,17 +265,19 @@ router.post('/register1', function (req, res) {
   var sql = {
     username: req.body.username,
     email: req.body.email,
-    password: req.body.password,
-    password2: req.body.password2,        
+    password: req.body.password,    
     tel: req.body.tel,
     cell: req.body.cell,
     birth: req.body.birth,
     address: req.body.address,
     allow: req.body.allow,
     };
+  var sql2 = {
+    password: req.body.password2,    
+  }
   var allow = sql.allow;
   var pass = sql.password;
-  var pass2 = sql.password2;
+  var pass2 = sql2.password;
   console.log(sql);
   if(pass == pass2){
     console.log(pass);
@@ -283,10 +288,10 @@ router.post('/register1', function (req, res) {
                 console.log(err);
             }
             // res.setHeader('Content-Type', 'application/json');
-          res.render('register', {
+          res.render('toMember', {
             loginStatus: loginStatus,
             username: req.session.username,                                          
-            message: '<sapn>恭喜你已經註冊成功囉！</span>',
+            message: '恭喜你已經註冊成功囉！\n請進行登入',
           });
         });
     }else if(allow == 0){
@@ -295,7 +300,7 @@ router.post('/register1', function (req, res) {
           message:'<sapn>請先詳閱使用條款，並同意，才可以註冊喔！</span>',
         });
     } 
-  }else{
+  } else if(pass !== pass2) {
     res.render('register', {
       loginStatus: loginStatus,  
       message: '<sapn>密碼與確認密碼不一致！</span>',

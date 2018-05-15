@@ -16,30 +16,33 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `news`
+-- Table structure for table `cart_shopping`
 --
 
-DROP TABLE IF EXISTS `news`;
+DROP TABLE IF EXISTS `cart_shopping`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `news` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `title` varchar(25) DEFAULT NULL,
-  `date` date DEFAULT NULL,
-  `pic` varchar(45) DEFAULT NULL,
-  `content` text,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+CREATE TABLE `cart_shopping` (
+  `ID` int(11) NOT NULL AUTO_INCREMENT,
+  `MEMBER_EMAIL` varchar(45) DEFAULT NULL,
+  `PRODUCT_ID` int(11) DEFAULT NULL,
+  `PRODUCT_AMOUNT` int(5) DEFAULT '1',
+  `status` varchar(5) DEFAULT 'on',
+  `addtime` datetime DEFAULT NULL,
+  `lastchangetime` datetime DEFAULT NULL,
+  `deletetime` datetime DEFAULT NULL,
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=388 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `news`
+-- Dumping data for table `cart_shopping`
 --
 
-LOCK TABLES `news` WRITE;
-/*!40000 ALTER TABLE `news` DISABLE KEYS */;
-INSERT INTO `news` VALUES (2,'哈囉大家好','2018-04-12','','hohohoh\r\n'),(3,'你好','2018-05-16',NULL,'你好嗎');
-/*!40000 ALTER TABLE `news` ENABLE KEYS */;
+LOCK TABLES `cart_shopping` WRITE;
+/*!40000 ALTER TABLE `cart_shopping` DISABLE KEYS */;
+INSERT INTO `cart_shopping` VALUES (383,'44455@gmail.com',8,5,'on','2018-05-15 11:28:07','2018-05-15 14:36:00',NULL),(384,'44455@gmail.com',9,2,'down','2018-05-15 14:21:14','2018-05-15 14:35:46','2018-05-15 14:40:57'),(385,'44455@gmail.com',10,3,'on','2018-05-15 14:29:47','2018-05-15 14:30:17',NULL),(386,'44455@gmail.com',7,1,'on','2018-05-15 14:42:53',NULL,NULL),(387,'44455@gmail.com',9,1,'on','2018-05-15 14:43:12',NULL,NULL);
+/*!40000 ALTER TABLE `cart_shopping` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -51,4 +54,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-05-11 17:59:53
+-- Dump completed on 2018-05-15 17:41:42
