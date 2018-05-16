@@ -10,7 +10,7 @@
 </head>
 <% include header %>
 <body>
-    <form action="/product/check1" method="POST"></form>
+    <form action="/product/check1" method="POST">
     <div id="wrapper">
         <div id="page">
             <div class="row">
@@ -60,8 +60,9 @@
                                 </tbody>
                             </table>
                             <div>
-                                <span id="total">總價：</span>
+                                <span id="total">總價：<input type="hidden" name="total"></span>
                                 <span>元</span>
+                                
                             </div>
                         </div>
                 <!-- /.table-responsive -->
@@ -72,35 +73,46 @@
         </div>
         <!-- /.col-lg-12 -->
     </div>
-        <div id="checkform">
-            <span>收件人名稱：</span><input type="text" name="buyer" required><br>
-            <span>收件地址：</span><input type="text" name="address" required><br>
-            <span>發票類型：</span>
-            <input type="radio" name="receipt" value="2"><span>二聯式</span>
-            <input type="radio" name="receipt" value="3"><span id="tip">三聯式</span><br>
-            <span>發票抬頭：</span><input type="text" name="invoiceTitle"><br>
-            <span>統一編號：</span><input type="text" name="invoiceNumber"><br>
-            <span>付款方式：</span><input type="radio" name="payMethod" value="1" checked><span>ATM轉帳</span><br>
-            <h4>敬請確認無誤後再將資料送出</h4>
-            <input type="button" value="確認結帳" onclick="formCheck(this)">
-        </div>
+    <div id="checkform">
+        <span>收件人名稱：</span><input type="text" name="buyer" required><br>
+        <span>收件地址：</span><input type="text" name="address" required><br>
+        <span>發票類型：</span>
+        <input type="radio" name="receipt" value="2"><span>二聯式</span>
+        <input type="radio" name="receipt" value="3"><span id="tip">三聯式</span><br>
+        <span>發票抬頭：</span><input type="text" name="invoiceTitle"><br>
+        <span>統一編號：</span><input type="text" name="invoiceNumber"><br>
+        <span>付款方式：</span><input type="radio" name="payMethod" value="1" checked><span>ATM轉帳</span><br>
+        <h4>敬請確認無誤後再將資料送出</h4>
+        <input type="button" value="確認結帳" onclick="formCheck(this)">
+    </div>
     </form>
     <script>
         $(function () {
-            var totalAdd = 0;
+            var total = 0;
             $(".subtotal").each(function (i) {
-                totalAdd += parseInt($(this).text());
+                total += parseInt($(this).text());
                 // var total = [];
-                return totalAdd;
+                return total;
             });
-            $("#total").append("<span name='total'>" + totalAdd + "</span>");
+            $("#total").append("<span id='totalVal'>" + total + "</span>");
+            $("#total>input").val(total);
+            console.log($("#total>input").val(total));
         });
-        function formCheck(this){
+        function formCheck(k){
             var receipt = $('[name="receipt"]:checked').val();
             if(receipt == undefined){
                 $('<span style="color:red;">必填</span>').appendTo('#tip');
             }else if(receipt == 2 || receipt == 3){
-                $(this).attr('type','submit');
+                $(k).attr('type','submit');
+                $(k).submit();
+                // $.ajax({
+                //     url:'/product/check1',
+                //     method: 'POST',
+                //     datatype: 'text',
+                //     data:{
+                //         total: $('#totalVal').text(),
+                //     }
+                // })
             }
         }
     </script>

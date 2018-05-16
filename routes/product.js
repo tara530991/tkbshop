@@ -131,11 +131,13 @@ router.get('/cart', function (req, res) {
       loginStatus: loginStatus,
       username: req.session.username,                                          
       message: '<sapn>尚未登入，請先進行<a href="/member/login">登入</a></sapn>',       
+      message2: '<sapn>購物車裡還沒有東西喔</sapn>',       
       data:data,
     });
   })
 });
 
+//購物車加減數量鍵
 router.get('/ajaxUpdateCart', function (req, res) {
   if (req.session.email) {
     loginStatus = true;
@@ -176,6 +178,7 @@ router.get('/ajaxUpdateCart', function (req, res) {
   })
 });
 
+//購物車刪除鍵
 router.post('/ajaxDeleteCart', function (req, res) {
   if (req.session.email) {
     loginStatus = true;
@@ -191,7 +194,7 @@ router.post('/ajaxDeleteCart', function (req, res) {
     productId: parseInt(req.body.productId),
   }
   console.log(typeof(sql.productId));
-  var sqlQuery = "UPDATE cart_shopping SET status='down',deletetime=NOW() WHERE PRODUCT_ID= ? && MEMBER_EMAIL= ? ;";
+  var sqlQuery = "UPDATE cart_shopping SET status='down',downtime=NOW() WHERE PRODUCT_ID= ? && MEMBER_EMAIL= ? ;";
   con.query(sqlQuery, [sql.productId,sql.email], function (err, rows) {
     var data = rows;
     if (err) { console.log(err); }
@@ -233,16 +236,16 @@ router.post('/check', function (req, res) {
     ' WHERE MEMBER_EMAIL=? && status="on" ' +
     ' GROUP BY CH.PRODUCT_ID, PD.product_id, CH.PRODUCT_AMOUNT;';
   con.query(sqlQuery, sql.email, function(err,rows){
-      var data = rows;
-      console.log(data);
-      if (err) { console.log(err); }
-      res.render('check',{
-        loginStatus: loginStatus,
-        username: req.session.username,
-        message: '<sapn>尚未登入，請先進行<a href="/member/login">登入</a></sapn>',
-        data: data,
-      });
-    })
+    var data = rows;
+    console.log(data);
+    if (err) { console.log(err)}; 
+    res.render('check',{
+      loginStatus: loginStatus,
+      username: req.session.username,
+      message: '<sapn>尚未登入，請先進行<a href="/member/login">登入</a></sapn>',
+      data: data,
+    });
+  });
 });
 
 router.post('/check1', function (req, res) {
@@ -265,22 +268,27 @@ router.post('/check1', function (req, res) {
     invoiceNumber: req.body.invoiceNumber,
     payMethod: req.body.payMethod,
   }
-  var sqlQuery = 'INSERT INTO　order_detail (MEMBER_EMAIL, addtime, total, buyer, address,' +
+  var sqlQuery = 'INSERT INTO order_detail (MEMBER_EMAIL, addtime, total, buyer, address,' +
     ' receipt, invoiceTitle, invoiceNumber, payMethod) VALUE (?,NOW(),?,?,?,?,?,?,?);';
   con.query(sqlQuery, [sql.email, sql.total, sql.buyer, sql.address, sql.receipt, 
     sql.invoiceTitle, sql.invoiceNumber, sql.payMethod],function(err,rows){
       var data = rows;
       console.log(data);
       if (err) { console.log(err); }
-      res.render('toCheck', {
-        loginStatus: loginStatus,
-        username: req.session.username,
-        message: '結帳完成，訂單已送出',
-        data: data,
+      var sqlQuery = 'UPDATE cart_shopping SET status="check",downtime=NOW()' + 
+        ' WHERE MEMBER_EMAIL=? && status="on";';
+      con.query(sqlQuery, sql.email, function(err,rows){ 
+        var data = rows;
+        console.log(data);
+        if (err) { console.log(err); }
+        res.render('toCheck', {
+          loginStatus: loginStatus,
+          username: req.session.username,
+          message: '結帳完成，訂單已送出',
+          data: data,
+        });
       });
   })
-
-
 })
 
 router.post('/checkover', function (req, res) {
@@ -292,7 +300,8 @@ router.post('/checkover', function (req, res) {
     req.session.views = 1;
   }
   console.log("登入狀態：" + loginStatus);
-  console.log("登入次數：" + req.session.views);  
+  console.log("登入次數：" + req.session.views); 
+  var sql 
   res.render('checkover',{
     loginStatus: loginStatus,
     username: req.session.username,
