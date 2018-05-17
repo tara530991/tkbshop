@@ -270,6 +270,7 @@ router.post('/check1', function (req, res) {
   }
   var sqlQuery = 'INSERT INTO order_detail (MEMBER_EMAIL, addtime, total, buyer, address,' +
     ' receipt, invoiceTitle, invoiceNumber, payMethod) VALUE (?,NOW(),?,?,?,?,?,?,?);';
+  sqlQuery += 'INSERT INTO order_product    '
   con.query(sqlQuery, [sql.email, sql.total, sql.buyer, sql.address, sql.receipt, 
     sql.invoiceTitle, sql.invoiceNumber, sql.payMethod],function(err,rows){
       var data = rows;
