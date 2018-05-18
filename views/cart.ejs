@@ -83,6 +83,8 @@
                 <!-- /.col-lg-12 -->
             </div>
             <!-- /.row -->
+            <!-- <form action="/product/orderNumber" method="post"></form> -->
+            <input type="submit" id="time">現在時間
     <% } %>        
     <script>
         $(function () {
@@ -100,7 +102,41 @@
             });
             $("#total").append("<span>" + totalAdd + "</span>");
             // console.log($("#productId").val());
+
+             $("#time").click(function (event) {
+                var date = new　Date();
+                console.log(date);
+                var yy = date.getFullYear().toString(); 
+                var mm = (date.getMonth() + 1).toString();
+                mm = mm.length == 1 ? '0' + mm : mm;                                                             
+                // if(mm.length == 1){
+                //     mm = '0' + mm;
+                // } 
+                var dd = date.getDate().toString();                               
+                if (dd.length == 1) {
+                     dd = '0' + dd;
+                }
+                var hh = date.getHours().toString();
+                var num = {
+                    0:'A', 1:'B', 2:'C', 3:'D', 4:'E', 5:'F', 6:'G', 7:'H', 8:'I', 9:'J',
+                    10:'K', 11:'L', 12:'M', 13:'N', 14:'O', 15:'P', 16:'Q', 17:'R', 18:'S',
+                    19:'T', 20:'U', 21:'V', 22:'W', 23:'X',
+                };
+                var timeNum = num[hh];
+                var orderNumber = timeNum + yy + mm + dd;
+                console.log(orderNumber); 
+                checkOrderNumber(orderNumber);
+            });　
         });
+        function checkOrderNumber(orderNumber){
+            $.ajax({
+                url:'/product/orderNumber',
+                method:'post',
+                data:{
+                    orderNumber: orderNumber,
+                },
+            })
+        }
 
         function add(k, id) {　//k是指input本身，id則是PD_ID
             $('#productId').val(id);　　//把PD_ID放到productId裡面

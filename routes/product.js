@@ -81,7 +81,7 @@ router.post('/addToCart', function (req, res) {
         con.query(sqlQuery, [req.session.email, sql.productId], function (err, rows) {
           var data = rows;
           if (err) { console.log(err); }
-          res.render('toAddCart', {
+          res.render('toCart', {
             loginStatus: loginStatus,
             username: req.session.username,
             data: data,
@@ -94,7 +94,7 @@ router.post('/addToCart', function (req, res) {
         con.query(sqlQuery, [req.session.email, sql.productId], function (err, rows) {
           var data = rows;
           if (err) { console.log(err); }
-          res.render('toAddCart', {
+          res.render('toCart', {
             loginStatus: loginStatus,
             username: req.session.username,
             data: data,
@@ -291,7 +291,18 @@ router.post('/check1', function (req, res) {
       });
   })
 })
-
+router.post('/orderNumber', function (req, res) {
+  var sql = {
+    orderNumber: req.body.orderNumber,
+  }
+  console.log(sql.orderNumber);
+  var sqlQuery = "SELECT * FROM order_detail WHERE order_id LIKE '?%' ;";
+  // var sqlQuery = 'SELECT * FROM order_detail WHERE order_id=? ;';
+  con.query(sqlQuery, sql.orderNumber ,function(err,rows){
+    var data = rows;
+    console.log(data);
+  })
+})
 router.post('/checkover', function (req, res) {
   if (req.session.email) {
     loginStatus = true;
