@@ -270,7 +270,7 @@ router.post('/check1', function (req, res) {
   }
   var sqlQuery = 'INSERT INTO order_detail (MEMBER_EMAIL, addtime, total, buyer, address,' +
     ' receipt, invoiceTitle, invoiceNumber, payMethod) VALUE (?,NOW(),?,?,?,?,?,?,?);';
-  sqlQuery += 'INSERT INTO order_product    '
+  sqlQuery += 'INSERT INTO order_product';
   con.query(sqlQuery, [sql.email, sql.total, sql.buyer, sql.address, sql.receipt, 
     sql.invoiceTitle, sql.invoiceNumber, sql.payMethod],function(err,rows){
       var data = rows;
@@ -296,11 +296,21 @@ router.post('/orderNumber', function (req, res) {
     orderNumber: req.body.orderNumber,
   }
   console.log(sql.orderNumber);
-  var sqlQuery = "SELECT * FROM order_detail WHERE order_id LIKE '?%' ;";
-  // var sqlQuery = 'SELECT * FROM order_detail WHERE order_id=? ;';
-  con.query(sqlQuery, sql.orderNumber ,function(err,rows){
+  var sqlQuery = "SELECT MAX(order_id) AS maxid FROM order_detail WHERE order_id IN" + 
+    " (SELECT order_id FROM order_detail WHERE order_id LIKE '" + sql.orderNumber + "%');";
+  con.query(sqlQuery, function(err,rows){
     var data = rows;
     console.log(data);
+    var num = data[0].maxid;
+    console.log(num);
+    var num2 = (num.substring(9,13)).replace(/\b(0+)/gi,"");
+    console.log(num2);
+    var num3 = parseInt(num2) + 1;
+    console.log(num3);
+    var num4 = (Array(4).join("0") + num3).slice(-4);
+    console.log(num4);
+    var serialNum = sql.orderNumber + num4;
+    console.log(serialNum);
   })
 })
 router.post('/checkover', function (req, res) {

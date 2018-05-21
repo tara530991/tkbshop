@@ -109,13 +109,8 @@
                 var yy = date.getFullYear().toString(); 
                 var mm = (date.getMonth() + 1).toString();
                 mm = mm.length == 1 ? '0' + mm : mm;                                                             
-                // if(mm.length == 1){
-                //     mm = '0' + mm;
-                // } 
                 var dd = date.getDate().toString();                               
-                if (dd.length == 1) {
-                     dd = '0' + dd;
-                }
+                dd = dd.length == 1 ? '0' + dd : dd;
                 var hh = date.getHours().toString();
                 var num = {
                     0:'A', 1:'B', 2:'C', 3:'D', 4:'E', 5:'F', 6:'G', 7:'H', 8:'I', 9:'J',
