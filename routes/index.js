@@ -60,6 +60,41 @@ router.get('/news', function (req, res) {
       });
     })
 });
+router.get('/ajaxNews', function (req, res) {
+  if (req.session.email) {
+    loginStatus = true;
+    req.session.views++;
+  } else {
+    loginStatus = false;
+    req.session.views = 1;
+  }
+  console.log("登入狀態：" + loginStatus);
+  console.log("登入次數：" + req.session.views); 
+  var sql = {
+    sort: req.query.sort,
+    search: req.query.search,    
+  }
+  var sqlQuery = "SELECT * FROM news WHERE concat(title,content) LIKE '%" + 
+    sql.search + "%' ORDER BY date ";
+  if (sql.sort == 1 || sql.sort == null){
+    sqlQuery += 'DESC;';
+  }else if(sql.sort == 2){
+    sqlQuery += 'ASC;';
+  }
+  con.query(sqlQuery, sql.search, function(err,rows){
+    var data = rows; 
+    console.log(data);
+    res.render('ajax_news', {
+      loginStatus: loginStatus,
+      username: req.session.username,
+      views: req.session.views,
+      data: data,
+      moment: moment,
+      message: "",
+    });
+  })
+})
+
 router.get('/contact', function (req, res) {
   if (req.session.email) {
     loginStatus = true;
