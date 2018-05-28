@@ -1,24 +1,31 @@
 <head>
     
-    <link href="/vendor/css/bootstrap.css" rel="stylesheet" type="text/css" media="all" />
-    <link href="/vendor/css/docs.min.css" rel="stylesheet">
+    <link href="/backvendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" media="all" />
+    <!-- <link href="/frontvendor/css/docs.min.css" rel="stylesheet"> -->
+    <link href="/backvendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
     <!-- Custom Theme files -->
     <!--theme style-->
-    <link href="/vendor/css/style.css" rel="stylesheet" type="text/css" media="all" />
-    <script src="/vendor/js/jquery.min.js"></script>
+    <link href="/frontvendor/css/style.css" rel="stylesheet" type="text/css" media="all" />
+    <script src="/frontvendor/js/jquery.min.js"></script>
+
 
     <!--//theme style-->
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="keywords" content="Wedding Store Responsive web template, Bootstrap Web Templates, Flat Web Templates, Andriod Compatible web template, 
     Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, SonyErricsson, Motorola web design" />
-    <script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
+    <script type="application/x-javascript"> 
+        addEventListener("load", function() { 
+            setTimeout(hideURLbar, 0); 
+            }, false);
+        function hideURLbar(){ window.scrollTo(0,1); } 
+    </script>
     
     <!-- start menu -->
-    <script src="/vendor/js/simpleCart.min.js"> </script>
+    <script src="/frontvendor/js/simpleCart.min.js"> </script>
     <!-- start menu -->
-    <link href="/vendor/css/memenu.css" rel="stylesheet" type="text/css" media="all" />
-    <script type="text/javascript" src="/vendor/js/memenu.js"></script>
+    <link href="/frontvendor/css/memenu.css" rel="stylesheet" type="text/css" media="all" />
+    <script type="text/javascript" src="/frontvendor/js/memenu.js"></script>
     <script>$(document).ready(function () { $(".memenu").memenu(); });</script>
     <!-- /start menu -->
     <style>
@@ -33,7 +40,7 @@
     </style>
 </head>
 <body>
-<script src="/vendor/js/responsiveslides.min.js"></script>
+<script src="/frontvendor/js/responsiveslides.min.js"></script>
 <script>  
     $(function () {
         $("#slider").responsiveSlides({
@@ -46,23 +53,25 @@
     });
 </script>
 <div class="header-bar col-lg-12">
-    <ul class="nav justify-content-center">
+    <ul class="nav justify-content-center col-lg-8">
         <% if (loginStatus == false) { %>
-            <li class="col-lg-1 nav-item">訪客，您好</li>
-            <li class="col-lg-1 nav-item">
+            <li class="col-lg-2 nav-item">訪客&nbsp;&nbsp;&nbsp;您好</li>
+            <li class="col-lg-2 nav-item">
                 <a href="/member/login">登入</a>
             </li>
-            <li class="col-lg-1 nav-item">
+            <li class="col-lg-2 nav-item">
                 <a href="/member/register">註冊</a>
             </li>
+    </ul>
+    <ulclass="nav justify-content-center col-lg-8">
         <% } else if(loginStatus == true){ %>
-            <li class="col-lg-1">
-                <%= username %>，您好</li>
-            <li class="col-lg-1">
+            <li class="col-lg-2 nav-item">
+                <%= username %>&nbsp;&nbsp;&nbsp;您好</li>
+            <li class="col-lg-2 nav-item">
                 <a href="/member/logout">登出</a>
             </li>
-            <li class="col-lg-1">
-                <a href="/product/cart">購物車<span calss="glyphicon glyphicon-shopping-cart"></span></a>
+            <li class="col-lg-2 nav-item">
+                <a href="/product/cart">購物車<span class="glyphicon glyphicon-shopping-cart"></span></a>
             </li>
         <% } %>
     </ul>
