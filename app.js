@@ -36,7 +36,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 // app.use(expressLayouts);
 
 // Use the session middleware
-app.use(session({ secret: 'keyboard cat', cookie: { maxAge: 36000000 },resave:true,saveUninitialized:true }));
+app.use(session({ secret: 'keyboard cat', cookie: { maxAge: 360000 },resave:true,saveUninitialized:true }));
 //maxAge：多久後session與相對應的cookie會失效，單位為毫秒（1秒=100毫秒）
 
 //單引號內為url上的路徑名稱，可自定義

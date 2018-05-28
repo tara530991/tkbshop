@@ -8,6 +8,24 @@ var multer = require('multer');
 var upload = multer({ dest: './public/upload/' });
 var moment = require('moment');
 var loginStatus = false;
+var transporter = require('./email');
+
+function statusTransform(statusNum){
+  console.log("狀態" + statusNum);
+  switch (statusNum) {
+    case '01': status = "訂單處理中"; break;
+    case '02': status = "待轉帳"; break;
+    case '03': status = "物流運送中"; break;
+    case '04': status = "訂單完成"; break;
+    case '11': status = "退貨申請送出"; break;
+    case '12': status = "退貨申請-收取退貨"; break;
+    case '13': status = "退貨申請-物流取貨"; break;
+    case '14': status = "退貨申請-退款完成"; break;
+    case '99': status = "訂單取消"; break;
+  }
+  console.log("狀態" + status);
+  return status;
+}
 
 //前端
 router.get('/', function (req, res) {
@@ -244,7 +262,7 @@ router.post('/check', function (req, res) {
   con.query(sqlQuery, sql.email, function(err,rows){
     var data = rows;
     console.log(data);
-    if (err) { console.log(err)}; 
+    if (err) { console.log(err);} 
     res.render('check',{
       loginStatus: loginStatus,
       username: req.session.username,
@@ -265,6 +283,7 @@ router.post('/check1', function (req, res) {
   console.log("登入狀態：" + loginStatus);
   console.log("登入次數：" + req.session.views);
   var sql = {
+    username: req.session.username,
     email: req.session.email,
     orderNumber: req.body.orderNumber,
     productId: req.body.productId,
@@ -280,60 +299,80 @@ router.post('/check1', function (req, res) {
   var productId = sql.productId;
   var productAmount = sql.productAmount;
   console.log(sql);
-  // console.log(product);
   var sqlQuery = "SELECT MAX(order_id) AS maxid FROM order_detail WHERE order_id IN" +
     " (SELECT order_id FROM order_detail WHERE order_id LIKE '" + sql.orderNumber + "%');";
-    con.query(sqlQuery, function (err, rows) {
-      var data = rows;      
-      var serialNum = "";
-      console.log(data);      
-      var num = data[0].maxid;
-      if (num !== null){
-        num = (num.substring(9, 13)).replace(/\b(0+)/gi, "");
-        num = parseInt(num) + 1;
-        num = (Array(4).join("0") + num).slice(-4);
-        serialNum = sql.orderNumber + num;
-      } else if (num == null) {
-        serialNum = sql.orderNumber + "0001";
-      }
-      console.log("流水號：" + serialNum);
-      var sqlQuery = 'INSERT INTO order_detail (order_id,MEMBER_EMAIL, addtime, total, buyer, address,' +
-        ' receipt, invoiceTitle, invoiceNumber, payMethod) VALUE (?,?,NOW(),?,?,?,?,?,?,?);';
-      con.query(sqlQuery, [serialNum, sql.email, sql.total, sql.buyer, sql.address, sql.receipt, 
-        sql.invoiceTitle, sql.invoiceNumber, sql.payMethod],function(err,rows){
-          var data = rows;
-          console.log(data);
-          if (err) { console.log(err);　}
-        });          
-      for (var i = 0; i < productId.length; i++) {
-        var obj = {
-          productId: productId[i],
-          productAmount: productAmount[i],
-        }
-        console.log(obj);
-        var sqlQuery = 'INSERT INTO order_product (order_id, product_id, amount) VALUE (?,?,?);';
-        con.query(sqlQuery, [serialNum, obj.productId, obj.productAmount], function (err, rows) {
-          var data = rows;
-          // console.log(data);
-          if (err) {console.log(err)}; 
-          });
-        }
-      con.query('INSERT INTO order_payment (order_id) VALUE (?);', serialNum, function(err, rows) {});
-      var sqlQuery = 'UPDATE cart_shopping SET status="check",downtime=NOW()' + 
-        ' WHERE MEMBER_EMAIL=? && status="on";';
-      con.query(sqlQuery, sql.email, function(err,rows){ 
+  con.query(sqlQuery, function (err, rows) {
+    var data = rows;      
+    var serialNum = "";
+    console.log(data);      
+    var num = data[0].maxid;
+    if (num !== null){
+      num = (num.substring(9, 13)).replace(/\b(0+)/gi, "");
+      num = parseInt(num) + 1;
+      num = (Array(4).join("0") + num).slice(-4);
+      serialNum = sql.orderNumber + num;
+    } else if (num == null) {
+      serialNum = sql.orderNumber + "0001";
+    }
+    console.log("流水號：" + serialNum);
+    var sqlQuery = 'INSERT INTO order_detail (order_id,MEMBER_EMAIL, addtime, total, buyer, address,' +
+      ' receipt, invoiceTitle, invoiceNumber, payMethod) VALUE (?,?,NOW(),?,?,?,?,?,?,?);';
+    con.query(sqlQuery, [serialNum, sql.email, sql.total, sql.buyer, sql.address, sql.receipt, 
+      sql.invoiceTitle, sql.invoiceNumber, sql.payMethod],function(err,rows){
         var data = rows;
-        // console.log(data);
-        if (err) { console.log(err); }
-        res.render('toCheck', {
-          loginStatus: loginStatus,
-          username: req.session.username,
-          message: '結帳完成，訂單已送出',
-          data: data,
-        });
+        console.log(data);
+        if (err) { console.log(err);　}
+      });
+    for (var i = 0; i < productId.length; i++) {
+      var obj = new Object();
+      obj.id = productId[i];
+      obj.amount = productAmount[i];
+      var Obj = Object.assign(obj);
+      // console.log(Obj);       
+      var sqlQuery2 = 'INSERT INTO order_product (order_id, product_id, amount) VALUE (?,?,?);';
+      con.query(sqlQuery2, [serialNum, Obj.id, Obj.amount], function (err, rows) {
+        var data = rows;
+        console.log(rows);
+        if (err) {console.log(err);}
+      });
+    }
+    con.query('INSERT INTO order_payment (order_id) VALUE (?);', serialNum, function(err, rows) {
+      var data = rows;
+      console.log(data);
+      if (err) { console.log(err); }
+    });
+    var sqlQuery3 = 'UPDATE cart_shopping SET status="check",downtime=NOW()' + 
+      ' WHERE MEMBER_EMAIL=? && status="on";';
+    con.query(sqlQuery3, sql.email, function(err,rows){ 
+      var data = rows;
+      console.log(data);
+      if (err) { console.log(err); }
+      var Email = {
+        from: "tara530991@gmail.com",
+        to: sql.email,
+        subject: "訂單已送出",
+        html: "<p>親愛的" + 　sql.username + "你好<br>我們已經收到你的訂單囉<br>" + 
+        "，請在48小時內完成ATM轉帳動作<br>我們將盡快為您出貨<br>" + 
+        "這是你的訂單編號：" + serialNum + "</p><br>"
+      };
+      // console.log(Email);
+      transporter.sendMail(Email, function (err, info) {
+        if (err) {
+          console.log(err);
+        } else {
+          console.log("訊息已經完成傳送: " + info.response);
+        }
+      });
+      res.render('toCheck', {
+        loginStatus: loginStatus,
+        username: req.session.username,
+        message: '結帳完成，訂單已送出',
+        data: data,
+        serialNum: serialNum,
       });
     });
-})
+  });
+});
 
 router.get('/checkover', function (req, res) {
   if (req.session.email) {
@@ -347,20 +386,15 @@ router.get('/checkover', function (req, res) {
   console.log("登入次數：" + req.session.views); 
   var sql = {
     email: req.session.email,
+    serialNum: req.query.serialNum,
   }
-  var sqlQuery = "SELECT MAX(order_id) AS maxid FROM order_detail WHERE order_id IN" +
-    " (SELECT order_id FROM order_detail WHERE MEMBER_EMAIL=?);"; 
-    con.query(sqlQuery, sql.email, function(err,rows){
-      var data = rows;
-      console.log(data);
-      if (err) { console.log(err); }
+  console.log(sql.serialNum);
       res.render('checkover',{
         loginStatus: loginStatus,
         username: req.session.username,
         message: '',
-        data: data,
+        serialNum: sql.serialNum,
       });
-    })
 });
 
 router.get('/ordersearch', function (req, res) {
@@ -377,80 +411,10 @@ router.get('/ordersearch', function (req, res) {
     loginStatus: loginStatus,
     username: req.session.username,
     message: '',
-    // data: data,
   });
-})
-router.post('/order', function (req, res) {
-  if (req.session.email) {
-    loginStatus = true;
-    req.session.views++;
-  } else {
-    loginStatus = false;
-    req.session.views = 1;
-  }
-  console.log("登入狀態：" + loginStatus);
-  console.log("登入次數：" + req.session.views);  
-  var sql = {
-    orderId: req.body.orderId,
-  }
-  console.log(orderId);
-  var sqlQuery = 'SELECT * FROM order_detail WHERE order_id=?';
-  con.query(sqlQuery, sql.orderId, function (err, rows) {
-    var data = rows;
-    // console.log(data);
-    if (err) { console.log(err); }
-    var sqlQuery = 'SELECT OP.product_id, OP.amount, P.product_name, P.pic, P.price,' + 
-    ' SUM(OP.amount * P.price) AS subtotal FROM order_product OP LEFT JOIN product P' +
-    ' ON OP.product_id = P.product_id WHERE order_id=?' + 
-    ' GROUP BY OP.product_id, OP.amount;';
-    con.query(sqlQuery, sql.orderId, function (err, rows) {
-      var data2 = rows;
-      console.log(data);
-      console.log(data2);
-      if (err) { console.log(err); }
-      console.log("狀態" + data[0].status);
-      var status = '';
-      switch(data[0].status){
-        case '01': status = "訂單處理中";break;
-        case '02': status = "待轉帳"; break;
-        case '03': status = "物流運送中"; break;
-        case '04': status = "訂單完成"; break;
-        case '11': status = "退貨申請送出"; break;
-        case '12': status = "退貨申請-收取退貨（物流作業中）"; break;
-        case '13': status = "退貨申請-物流取貨（已收貨）"; break;
-        case '14': status = "退貨申請-退款完成（已退款）"; break;
-        case '99': status = "訂單取消"; break;
-      }
-      console.log("狀態" + status);
-      res.render('order', {
-        loginStatus: loginStatus,           
-        username: req.session.username,
-        moment:moment, 
-        status: status,                                         
-        data: data,
-        data2: data2,
-        message: '',
-      });
-    });
-  })
 });
+
 router.get('/orderlist', function (req, res) {
-  if (req.session.email) {
-    loginStatus = true;
-    req.session.views++;
-  } else {
-    loginStatus = false;
-    req.session.views = 1;
-  }
-  console.log("登入狀態：" + loginStatus);
-  console.log("登入次數：" + req.session.views);
-  res.render('orderlist', {
-    loginStatus: loginStatus,
-    username: req.session.username,
-    message: '',
-  });
-})
-router.post('/orderlist', function (req, res) {
   if (req.session.email) {
     loginStatus = true;
     req.session.views++;
@@ -464,18 +428,98 @@ router.post('/orderlist', function (req, res) {
     email: req.session.email,
     orderId: req.body.orderId,
   }
-  var sqlQuery = 'SELECT * FROM order_detail WHERE MEMBER_EMAIL=? AND order_id=?;';
-  con.query(sqlQuery,[sql.email, sql.orderId], function(err,rows){
+  var sqlQuery = 'SELECT * FROM order_detail WHERE MEMBER_EMAIL=? ORDER BY addtime';
+  con.query(sqlQuery, sql.email, function (err, rows) {
     var data = rows;
-    console.log(data);
+    // console.log(data);
     if (err) { console.log(err); }
+    var statusArray = new Array();
+    for (var i = 0; i < data.length; i++) {
+      statusArray.push(statusTransform(data[i].status));
+    }
+    console.log(statusArray);
     res.render('orderlist', {
       loginStatus: loginStatus,
       username: req.session.username,
-      message: '',
       data: data,
+      statusArray: statusArray,
+      moment: moment,
+      message: '',
     });
   })
 })
 
+router.post('/order', function (req, res) {
+  if (req.session.email) {
+    loginStatus = true;
+    req.session.views++;
+  } else {
+    loginStatus = false;
+    req.session.views = 1;
+  }
+  console.log("登入狀態：" + loginStatus);
+  console.log("登入次數：" + req.session.views);  
+  var sql = {
+    orderId: req.body.orderId,
+  }
+  console.log(sql.orderId);
+  var sqlQuery = 'SELECT * FROM order_detail WHERE order_id=?';
+  con.query(sqlQuery, sql.orderId, function (err, rows) {
+    var data = rows;
+    console.log(data);
+    if (err) { console.log(err); }
+    var sqlQuery2 = 'SELECT OP.product_id, OP.amount, P.product_name, P.pic, P.price,' + 
+    ' SUM(OP.amount * P.price) AS subtotal FROM order_product OP LEFT JOIN product P' +
+    ' ON OP.product_id = P.product_id WHERE order_id=?' + 
+    ' GROUP BY OP.product_id, OP.amount;';
+    con.query(sqlQuery2, sql.orderId, function (err, rows) {
+      var data2 = rows;
+      console.log(data2);
+      if (err) { console.log(err); }
+      var statusArray = new Array();      
+      statusArray.push(statusTransform(data[0].status));
+      res.render('order', {
+        loginStatus: loginStatus,           
+        username: req.session.username,
+        moment:moment, 
+        statusArray: statusArray,                                         
+        data: data,
+        data2: data2,
+        message: '',
+      });
+    });
+  })
+});
+
+router.get('/sendEmail', function (req, res) {
+  if (req.session.email) {
+    loginStatus = true;
+    req.session.views++;
+  } else {
+    loginStatus = false;
+    req.session.views = 1;
+  }
+  console.log(123);
+  var Email = { 
+    from: "tara530991@gmail.com",
+    to: "tara530991@gmail.com",
+    subject: "重要訊息通知",
+    html: "<b>原因: 參數設定有問題，需要進行檢查</b>"
+  };
+  console.log(Email);
+
+  transporter.sendMail(Email,function(err,info){
+    if (err) {
+      console.log(err);
+    } else {
+      console.log("訊息已經完成傳送: " + info.response);
+    }
+  });
+
+    res.send('sendSuccess');
+
+})
+var mailOptions = function (data) {
+  this.data = data;
+}
 module.exports = router;

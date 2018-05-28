@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>新增產品分類-後台管理</title>
+</head>
+<% include backheader %>
+<body>
+    <div class="addform">
+        <h2>新增產品分類</h2>
+        <section>
+            <form action="/adminP/category-add1" method="POST">
+                <label for="">產品類別：
+                    <input type="text" name="category" id="category">
+                </label>
+                <br>
+                <label for="">排序：
+                    <input type="text" name="sort" id="sort">
+                </label>
+                <br>
+                <input type="submit" value="送出">
+            </form>
+            <%- message %>
+        </section>
+    </div>
+</body>
+
+</html>

@@ -8,6 +8,7 @@ var multer = require('multer');
 var upload = multer({ dest: './public/upload/' });
 var moment = require('moment');
 var loginStatus = false;
+var transporter = require('./email');
 
 //前端
 
@@ -83,7 +84,7 @@ router.post('/login1', function (req, res) {
     console.log("已經為登入狀態");
     con.query("SELECT * FROM member WHERE email='" + sql.email + "'", sql, function (err, rows) {    
       var data = rows;      
-      res.render('toIndex', {
+      res.render('toBack', {
       loginStatus: true,        
       username: req.session.username,                      
       views: req.session.views,      
@@ -209,6 +210,7 @@ router.get('/newpass', function (req, res) {
 });
 router.post('/newpass1', function (req, res) {
   var sql = {
+    email: req.session.email,
     oldpass: req.body.oldpass,
     newpass: req.body.newpass,
     newpass2: req.body.newpass2,
@@ -219,9 +221,22 @@ router.post('/newpass1', function (req, res) {
   if (req.session.password == oldP){
     if (newP == newP2) {
       con.query("UPDATE member SET password='" + newP + "' WHERE password='" + oldP + "'", sql, function (err, rows) {
-        if (err) {
-          console.log(err);
-        }
+        if (err) {console.log(err);}
+        var Email = {
+          from: "tara530991@gmail.com",
+          to: sql.email,
+          subject: "密碼更新",
+          html: "<p>親愛的" + sql.username + "你好<br>您的密碼已經更新囉<br>" +
+            "，請在請按此返回官網<a href="/">按我<br>"
+        };
+        // console.log(Email);
+        transporter.sendMail(Email, function (err, info) {
+          if (err) {
+            console.log(err);
+          } else {
+            console.log("訊息已經完成傳送: " + info.response);
+          }
+        });
         res.render('toIndex', {
           loginStatus: loginStatus,
           username: req.session.username,                                                        
