@@ -46,6 +46,7 @@ router.get('/', function (req, res) {
       loginStatus: loginStatus,     
       username: req.session.username,                                          
       data : data,
+      moment:moment,
     });
   })
 });

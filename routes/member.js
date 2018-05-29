@@ -299,9 +299,7 @@ router.post('/register1', function (req, res) {
     if(allow == 1){
       console.log(allow);        
         con.query('INSERT INTO member SET ?', sql, function (err, rows) {
-            if (err) {
-                console.log(err);
-            }
+            if (err) {console.log(err);}
             // res.setHeader('Content-Type', 'application/json');
           res.render('toMember', {
             loginStatus: loginStatus,

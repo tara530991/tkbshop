@@ -1,12 +1,23 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>產品項目</title>
+    <title>產品列表</title>
+    <style>
+        #breadcrumb {display:block;}
+    </style>
 </head>
 <% include header %>
 <body>
 
 <form id="mainForm" action="/product/addToCart" method="POST">
+<div class="product-model">
+    <div class="container">
+        <ol class="breadcrumb">
+             <!-- breadcrumb在frontvendor/css/style.css中暫時註解掉，記得拔掉 -->
+            <li><a href="/">首頁</a></li>
+            <li class="active">產品列表</li>
+        </ol>
+    </div>
     <div class="col-lg-12">
         <h2 class="top">產品項目</h2>
     </div>
@@ -29,27 +40,46 @@
         </section>
         <section id="panBody">
             <div id="news_list">
-                <table class="table table-hover col-lg-offset-1">
-                    <thead>
-                        <tr>
-                            <th scope="col" class="col-lg-6 text-center">標題</th>
-                            <th scope="col" class="col-lg-2 text-center">日期</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <input type="hidden" id="newsId" name="newsId">
-                        <% for(var i=0 ; i < data.length;i++) { %>
-                            <tr onclick="newsContent(<%=data[i].id %>)">
-                                <th scope="row">
-                                    <%=data[i].title %>
-                                </th>
-                                <td class="text-center">
-                                    <%=moment(data[i].date).format('YYYY-MM-DD')%>
-                                </td>
-                            </tr>
-                            <% } %>
-                    </tbody>
-                </table>
+                
+
+        <div class="col-md-9 product-model-sec">
+            <a href="single.html">
+                <div class="product-grid">
+                    <div class="more-product">
+                        <span> </span>
+                    </div>
+                    <div class="product-img b-link-stripe b-animate-go  thickbox">
+                        <img src="images/p1.jpg" class="img-responsive" alt="">
+                        <div class="b-wrapper">
+                            <h4 class="b-animate b-from-left  b-delay03">
+                                <button>
+                                    <span class="glyphicon glyphicon-zoom-in" aria-hidden="true"></span>Quick View</button>
+                            </h4>
+                        </div>
+                    </div>
+            </a>
+            <div class="product-info simpleCart_shelfItem">
+                <div class="product-info-cust prt_name">
+                    <h4>Lights #1</h4>
+                    <span class="item_price">$187.95</span>
+                    <div class="ofr">
+                        <p class="pric1">
+                            <del>Rs 280</del>
+                        </p>
+                        <p class="disc">[12% Off]</p>
+                    </div>
+                    <input type="text" class="item_quantity" value="1" />
+                    <input type="button" class="item_add items" value="ADD">
+                    <div class="clearfix"> </div>
+                </div>
+            </div>
+            </div>
+            </div>
+            </div>
+
+
+
+
             </div>
         </section>
         </div>
