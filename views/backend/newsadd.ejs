@@ -14,12 +14,12 @@
         </div>
         <section>
             <form action="/admin/news-add1" method="POST">
-                <label for="">標題：<input type="text" name="title" id="title"></label><br>
-                <label for="">日期：<input type="date" name="date" id="date"></label><br>
+                <label for="">標題：<input type="text" name="title" id="title" class="form-control"></label><br>
+                <label for="">日期：<input type="date" name="date" id="date" class="form-control"></label><br>
                 <label for="">圖片：<input type="file"></label><br>
                 <label for="">內容：</label><br>
-                    <textarea name="content" id="content" cols="80" rows="20"></textarea><br>
-                <input type="submit" value="送出">            
+                    <textarea name="content" id="content" rows="20" class="form-control"></textarea><br>
+                <input type="submit" value="送出" class="btn btn-default">            
             </form>
             <%- message %>
         </section>

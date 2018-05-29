@@ -10,8 +10,7 @@ var qs = require('querystring');
 var router = express.Router();
 var session = require('express-session');
 var bodyParser = require('body-parser');
-var multer = require('multer');
-var upload = multer({ dest: 'upload/' });
+
 // var expressLayouts = require('express-ejs-layouts');
 
 //前台路由

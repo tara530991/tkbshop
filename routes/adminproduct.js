@@ -5,7 +5,7 @@ var events = require('events');
 var bodyParser = require('body-parser');
 var urlencodedParser = bodyParser.urlencoded({ extended: false });
 var multer = require('multer');
-var upload = multer({ dest: 'upload/' });
+var upload = multer({ dest: 'public/upload/' });
 var moment = require('moment');
 var loginStatus = false;
 
@@ -126,7 +126,7 @@ router.post('/product-add1', upload.array('pic'), function (req, res) {
         category: req.body.category,
     };
     console.log(12345); 
-    var file = req.file;
+    var file = req.files;
     console.log(file); 
     console.log('文件类型：%s', file.mimetype);
     console.log('原始文件名：%s', file.originalname);
@@ -143,6 +143,43 @@ router.post('/product-add1', upload.array('pic'), function (req, res) {
         });
     });
 });
+router.get('/test', function (req, res) {
+    res.render('backend/test', {
+        loginStatus: loginStatus,      
+        message: '',
+    });
+})
+
+router.post('/test', upload.array('pic'), function (req, res) {
+    if (req.session.admin <= 1) {
+        loginStatus = false;
+    } else if (req.session.admin > 1) {
+        loginStatus = true;
+    }
+    var sql = {
+        pic: req.body.pic,
+    }
+    console.log(12345); 
+    var file = req.files;
+    console.log(file); 
+    console.log('文件类型：' + file.mimetype);
+    console.log('原始文件名：' + file.originalname);
+    console.log('文件大小：' + file.size);
+    console.log('文件保存路径：' + file.path);
+    var slqQuery = "INSERT INTO test(pic) VALUE(?)";
+    con.query(slqQuery, sql.pic,function(err,rows){
+        if(err){console.log(err);}
+        var data = rows;
+        console.log(data);
+        res.render('backend/test', {
+            loginStatus: loginStatus,      
+            message: '<span class="alert alert-success">照片新增成功</span>',
+        });
+    });
+});
+
+
+
 
 router.get('/order-list', function (req, res) {
     req.session.admin = 1;

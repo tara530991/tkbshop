@@ -42,6 +42,7 @@ router.get('/', function (req, res) {
   sqlQuery = ' SELECT * FROM product ';
   con.query(sqlQuery,function(err,rows){
     var data = rows;
+    console.log(data);
     res.render('product',{
       loginStatus: loginStatus,     
       username: req.session.username,                                          

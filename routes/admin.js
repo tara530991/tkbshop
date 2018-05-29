@@ -15,6 +15,18 @@ router.get('/', function (req, res) {
     if (req.session.admin > 1) {
       loginStatus = true;
     }
+  res.render('backend/login',{
+    loginStatus: loginStatus,
+    message: "",
+  });
+});
+
+router.get('/index', function (req, res) {
+  var loginStatus = false;
+    req.session.admin = 1;  
+    if (req.session.admin > 1) {
+      loginStatus = true;
+    }
   res.render('backend/index',{
     loginStatus: loginStatus,
     message: "",

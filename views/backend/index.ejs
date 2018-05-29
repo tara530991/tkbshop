@@ -5,45 +5,6 @@
 </head>
 <% include backheader %>
 <body>
-    <div class="container">
-            <div class="row">
-                <div class="col-md-4 col-md-offset-4">
-                    <div class="login-panel panel panel-default">
-                        <div class="panel-heading">
-                            <h3 class="panel-title">管理員登入</h3>
-                        </div>
-                        <div class="panel-body">
-                            <fieldset>
-                                    <% if (loginStatus == false) { %>
-                                    <form role="form" action="/admin/login" method="POST">
-                                        <div class="form-group">
-                                        <input class="form-control" placeholder="帳號" name="account" type="text" autofocus>
-                                        </div>
-                                        <div class="form-group">
-                                            <input class="form-control" placeholder="密碼" name="password" type="password">
-                                        </div>
-                                        <!-- <div class="checkbox">
-                                            <label>
-                                                <input name="remember" type="checkbox" value="Remember Me">Remember Me
-                                            </label>
-                                        </div> -->
-                                        <input type="submit" value="登入" class="btn btn-lg btn-success btn-block">
-                                        <%- message %>
-                                    </form>
-                                    <% } else if(loginStatus == true) { %>
-                                        <form action="/admin/logout" method="get">
-                                            <input type="submit" value="登出" class="btn btn-lg btn-warning btn-block">
-                                        </form>
-                                    <!-- Change this to a button or input when using this as a form -->
-<<<<<<< HEAD
-                                    <% } %>
-=======
->>>>>>> fd0e9911143981e2a338d4287732bbb360892421
-                                </fieldset>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+   
 </body>
 </html>
