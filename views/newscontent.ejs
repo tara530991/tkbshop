@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title><%=data[0].title %></title>
+    <style>
+        button{margin:0.5em 1.2em !important;}
+        .btn-group {padding-left:4em !important;}
+        .content{background-color: rgba(255, 224, 195, 0.836);padding:2em !important;}
+    </style>
+</head>
+<% include header %>
+<body>
+<form id="mainForm" action="/newsContent" method="get">
+    <div class="col-lg-12">
+        <h2 class="top"><%=data[0].title %></h2>
+    </div>
+    <div class="content col-lg-8 col-lg-offset-2">
+        <p><%=data[0].content %></p>
+    </div>
+
+    <div class="btn-group col-lg-4 col-lg-offset-4">
+        <input type="hidden" id="newsId" name="newsId">
+        <button id="btnPre" type="button" class="btn btn-secondary" onclick="newsContent(<%=data[0].id %> - 1)">上一篇</button>
+        <a href="/news"><button type="button" class="btn btn-secondary">回到消息列表</button></a>
+        <button id="btnNext" type="button" class="btn btn-secondary" onclick="newsContent(<%=data[0].id %> + 1)">下一篇</button>
+    </div>
+</form>
+</body>
+
+    <script>
+        $(function(){
+            if('<%=data[0].id %>' == 1){
+                $('#btnPre').attr('disabled','true');
+            }else if('<%=data[0].id %>' == '<%=count[0].len %>'){
+                $('#btnNext').attr('disabled', 'true');
+            }
+            console.log('<%=data[0].id %>');
+            console.log('<%=count[0].len %>');
+        })
+        function newsContent(id) {
+            console.log(id);
+            $('#newsId').val(id);
+            $('#mainForm').submit();
+        }
+    </script>
+</body>
+</html>

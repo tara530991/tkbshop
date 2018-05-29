@@ -5,90 +5,53 @@
 </head>
 <% include header %>
 <body>
-
+<form id="mainForm" action="/newsContent" method="get">
     <div class="col-lg-12">
         <h2 class="top">最新消息列表</h2>
     </div>
-
-<!-- </div>
-<div class="row wrap1280">
-    <div class="col-lg-12">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                DataTables Advanced Tables
-            </div> -->
-        <div class="col-lg-10">
-            <section id="sortbar" class="col-lg-10">
-                <div class="col-lg-3">
-                    <span>排序方式</span>
-                    <select name="sort" id="sort" onchange="sortSearch()">
+    <section class="col-lg-10">
+        <section id="sortbar" class="col-lg-10 col-lg-offset-4">
+            <div class="col-lg-4">
+                <label>排序方式             
+                    <select name="dataTables-example_length" aria-controls="dataTables-example" class="form-control input-sm">
                         <option value="">請選擇條件</option>
                         <option value="1">時間(由新至舊)</option>
                         <option value="2">時間(由舊至新)</option>
                     </select>
-                </div>
-                <div class="col-lg-4 offset-lg-3">
-                    <input type="text" name="search" id="search">
-                    <input type="button" value="查詢" onclick="sortSearch()">
-                </div>
-            </section>
-            <section id="panBody">
-                <div id="news_list">
-                    <section class="card">
-                        <div class="card-header">
-                            <h5 class="mb-0">
-                                <button class="btn btn-link" data-toggle="collapse" data-target="#collapse1" aria-expanded="true" aria-controls="collapse1">
-                                    Collapsible Group Item #1
-                                </button>
-                            </h5>
-                        </div>
-                        <div id="collapse1" class="collapse show" aria-labelledby="heading1" data-parent="#accordion">
-                            <div class="card-body">
-                                Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute,
-                                non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt
-                                aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica,
-                                craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings
-                                occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus
-                                labore sustainable VHS.
-                            </div>
-                        </div>
-                    </section>
-                </div>
+                </label>
             </div>
-        </div>
-</body>
-                    <!-- <thead>
+            <div class="col-lg-4">
+                <input type="text" name="search" id="search" class="form-control input-sm">
+                <input type="button" class="btn btn-info btn-sm" value="查詢" onclick="sortSearch()">
+                <!-- <input type="search"  placeholder="" aria-controls="dataTables-example"> -->
+            </div>
+        </section>
+        <section id="panBody">
+            <div id="news_list">
+                <table class="table table-hover col-lg-offset-1">
+                    <thead>
                         <tr>
-                            <th>日期</th>
-                            <th>標題</th>
-                            <th>圖片</th>
-                            <th>內容</th>
+                            <th scope="col" class="col-lg-6 text-center">標題</th>
+                            <th scope="col" class="col-lg-2 text-center">日期</th>
                         </tr>
                     </thead>
                     <tbody>
+                        <input type="hidden" id="newsId" name="newsId">
                         <% for(var i=0 ; i < data.length;i++) { %>
-                            <tr class="odd gradeX">
-                                <td>
-                                    <%=moment(data[i].date).format('YYYY-MM-DD')%>
-                                </td>
-                                <td>
-                                    <%=data[i].title %>
-                                </td>
-                                <td>
-                                    <img src="<%=data[i].pic %>" alt="">
-                                </td>
-                                <td>
-                                    <%=data[i].content %>
-                                </td>
-                            </tr>
-                            <%} %>
-                    </tbody> -->
+                        <tr onclick="newsContent(<%=data[i].id %>)">
+                            <th scope="row"><%=data[i].title %></th>
+                            <td class="text-center"><%=moment(data[i].date).format('YYYY-MM-DD')%></td>
+                        </tr>
+                        <% } %>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+</form>
+</body>
 
     <script>
-        $(function(){
-            
-        })
-
         function sortSearch(){
             $.ajax({
                 url:'ajaxNews',
@@ -106,6 +69,10 @@
                     console.log(err);
                 }
             })  
+        }
+        function newsContent(id){
+            $('#newsId').val(id);
+            $('#mainForm').submit();
         }
     </script>
 </body>

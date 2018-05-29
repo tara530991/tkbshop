@@ -95,6 +95,39 @@ router.get('/ajaxNews', function (req, res) {
   })
 })
 
+router.get('/newsContent', function (req, res) {
+  if (req.session.email) {
+    loginStatus = true;
+    req.session.views++;
+  } else {
+    loginStatus = false;
+    req.session.views = 1;
+  }
+  console.log("登入狀態：" + loginStatus);
+  console.log("登入次數：" + req.session.views);
+  var sql = {
+    newsId: req.query.newsId,
+  }
+  var count = 0;
+  var sqlQuery = 'SELECT COUNT(id) AS len FROM news;';
+  con.query(sqlQuery, function (err, rows) { 
+    count = rows;
+    console.log(count);    
+  });
+  var sqlQuery2 = 'SELECT * FROM news WHERE id=?;';  
+  con.query(sqlQuery2, sql.newsId, function (err, rows) {
+    var data = rows;
+    res.render('newscontent', {
+      loginStatus: loginStatus,
+      views: req.session.views,
+      data: data,
+      count: count,
+      moment: moment,
+      username: req.session.username,
+    });
+  });
+});
+
 router.get('/contact', function (req, res) {
   if (req.session.email) {
     loginStatus = true;
