@@ -4,10 +4,20 @@ var con = require('./sql');
 var events = require('events');
 var bodyParser = require('body-parser');
 var urlencodedParser = bodyParser.urlencoded({ extended: false });
-var multer = require('multer');
-var upload = multer({ dest: 'public/upload/' });
 var moment = require('moment');
 var loginStatus = false;
+// 圖片上傳
+var multer = require('multer');
+// var upload = multer({ dest: 'public/upload/' });
+var path = require('path');
+const storage = multer.diskStorage({
+    destination: path.join('../public/upload/'),
+    filename: function (req, file, cb) {
+        cb(null, file.originalname.replace(path.extname(file.originalname),"") +
+         '-' + Date.now() + path.extname(file.originalname));
+    }
+});
+const upload = multer({storage: storage}).single('pic');
 
 //管理端
 router.get('/category-list', function (req, res) {
@@ -105,7 +115,7 @@ router.get('/product-add', function (req, res) {
     })
 });
 
-router.post('/product-add1', upload.array('pic'), function (req, res) {
+router.post('/product-add1', upload, function (req, res) {
     if (req.session.admin <= 1) {
         loginStatus = false;
     } else if (req.session.admin > 1) {
@@ -125,61 +135,31 @@ router.post('/product-add1', upload.array('pic'), function (req, res) {
         sort: req.body.sort,
         category: req.body.category,
     };
-    console.log(12345); 
-    var file = req.files;
-    console.log(file); 
-    console.log('文件类型：%s', file.mimetype);
-    console.log('原始文件名：%s', file.originalname);
-    console.log('文件大小：%s', file.size);
-    console.log('文件保存路径：%s', file.path);
     var slqQuery = "INSERT INTO product(product,price,stock,uptime,downtime,description,addtime,changetime,ident,sort,category) VALUE(?,?,?,?,?,?,?,?,?,?,?)";
     con.query(slqQuery, [sql.product, sql.price, sql.stock , sql.uptime, sql.downtime, sql.description, sql.addtime, sql.changetime, sql.ident,sql.sort,sql.category],function(err,rows){
         if(err){console.log(err);}
         var data = rows;
-        console.log(data);
-        res.render('backend/productadd', {
-            loginStatus: loginStatus,      
-            message: '<span class="alert alert-success">產品新增成功</span>',
-        });
     });
-});
-router.get('/test', function (req, res) {
-    res.render('backend/test', {
-        loginStatus: loginStatus,      
-        message: '',
-    });
-})
-
-router.post('/test', upload.array('pic'), function (req, res) {
-    if (req.session.admin <= 1) {
-        loginStatus = false;
-    } else if (req.session.admin > 1) {
-        loginStatus = true;
-    }
-    var sql = {
-        pic: req.body.pic,
-    }
-    console.log(12345); 
-    var file = req.files;
-    console.log(file); 
-    console.log('文件类型：' + file.mimetype);
+    var file = req.file;
+    console.log(file);
+    console.log('文件類型：' + file.mimetype);
+    console.log('文件副檔名：' + path.extname(file.originalname));
     console.log('原始文件名：' + file.originalname);
-    console.log('文件大小：' + file.size);
+    console.log('DB儲存文件名稱：' + file.filename);
     console.log('文件保存路径：' + file.path);
     var slqQuery = "INSERT INTO test(pic) VALUE(?)";
-    con.query(slqQuery, sql.pic,function(err,rows){
-        if(err){console.log(err);}
-        var data = rows;
-        console.log(data);
-        res.render('backend/test', {
-            loginStatus: loginStatus,      
-            message: '<span class="alert alert-success">照片新增成功</span>',
-        });
+    upload(req, res, err => {
+        if (err) { console.log(err); }
+        var sql = "INSERT INTO test(pic) VALUES(?)";
+        con.query(sql, file.filename, function (err, rows) {
+            if (err) { console.log(err); }
+            res.render('backend/test', {
+                loginStatus: loginStatus,
+                message: '<span class="alert alert-success">照片新增成功</span>',
+            });
+        })
     });
 });
-
-
-
 
 router.get('/order-list', function (req, res) {
     req.session.admin = 1;
