@@ -3,162 +3,108 @@
 <head>
     <title>產品列表</title>
     <style>
-        .container:before {display:block !important;content:"";}
+        .product-grid {width:60% !important;}
+        .product-img img{padding:0.5em !important;margin-top:15%;}
+        .item_quantity{width:35% !important;}
+        .pro_name {font-size:1.25em !important;color:#000 !important;margin-bottom:20px !important;}
+        .items{margin:0 0 0 5px!important;}
+        .product-list{margin:5em 0 0;}
+        .item_add{padding:0.5em 1em !important;} 
+        .v-center{position:absolute;bottom: -25%;left:50%;transform:translateX(-50%);}
     </style>
 </head>
 <% include header %>
 <body>
 <form id="mainForm" action="/product/addToCart" method="POST">
 <div class="product-model">
-    
+    <div class="container">
         <ol class="breadcrumb">
             <li><a href="/">首頁</a></li>
             <li class="active">產品列表</li>
         </ol>
-   
+    </div>
     <div class="col-lg-12">
         <h2 class="top">產品項目</h2>
     </div>
-    <section class="col-lg-10">
-        <section id="sortbar" class="col-lg-10 col-lg-offset-4">
-            <div class="col-lg-4">
+    <section id="sortbar">
+        <div class="col-lg-8 col-lg-offset-3">
+            <div class="col-lg-5">
                 <label>排序方式
-                    <select name="dataTables-example_length" aria-controls="dataTables-example" class="form-control input-sm">
+                    <select name="sort" id="sort" aria-controls="dataTables-example" class="form-control input-sm" onchange="sortSearch()">
                         <option value="">請選擇條件</option>
                         <option value="1">售價(由低至高)</option>
                         <option value="2">售價(由高至低)</option>
                     </select>
                 </label>
             </div>
-            <div class="col-lg-4">
+            <div class="col-lg-5">
                 <input type="text" name="search" id="search" class="form-control input-sm">
                 <input type="button" class="btn btn-info btn-sm" value="查詢" onclick="sortSearch()">
-                <!-- <input type="search"  placeholder="" aria-controls="dataTables-example"> -->
             </div>
-        </section>
-        <section id="panBody">
-            <div id="news_list">
-                
-
-        <div class="col-md-9 product-model-sec">
-            <a href="single.html">
-                <div class="product-grid">
-                    <div class="more-product">
-                        <span> </span>
-                    </div>
-                    <div class="product-img b-link-stripe b-animate-go  thickbox">
-                        <img src="images/p1.jpg" class="img-responsive" alt="">
-                        <div class="b-wrapper">
-                            <h4 class="b-animate b-from-left  b-delay03">
-                                <button>
-                                    <span class="glyphicon glyphicon-zoom-in" aria-hidden="true"></span>Quick View</button>
-                            </h4>
+            <div></div>
+        </div>
+    </section> 
+    <section id="panBody">
+        <div id="product_list">
+            <div class="product-list col-lg-10 col-lg-offset-1">
+                <input type="hidden" id="productId" name="productId">
+                <input type="hidden" id="productAmount" name="productAmount">
+                <% for(var i=0 ; i<data.length;i++) { %>
+                <section class="col-lg-4">
+                    <div class="product-grid">
+                        <div class="more-product">
+                            <span> </span>
+                        </div>
+                        <div class="product-img b-link-stripe b-animate-go thickbox">
+                            <img src="upload/<%=data[i].pic%>" class="img-responsive" alt="">
                         </div>
                     </div>
-            </a>
-            <div class="product-info simpleCart_shelfItem">
-                <div class="product-info-cust prt_name">
-                    <h4>Lights #1</h4>
-                    <span class="item_price">$187.95</span>
-                    <div class="ofr">
-                        <p class="pric1">
-                            <del>Rs 280</del>
-                        </p>
-                        <p class="disc">[12% Off]</p>
+                    <div class="product-info simpleCart_shelfItem">
+                        <div class="product-info-cust prt_name">
+                            <h4 class="pro_name"><%=data[i].product_name%></h4>
+                            <span class="item_price"><%=data[i].price%>元</span>
+                            <input type="text" class="item_quantity" value="1" id="amount"/>
+                            <input type="button" class="item_add items" value="加入購物車" onclick="addToCart(<%=data[i].product_id %>,this)">
+                            <div class="clearfix"> </div>
+                        </div>
                     </div>
-                    <input type="text" class="item_quantity" value="1" />
-                    <input type="button" class="item_add items" value="ADD">
-                    <div class="clearfix"> </div>
-                </div>
+                </section>
+                <% } %>
             </div>
-            </div>
-            </div>
-            </div>
-
-
-
-
-            </div>
-        </section>
+            <nav aria-label="Page navigation example" class="v-center">
+                <input type="hidden" name="page" val="0">
+                <ul class="pagination">
+                    <li class="page-item">
+                        <a class="page-link" href="#">Previous</a>
+                    </li>
+                    <% for(var i=1 ; i <= pages; i++) { %>
+                    <li class="page-item">
+                        <a class="page-link" href="#"><%=i%></a>
+                    </li>
+                    <% } %>
+                    <li class="page-item">
+                        <a class="page-link" href="#">Next</a>
+                    </li>
+                </ul>
+            </nav>
         </div>
+    </section>
+</div>
 </form>
 
-        <!-- <div class="row wrap1280">
-            <div class="col-lg-12">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        DataTables Advanced Tables
-                    </div>
-                    <form id="mainForm" action="/product/addToCart" method="POST">
-                        <input type="hidden" id="product" name="productId" />
-                        <div id="panBody" class="panel-body">
-                            <table id="product_list" width="100%" class="table table-striped table-bordered table-hover" id="dataTables-example">
-                                <div>
-                                    <span>排序方式</span>
-                                    <select name="sort" id="sort" onchange="sortSearch()">
-                                        <option value="">請選擇條件</option>
-                                        <option value="1">售價(由低至高)</option>
-                                        <option value="2">售價(由高至低)</option>
-                                    </select>
-                                </div>
-                                <div>
-                                    <input type="text" name="search" id="search">
-                                    <input type="button" value="查詢" onclick="sortSearch()">
-                                </div> -->
-                                <thead>
-                                    <tr>
-                                        <th>圖片</th>
-                                        <th>品名</th>
-                                        <th>產品說明</th>
-                                        <th>售價</th>
-                                        <th>存貨狀況</th>
-                                        <th>放入購物車</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <% for(var i=0 ; i < data.length;i++) { %>
-                                        <tr class="odd gradeX">
-                                            <td>
-                                                <img src="<%=data[i].pic %>" alt="" />
-                                            </td>
-                                            <td>
-                                                <%=data[i].product_name %>
-                                            </td>
-                                            <td>
-                                                <%=data[i].description %>
-                                            </td>
-                                            <td class="price">
-                                                <%=data[i].price %>
-                                            </td>
-                                            <td>
-                                                <%=data[i].stock %>
-                                            </td>
-                                            <td>
-                                                <button onclick="addToCart(<%=data[i].product_id %>)">加入購物車</button>
-                                            </td>
-                                        </tr>
-                                    <% } %>
-                                </tbody>
-                            </table>
-                            <!-- /.table-responsive -->
-        
-                        </div>
-                    </form>
-                    <!-- /.panel-body -->
-                </div>
-                <!-- /.panel -->
-            </div>
-            <!-- /.col-lg-12 -->
-        </div>
-        <!-- /.row -->
 <script>
     $(function () {        
-        var request = new XMLHttpRequest();     
+        var request = new XMLHttpRequest();   
+        var pages = "<%=pages%>";
+        console.log(pages);
     });
 
-    function addToCart(productId){
-        $("#product").val(productId);
+    function addToCart(productId,k){
+        $("#productId").val(productId);
+        var amount = $(k).parent().find(".item_quantity").val();
+        $('#productAmount').val(amount);
         // alert($("#product").val());
+        $('#mainForm').submit();
     }
 
     function sortSearch() {

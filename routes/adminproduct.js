@@ -11,7 +11,7 @@ var multer = require('multer');
 // var upload = multer({ dest: 'public/upload/' });
 var path = require('path');
 const storage = multer.diskStorage({
-    destination: path.join('../public/upload/'),
+    destination: path.join('public/upload/'),
     filename: function (req, file, cb) {
         cb(null, file.originalname.replace(path.extname(file.originalname),"") +
          '-' + Date.now() + path.extname(file.originalname));
@@ -96,6 +96,48 @@ router.get('/product-list', function (req, res) {
         });
     });
 });
+router.get('/product-list', function (req, res) {
+    var loginStatus = false;
+    req.session.admin = 1;
+    if (req.session.admin > 1) {
+        loginStatus = true;
+    }
+    con.query('SELECT * FROM product', function (err, rows) {
+        var data = rows;
+        if (err) {console.log(err);}
+        res.render('backend/product', {
+            loginStatus: loginStatus,
+            data: data,
+            moment: moment,
+        });
+    });
+});
+
+router.post('/ajaxDeleteProduct', function (req, res) {
+    var loginStatus = false;
+    req.session.admin = 1;
+    if (req.session.admin > 1) {
+        loginStatus = true;
+    }
+    var sql = {
+        productId:req.body.productId,
+    }
+    con.query('DELETE FROM product WHERE product_id=?', sql.productId, function (err, rows) {
+        var data = rows;
+        if (err) {console.log(err);}
+        console.log(data);
+        con.query('SELECT * FROM product', function (err, rows) {
+            var data = rows;
+            if (err) { console.log(err); }
+            res.render('backend/ajax_product', {
+                loginStatus: loginStatus,
+                data: data,
+                moment: moment,
+            });
+        });
+    });
+});
+
 router.get('/product-add', function (req, res) {
     var loginStatus; 
     if (req.session.admin <= 1) {
@@ -122,42 +164,33 @@ router.post('/product-add1', upload, function (req, res) {
         loginStatus = true;
     }
     var sql = {
-        product: req.body.product,
+        product_name: req.body.product_name,
         price: req.body.price,
         stock: req.body.stock,
-        uptime: req.body.uptime,
-        downtime: req.body.downtime,
         description: req.body.description,
         pic: req.body.pic,
         addtime: req.body.addtime,
-        changetime: req.body.changetime,
         ident: req.body.ident,
         sort: req.body.sort,
         category: req.body.category,
     };
-    var slqQuery = "INSERT INTO product(product,price,stock,uptime,downtime,description,addtime,changetime,ident,sort,category) VALUE(?,?,?,?,?,?,?,?,?,?,?)";
-    con.query(slqQuery, [sql.product, sql.price, sql.stock , sql.uptime, sql.downtime, sql.description, sql.addtime, sql.changetime, sql.ident,sql.sort,sql.category],function(err,rows){
-        if(err){console.log(err);}
-        var data = rows;
-    });
     var file = req.file;
-    console.log(file);
+    // console.log(file);
     console.log('文件類型：' + file.mimetype);
     console.log('文件副檔名：' + path.extname(file.originalname));
     console.log('原始文件名：' + file.originalname);
     console.log('DB儲存文件名稱：' + file.filename);
     console.log('文件保存路径：' + file.path);
-    var slqQuery = "INSERT INTO test(pic) VALUE(?)";
     upload(req, res, err => {
-        if (err) { console.log(err); }
-        var sql = "INSERT INTO test(pic) VALUES(?)";
-        con.query(sql, file.filename, function (err, rows) {
+        var slqQuery = "INSERT INTO product(product_name,price,stock,description,ident,sort,category,pic,addtime) VALUE(?,?,?,?,?,?,?,?,NOW())";
+        con.query(slqQuery, [sql.product_name, sql.price, sql.stock, sql.description, sql.ident, sql.sort, sql.category, file.filename, sql.addtime], function (err, rows) {
             if (err) { console.log(err); }
-            res.render('backend/test', {
+            var data = rows;
+            res.render('backend/toBackProduct', {
                 loginStatus: loginStatus,
-                message: '<span class="alert alert-success">照片新增成功</span>',
+                message: '產品新增成功',
             });
-        })
+        });
     });
 });
 

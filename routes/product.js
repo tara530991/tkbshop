@@ -39,15 +39,28 @@ router.get('/', function (req, res) {
   console.log("登入狀態：" + loginStatus);  
   console.log("登入次數：" + req.session.views);  
   console.log(req.query.sort);
-  sqlQuery = ' SELECT * FROM product ';
-  con.query(sqlQuery,function(err,rows){
+  var limit = 6;
+  var startpage = req.query.page * 6;
+  sqlQuery = 'SELECT COUNT(product_id) AS len FROM product';
+  con.query(sqlQuery,  function (err, rows) {
     var data = rows;
-    console.log(data);
-    res.render('product',{
-      loginStatus: loginStatus,     
-      username: req.session.username,                                          
-      data : data,
-      moment:moment,
+    var count = data[0].len;
+    // var pages = Math.round(count / 6);
+    var pages = 10;
+    console.log(count);    
+    console.log(pages);    
+    sqlQuery = 'SELECT * FROM product LIMIT 0,6';
+    con.query(sqlQuery, startpage, function(err,rows){
+      var data = rows;
+      console.log(data);
+        res.render('product',{
+          loginStatus: loginStatus,     
+          username: req.session.username,                                          
+          data : data,
+          count: count,
+          pages: pages,
+          moment: moment,
+      });
     });
   })
 });
@@ -66,6 +79,7 @@ router.get('/ajaxProduct', function (req, res) {
     sort: req.query.sort,
     search: req.query.search, 
   }
+  console.log(sql.sort);
   var sqlQuery = "SELECT * FROM product WHERE concat(product_name,description) LIKE '%" + 
     sql.search + "%' ORDER BY price";
   if (sql.sort ==1){
@@ -94,17 +108,19 @@ router.post('/addToCart', function (req, res) {
   console.log("登入狀態：" + loginStatus);
   console.log("登入次數：" + req.session.views);  
   var sql = {
+    email: req.session.email,
     productId: req.body.productId,
+    productAmount: req.body.productAmount,
   };
-  console.log(sql.productId);
+  console.log(sql);
   sqlQuery = 'SELECT * FROM cart_shopping WHERE MEMBER_EMAIL= ? && PRODUCT_ID= ? && status="on" ;';
-  con.query(sqlQuery, [req.session.email, sql.productId],function(err,rows){
+  con.query(sqlQuery, [sql.email, sql.productId],function(err,rows){
     var data = rows;
     console.log(data);
     // console.log("資料長度：" + data.length);
       if (data.length == 0 || data.length == null) {
-        sqlQuery = 'INSERT INTO cart_shopping (MEMBER_EMAIL,PRODUCT_ID,PRODUCT_AMOUNT,addtime) VALUE(?,?,1,NOW());';
-        con.query(sqlQuery, [req.session.email, sql.productId], function (err, rows) {
+        sqlQuery = 'INSERT INTO cart_shopping (MEMBER_EMAIL,PRODUCT_ID,PRODUCT_AMOUNT,addtime) VALUE(?,?,?,NOW());';
+        con.query(sqlQuery, [sql.email, sql.productId, sql.productAmount], function (err, rows) {
           var data = rows;
           if (err) { console.log(err); }
           res.render('toCart', {
@@ -115,9 +131,9 @@ router.post('/addToCart', function (req, res) {
           })
         })
       } else if (data.length > 0) {
-        sqlQuery = 'UPDATE cart_shopping SET PRODUCT_AMOUNT=PRODUCT_AMOUNT+1,' +
+        sqlQuery = 'UPDATE cart_shopping SET PRODUCT_AMOUNT=PRODUCT_AMOUNT+?,' +
         ' lastchangetime=NOW() WHERE MEMBER_EMAIL=? && PRODUCT_ID=?;';
-        con.query(sqlQuery, [req.session.email, sql.productId], function (err, rows) {
+        con.query(sqlQuery, [sql.productAmount,sql.email, sql.productId], function (err, rows) {
           var data = rows;
           if (err) { console.log(err); }
           res.render('toCart', {
