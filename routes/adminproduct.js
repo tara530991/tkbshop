@@ -186,7 +186,7 @@ router.post('/product-add1', upload, function (req, res) {
         con.query(slqQuery, [sql.product_name, sql.price, sql.stock, sql.description, sql.ident, sql.sort, sql.category, file.filename, sql.addtime], function (err, rows) {
             if (err) { console.log(err); }
             var data = rows;
-            res.render('backend/toBackProduct', {
+            res.render('backend/toProduct', {
                 loginStatus: loginStatus,
                 message: '產品新增成功',
             });

@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+<% include backheader %>
+<body>
+    <form id="mainForm" action="/adminP/product-add" method="GET">
+        <input type="hidden" id="message" value="<%- message %>"/>
+    </form>
+</body>
+<script>
+    $(function(){
+        alert($("#message").val());
+        $("#mainForm").submit();
+    });
+</script>
+</html>

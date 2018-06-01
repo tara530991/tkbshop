@@ -10,7 +10,8 @@
         .items{margin:0 0 0 5px!important;}
         .product-list{margin:5em 0 0;}
         .item_add{padding:0.5em 1em !important;} 
-        .v-center{position:absolute;bottom: -25%;left:50%;transform:translateX(-50%);}
+        .v-center{position:absolute;bottom: -5em;left:50%;transform:translateX(-50%);}
+        .page-item {cursor: pointer;}
     </style>
 </head>
 <% include header %>
@@ -38,7 +39,11 @@
                 </label>
             </div>
             <div class="col-lg-5">
-                <input type="text" name="search" id="search" class="form-control input-sm">
+                <% if(serach == null) { %>
+                    <input type="text" name="search" id="search" class="form-control input-sm">
+                <% }else{ %>
+                    <input type="text" name="search" id="search" class="form-control input-sm" value="<%=search %>">                    
+                <% } %>
                 <input type="button" class="btn btn-info btn-sm" value="查詢" onclick="sortSearch()">
             </div>
             <div></div>
@@ -70,33 +75,42 @@
                     </div>
                 </section>
                 <% } %>
+                <!-- 分頁 -->
+                <nav aria-label="Page navigation example" class="v-center">
+                    <input type="hidden" name="nowPage" id="nowPage" value="1">
+                    <input type="hidden" name="pages" id="pages" value="<%=pages %>">
+                    <input type="hidden" name="count" id="count" value="<%=count %>">
+                    <ul class="pagination">
+                        <li id="preBtn" class="page-item" onclick="sortSearch(0)">
+                            <a class="page-link">Previous</a>
+                        </li>
+                        <% for(var i=1 ; i <= pages ; i++) { %>
+                            <li class="page-item" onclick="sortSearch(<%=i%>)">
+                                <a class="page-link"><%=i%></a>
+                            </li>
+                        <% } %>
+                        <li id="nextBtn" class="page-item" onclick="sortSearch(2)">
+                            <a class="page-link">Next</a>
+                        </li>
+                    </ul>
+                </nav>
             </div>
-            <nav aria-label="Page navigation example" class="v-center">
-                <input type="hidden" name="page" val="0">
-                <ul class="pagination">
-                    <li class="page-item">
-                        <a class="page-link" href="#">Previous</a>
-                    </li>
-                    <% for(var i=1 ; i <= pages; i++) { %>
-                    <li class="page-item">
-                        <a class="page-link" href="#"><%=i%></a>
-                    </li>
-                    <% } %>
-                    <li class="page-item">
-                        <a class="page-link" href="#">Next</a>
-                    </li>
-                </ul>
-            </nav>
         </div>
     </section>
 </div>
 </form>
-
 <script>
     $(function () {        
-        var request = new XMLHttpRequest();   
-        var pages = "<%=pages%>";
-        console.log(pages);
+        function btnDisable() {
+            var nowPage =　$("#nowPage").val();
+            var pages =  $("#pages").val();
+            if(nowPage == 1){
+                $("#preBtn").addClass("disabled");
+            }else if(nowPage == pages){
+                $("#nextBtn").addClass("disabled");                
+            }
+        }
+        btnDisable();
     });
 
     function addToCart(productId,k){
@@ -107,7 +121,8 @@
         $('#mainForm').submit();
     }
 
-    function sortSearch() {
+    function sortSearch(pagesNum) {   
+        $("#nowPage").val(pagesNum);     
         $.ajax({
             url: '/product/ajaxProduct',
             method: 'GET',
@@ -115,17 +130,21 @@
             data: {
                 sort: $('#sort').val(),
                 search: $('#search').val(),
+                nowPage: $('#nowPage').val(),
+                pages: $('#pages').val(),
+                count: $('#count').val(),
             },
             success: function (data) {
+                console.log(data);
                 $('#product_list').remove();
                 $('#panBody').append(data);
+                btnDisable();
             },
             error: function (err) {
                 console.log(err);
             }
         })
     }
-
 </script>
 </body>
 </html>

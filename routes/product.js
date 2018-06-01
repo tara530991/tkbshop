@@ -38,27 +38,27 @@ router.get('/', function (req, res) {
   }
   console.log("登入狀態：" + loginStatus);  
   console.log("登入次數：" + req.session.views);  
-  console.log(req.query.sort);
-  var limit = 6;
-  var startpage = req.query.page * 6;
-  sqlQuery = 'SELECT COUNT(product_id) AS len FROM product';
+  var startcount = 0;
+  var search = null;
+  var sqlQuery = 'SELECT COUNT(product_id) AS len FROM product';
   con.query(sqlQuery,  function (err, rows) {
     var data = rows;
-    var count = data[0].len;
-    // var pages = Math.round(count / 6);
-    var pages = 10;
-    console.log(count);    
-    console.log(pages);    
-    sqlQuery = 'SELECT * FROM product LIMIT 0,6';
-    con.query(sqlQuery, startpage, function(err,rows){
+    var count = data[0].len;  //筆數
+    var pages = Math.round(count / 6) + 1;  //總頁數
+    console.log("資料筆數：" + count);
+    console.log("總頁數：" + pages);
+    console.log("資料開始抓取起始數：" + startcount);    
+    sqlQuery = 'SELECT * FROM product LIMIT ?,6';
+    con.query(sqlQuery, startcount, function (err, rows) {
       var data = rows;
-      console.log(data);
+      // console.log(data);
         res.render('product',{
           loginStatus: loginStatus,     
           username: req.session.username,                                          
           data : data,
           count: count,
           pages: pages,
+          serach: search,
           moment: moment,
       });
     });
@@ -78,23 +78,117 @@ router.get('/ajaxProduct', function (req, res) {
   var sql = {
     sort: req.query.sort,
     search: req.query.search, 
+    nowPage: req.query.nowPage,
+    pages: req.query.pages,
+    count: req.query.count,
   }
-  console.log(sql.sort);
-  var sqlQuery = "SELECT * FROM product WHERE concat(product_name,description) LIKE '%" + 
-    sql.search + "%' ORDER BY price";
-  if (sql.sort ==1){
-    sqlQuery += " ASC;";
-  } else if (sql.sort == 2){
-    sqlQuery += " DESC;";
-  }
-  con.query(sqlQuery,function(err,rows){
-    var data = rows;
-    res.render('ajax_product',{
-      loginStatus: loginStatus,     
-      username: req.session.username,                                          
-      data : data,
+  console.log("排序方式：" + sql.sort);
+  console.log("前台點選頁數：" + sql.nowPage);
+  console.log("搜尋詞：" + sql.search);
+  console.log("總資料筆數：" + sql.count);
+  var startcount = 0;
+  if (sql.sort == "" && sql.search == ""){
+    //只有換頁動作
+    var startcount = (sql.nowPage - 1) * 6; //預設第1頁為0，0、6、12...
+    console.log("資料開始抓取起始數：" + startcount);    
+    var sqlQuery = 'SELECT * FROM product LIMIT ?,6';
+    con.query(sqlQuery, startcount, function (err, rows) {
+      var data = rows;
+      // console.log(data);
+      res.render('ajax_product', {
+        loginStatus: loginStatus,
+        username: req.session.username,
+        data: data,
+        count: sql.count,
+        nowPage: req.query.nowPage,        
+        pages: sql.pages,
+        serach: sql.search,
+        moment: moment,
+      });
     });
-  })
+  } else {
+    //包含查詢條件或排序條件的情況
+
+  }
+  // var sqlQuery = "SELECT * FROM product WHERE concat(product_name,description) LIKE '%" + sql.search + "%' ORDER BY price ";
+  // if (sql.sort == 1) {　sqlQuery += " ASC ";
+  // } else if (sql.sort == 2) { sqlQuery+= " DESC "; }
+  // sqlQuery +=" LIMIT ?, 6;";
+  // con.query(sqlQuery, startcount, function (err, rows) {
+  //   if (err) {console.log(err);}      
+  //   var data = rows;
+  //   // console.log(data);
+  //   var count = data[0].len; //筆數
+  //   var pages = Math.round(count / 6); //當前頁數
+  //   var startcount = (sql.pages - 1) * 6; //預設第1頁為0，0、6、12...
+  //   console.log("資料筆數：" + count);
+  //   console.log("當前頁數：" + pages);
+  //   console.log("資料開始抓取起始數：" + startcount);
+  //   res.render('ajax_product',{
+  //     loginStatus: loginStatus,     
+  //     username: req.session.username,                                          
+  //     data: data, 
+  //     count: count,
+  //     pages: pages,
+  //     search: sql.search,
+  //     moment: moment,
+  //   });
+  // });
+});
+
+router.get('', function (req, res) {
+  if (req.session.email) {
+    loginStatus = true;
+    req.session.views++;
+  } else {
+    loginStatus = false;
+    req.session.views = 1;
+  }
+  console.log("登入狀態：" + loginStatus);
+  console.log("登入次數：" + req.session.views);
+  var sql = {
+    sort: req.query.sort,
+    search: req.query.search,
+    pages: req.query.pages,
+  }
+  console.log("排序方式：" + sql.sort);
+  console.log("前台點選頁數：" + sql.pages);
+  console.log("搜尋詞：" + sql.search);
+  var sqlQuery = "SELECT COUNT(product_id) AS len FROM product WHERE product_name" +
+    " LIKE '%" + sql.search + "%' OR description LIKE '%" + sql.search + "%';";
+  con.query(sqlQuery, function (err, rows) {
+    if (err) {
+      console.log(err);
+    }
+    var data = rows;
+    console.log(data);
+    var count = data[0].len; //筆數
+    var pages = Math.round(count / 6); //當前頁數
+    var startcount = (sql.pages - 1) * 6; //預設第1頁為0，0、6、12...
+    console.log("資料筆數：" + count);
+    console.log("當前頁數：" + pages);
+    console.log("資料開始抓取起始數：" + startcount);
+    var sqlQuery = "SELECT * FROM product WHERE WHERE product_name LIKE '%" +
+      sql.search + "%' OR description LIKE '%" + sql.search + "%' LIMIT ?,6 ;";
+    if (sql.sort == 1) {
+      sqlQuery += " ASC;";
+    } else if (sql.sort == 2) {
+      sqlQuery += " DESC;";
+    }
+    con.query(sqlQuery, startcount, function (err, rows) {
+      if (err) {console.log(err);}
+      var data = rows;
+      console.log(data);
+      res.render('ajax_product', {
+        loginStatus: loginStatus,
+        username: req.session.username,
+        data: data,
+        count: count,
+        pages: pages,
+        moment: moment,
+      });
+    });
+  });
 });
 
 router.post('/addToCart', function (req, res) {

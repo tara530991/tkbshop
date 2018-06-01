@@ -4,36 +4,47 @@
         <input type="hidden" id="productId" name="productId">
         <input type="hidden" id="productAmount" name="productAmount">
         <% for(var i=0 ; i<data.length;i++) { %>
-            <section class="col-lg-4">
-                <a href="#">
-                    <div class="product-grid">
-                        <div class="more-product">
-                            <span> </span>
-                        </div>
-                        <div class="product-img b-link-stripe b-animate-go thickbox">
-                            <img src="upload/<%=data[i].pic%>" class="img-responsive" alt="">
-                            <div class="b-wrapper">
-                                <h4 class="b-animate b-from-left  b-delay03">
-                                    <button>
-                                        <span class="glyphicon glyphicon-zoom-in" aria-hidden="true"></span>Quick View</button>
-                                </h4>
-                            </div>
-                        </div>
-                    </div>
-                </a>
-                <div class="product-info simpleCart_shelfItem">
-                    <div class="product-info-cust prt_name">
-                        <h4 class="pro_name">
-                            <%=data[i].product_name%>
-                        </h4>
-                        <span class="item_price">
-                            <%=data[i].price%>元</span>
-                        <input type="text" class="item_quantity" value="1" id="amount" />
-                        <input type="button" class="item_add items" value="加入購物車" onclick="addToCart(<%=data[i].product_id %>)">
-                        <div class="clearfix"> </div>
-                    </div>
+        <section class="col-lg-4">
+            <div class="product-grid">
+                <div class="more-product">
+                    <span> </span>
                 </div>
-            </section>
-            <% } %>
+                <div class="product-img b-link-stripe b-animate-go thickbox">
+                    <img src="upload/<%=data[i].pic%>" class="img-responsive" alt="">
+                </div>
+            </div>
+            <div class="product-info simpleCart_shelfItem">
+                <div class="product-info-cust prt_name">
+                    <h4 class="pro_name">
+                        <%=data[i].product_name%>
+                    </h4>
+                    <span class="item_price">
+                        <%=data[i].price%>元</span>
+                    <input type="text" class="item_quantity" value="1" id="amount" />
+                    <input type="button" class="item_add items" value="加入購物車" onclick="addToCart(<%=data[i].product_id %>,this)">
+                    <div class="clearfix"> </div>
+                </div>
+            </div>
+        </section>
+        <% } %>
+        <!-- 分頁 -->
+        <nav aria-label="Page navigation example" class="v-center">
+            <input type="hidden" name="nowPage" id="nowPage" value="<%=nowPage %>">
+            <input type="hidden" name="pages" id="pages" value="<%=pages %>">
+            <input type="hidden" name="count" id="count" value="<%=count %>">
+            <ul class="pagination">
+                <li class="page-item" onclick="sortSearch(<%=nowPage %> - 1)">
+                    <a class="page-link">Previous</a>
+                </li>
+            <% for(var i=1 ; i <= pages ; i++) { %>
+                <li class="page-item" onclick="sortSearch(<%=i%>)">
+                    <a class="page-link"><%=i%></a>
+                </li>
+                <% } %>
+                <li class="page-item" onclick="sortSearch(<%=nowPage %> + 1)">
+                    <a class="page-link">Next</a>
+                </li>
+            </ul>
+        </nav>
     </div>
 </div>
