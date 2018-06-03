@@ -33,7 +33,7 @@
             <input type="hidden" name="pages" id="pages" value="<%=pages %>">
             <input type="hidden" name="count" id="count" value="<%=count %>">
             <ul class="pagination">
-                <li class="page-item" onclick="sortSearch(<%=nowPage %> - 1)">
+                <li id="preBtn"  class="page-item" onclick="sortSearch(<%=nowPage %> - 1)">
                     <a class="page-link">Previous</a>
                 </li>
             <% for(var i=1 ; i <= pages ; i++) { %>
@@ -41,7 +41,7 @@
                     <a class="page-link"><%=i%></a>
                 </li>
                 <% } %>
-                <li class="page-item" onclick="sortSearch(<%=nowPage %> + 1)">
+                <li id="nextBtn" class="page-item" onclick="sortSearch(<%=nowPage %> + 1)">
                     <a class="page-link">Next</a>
                 </li>
             </ul>

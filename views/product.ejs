@@ -101,17 +101,19 @@
 </form>
 <script>
     $(function () {        
-        function btnDisable() {
-            var nowPage =　$("#nowPage").val();
-            var pages =  $("#pages").val();
-            if(nowPage == 1){
-                $("#preBtn").addClass("disabled");
-            }else if(nowPage == pages){
-                $("#nextBtn").addClass("disabled");                
-            }
-        }
         btnDisable();
     });
+
+    function btnDisable() {
+        console.log(123);
+        var nowPage =　$("#nowPage").val();
+        var pages =  $("#pages").val();
+        if(nowPage == 1){
+            $("#preBtn").addClass("disabled");
+        }else if(nowPage == pages){
+            $("#nextBtn").addClass("disabled");                
+        }
+    }   
 
     function addToCart(productId,k){
         $("#productId").val(productId);

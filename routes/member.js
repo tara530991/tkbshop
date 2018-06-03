@@ -83,8 +83,9 @@ router.post('/login1', function (req, res) {
   } else if (loginStatus == true){
     console.log("已經為登入狀態");
     con.query("SELECT * FROM member WHERE email='" + sql.email + "'", sql, function (err, rows) {    
+      req.session.views ++;      
       var data = rows;      
-      res.render('toBack', {
+      res.render('toIndex', {
       loginStatus: true,        
       username: req.session.username,                      
       views: req.session.views,      

@@ -11,7 +11,7 @@ var loginStatus = false;
 var transporter = require('./email');
 
 function statusTransform(statusNum){
-  console.log("狀態" + statusNum);
+  // console.log("狀態" + statusNum);
   switch (statusNum) {
     case '01': status = "訂單處理中"; break;
     case '02': status = "待轉帳"; break;
@@ -23,7 +23,7 @@ function statusTransform(statusNum){
     case '14': status = "退貨申請-退款完成"; break;
     case '99': status = "訂單取消"; break;
   }
-  console.log("狀態" + status);
+  // console.log("狀態" + status);
   return status;
 }
 
@@ -84,111 +84,66 @@ router.get('/ajaxProduct', function (req, res) {
   }
   console.log("排序方式：" + sql.sort);
   console.log("前台點選頁數：" + sql.nowPage);
+  console.log("總頁數：" + sql.pages);
   console.log("搜尋詞：" + sql.search);
   console.log("總資料筆數：" + sql.count);
   var startcount = 0;
-  if (sql.sort == "" && sql.search == ""){
-    //只有換頁動作
-    var startcount = (sql.nowPage - 1) * 6; //預設第1頁為0，0、6、12...
-    console.log("資料開始抓取起始數：" + startcount);    
-    var sqlQuery = 'SELECT * FROM product LIMIT ?,6';
-    con.query(sqlQuery, startcount, function (err, rows) {
-      var data = rows;
-      // console.log(data);
-      res.render('ajax_product', {
-        loginStatus: loginStatus,
-        username: req.session.username,
-        data: data,
-        count: sql.count,
-        nowPage: req.query.nowPage,        
-        pages: sql.pages,
-        serach: sql.search,
-        moment: moment,
+  if (sql.nowPage > sql.pages || sql.nowPage == 0){
+  }else{
+    if (sql.sort == "" && sql.search == ""){
+      //只有換頁動作
+      var startcount = (sql.nowPage - 1) * 6; //預設第1頁為0，0、6、12...
+      console.log("資料開始抓取起始數：" + startcount);    
+      var sqlQuery = 'SELECT * FROM product LIMIT ?,6';
+      con.query(sqlQuery, startcount, function (err, rows) {
+        var data = rows;
+        // console.log(data);
+        res.render('ajax_product', {
+          loginStatus: loginStatus,
+          username: req.session.username,
+          data: data,
+          count: sql.count,
+          nowPage: req.query.nowPage,        
+          pages: sql.pages,
+          serach: sql.search,
+          moment: moment,
+        });
       });
-    });
-  } else {
-    //包含查詢條件或排序條件的情況
-
-  }
-  // var sqlQuery = "SELECT * FROM product WHERE concat(product_name,description) LIKE '%" + sql.search + "%' ORDER BY price ";
-  // if (sql.sort == 1) {　sqlQuery += " ASC ";
-  // } else if (sql.sort == 2) { sqlQuery+= " DESC "; }
-  // sqlQuery +=" LIMIT ?, 6;";
-  // con.query(sqlQuery, startcount, function (err, rows) {
-  //   if (err) {console.log(err);}      
-  //   var data = rows;
-  //   // console.log(data);
-  //   var count = data[0].len; //筆數
-  //   var pages = Math.round(count / 6); //當前頁數
-  //   var startcount = (sql.pages - 1) * 6; //預設第1頁為0，0、6、12...
-  //   console.log("資料筆數：" + count);
-  //   console.log("當前頁數：" + pages);
-  //   console.log("資料開始抓取起始數：" + startcount);
-  //   res.render('ajax_product',{
-  //     loginStatus: loginStatus,     
-  //     username: req.session.username,                                          
-  //     data: data, 
-  //     count: count,
-  //     pages: pages,
-  //     search: sql.search,
-  //     moment: moment,
-  //   });
-  // });
-});
-
-router.get('', function (req, res) {
-  if (req.session.email) {
-    loginStatus = true;
-    req.session.views++;
-  } else {
-    loginStatus = false;
-    req.session.views = 1;
-  }
-  console.log("登入狀態：" + loginStatus);
-  console.log("登入次數：" + req.session.views);
-  var sql = {
-    sort: req.query.sort,
-    search: req.query.search,
-    pages: req.query.pages,
-  }
-  console.log("排序方式：" + sql.sort);
-  console.log("前台點選頁數：" + sql.pages);
-  console.log("搜尋詞：" + sql.search);
-  var sqlQuery = "SELECT COUNT(product_id) AS len FROM product WHERE product_name" +
-    " LIKE '%" + sql.search + "%' OR description LIKE '%" + sql.search + "%';";
-  con.query(sqlQuery, function (err, rows) {
-    if (err) {
-      console.log(err);
-    }
-    var data = rows;
-    console.log(data);
-    var count = data[0].len; //筆數
-    var pages = Math.round(count / 6); //當前頁數
-    var startcount = (sql.pages - 1) * 6; //預設第1頁為0，0、6、12...
-    console.log("資料筆數：" + count);
-    console.log("當前頁數：" + pages);
-    console.log("資料開始抓取起始數：" + startcount);
-    var sqlQuery = "SELECT * FROM product WHERE WHERE product_name LIKE '%" +
-      sql.search + "%' OR description LIKE '%" + sql.search + "%' LIMIT ?,6 ;";
-    if (sql.sort == 1) {
-      sqlQuery += " ASC;";
-    } else if (sql.sort == 2) {
-      sqlQuery += " DESC;";
-    }
-    con.query(sqlQuery, startcount, function (err, rows) {
-      if (err) {console.log(err);}
-      var data = rows;
-      console.log(data);
-      res.render('ajax_product', {
-        loginStatus: loginStatus,
-        username: req.session.username,
-        data: data,
-        count: count,
-        pages: pages,
-        moment: moment,
+    } else {
+      //包含查詢條件或排序條件的情況
+      var sqlQuery = "SELECT COUNT(product_id) AS len FROM product WHERE concat(product_name,description)" + 
+      " LIKE '%" + sql.search + "%'";
+      con.query(sqlQuery, function (err, rows) {
+        if (err) {console.log(err);}      
+        var data = rows;
+        var count = data[0].len; //筆數
+        var pages = Math.round(count / 6) + 1; //總頁數
+        var startcount = (sql.nowPage - 1) * 6; //預設第1頁為0，0、6、12...
+        console.log("總資料筆數：" + count);
+        console.log("總頁數：" + pages);
+        console.log("資料開始抓取起始數：" + startcount);    
+        var sqlQuery = "SELECT * FROM product WHERE concat(product_name,description) LIKE '%" + 
+          sql.search + "%' ORDER BY price ";
+          if (sql.sort == 1) {　sqlQuery += " ASC ";
+        } else if (sql.sort == 2) { sqlQuery+= " DESC "; }
+        sqlQuery +=" LIMIT ?, 6;";
+        con.query(sqlQuery, startcount, function (err, rows) {  
+          if (err) {console.log(err);}      
+          var data = rows;
+          // console.log(data);
+          res.render('ajax_product',{
+            loginStatus: loginStatus,     
+            username: req.session.username,                                          
+            data: data, 
+            count: count,
+            pages: pages,
+            search: sql.search,
+            moment: moment,
+          });
+        });
       });
-    });
-  });
+    }
+  }
 });
 
 router.post('/addToCart', function (req, res) {
@@ -541,9 +496,10 @@ router.get('/orderlist', function (req, res) {
     orderId: req.body.orderId,
   }
   var sqlQuery = 'SELECT * FROM order_detail WHERE MEMBER_EMAIL=? ORDER BY addtime';
+  const newLocal = 'orderlist';
   con.query(sqlQuery, sql.email, function (err, rows) {
     var data = rows;
-    // console.log(data);
+    console.log(data);
     if (err) { console.log(err); }
     var statusArray = new Array();
     for (var i = 0; i < data.length; i++) {
@@ -580,58 +536,35 @@ router.post('/order', function (req, res) {
     var data = rows;
     console.log(data);
     if (err) { console.log(err); }
-    var sqlQuery2 = 'SELECT OP.product_id, OP.amount, P.product_name, P.pic, P.price,' + 
-    ' SUM(OP.amount * P.price) AS subtotal FROM order_product OP LEFT JOIN product P' +
-    ' ON OP.product_id = P.product_id WHERE order_id=?' + 
-    ' GROUP BY OP.product_id, OP.amount;';
-    con.query(sqlQuery2, sql.orderId, function (err, rows) {
-      var data2 = rows;
-      console.log(data2);
-      if (err) { console.log(err); }
-      var statusArray = new Array();      
-      statusArray.push(statusTransform(data[0].status));
-      res.render('order', {
+    if (data == 0){
+      res.render('toOrderSearch', {
         loginStatus: loginStatus,           
         username: req.session.username,
-        moment:moment, 
-        statusArray: statusArray,                                         
-        data: data,
-        data2: data2,
-        message: '',
+        message: '訂單號碼不存在',
       });
-    });
+    }else{
+      var sqlQuery2 = 'SELECT OP.product_id, OP.amount, P.product_name, P.pic, P.price,' + 
+      ' SUM(OP.amount * P.price) AS subtotal FROM order_product OP LEFT JOIN product P' +
+      ' ON OP.product_id = P.product_id WHERE order_id=?' + 
+      ' GROUP BY OP.product_id, OP.amount;';
+      con.query(sqlQuery2, sql.orderId, function (err, rows) {
+        var data2 = rows;
+        console.log(data2);
+        if (err) { console.log(err); }
+        var statusArray = new Array();      
+        statusArray.push(statusTransform(data[0].status));
+        res.render('order', {
+          loginStatus: loginStatus,           
+          username: req.session.username,
+          moment:moment, 
+          statusArray: statusArray,                                         
+          data: data,
+          data2: data2,
+          message: '',
+        });
+      });
+    }
   })
 });
 
-router.get('/sendEmail', function (req, res) {
-  if (req.session.email) {
-    loginStatus = true;
-    req.session.views++;
-  } else {
-    loginStatus = false;
-    req.session.views = 1;
-  }
-  console.log(123);
-  var Email = { 
-    from: "tara530991@gmail.com",
-    to: "tara530991@gmail.com",
-    subject: "重要訊息通知",
-    html: "<b>原因: 參數設定有問題，需要進行檢查</b>"
-  };
-  console.log(Email);
-
-  transporter.sendMail(Email,function(err,info){
-    if (err) {
-      console.log(err);
-    } else {
-      console.log("訊息已經完成傳送: " + info.response);
-    }
-  });
-
-    res.send('sendSuccess');
-
-})
-var mailOptions = function (data) {
-  this.data = data;
-}
 module.exports = router;
