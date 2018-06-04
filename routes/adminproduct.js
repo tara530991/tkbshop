@@ -19,6 +19,23 @@ const storage = multer.diskStorage({
 });
 const upload = multer({storage: storage}).single('pic');
 
+function statusTransform(statusNum) {
+    // console.log("狀態" + statusNum);
+    switch (statusNum) {
+        case '01': status = "訂單處理中"; break;
+        case '02': status = "待轉帳"; break;
+        case '03': status = "物流運送中"; break;
+        case '04': status = "訂單完成"; break;
+        case '11': status = "退貨申請送出"; break;
+        case '12': status = "退貨申請-收取退貨"; break;
+        case '13': status = "退貨申請-物流取貨"; break;
+        case '14': status = "退貨申請-退款完成"; break;
+        case '99': status = "訂單取消"; break;
+    }
+    // console.log("狀態" + status);
+    return status;
+}
+
 //管理端
 router.get('/category-list', function (req, res) {
     var loginStatus = false;
@@ -201,10 +218,26 @@ router.get('/order-list', function (req, res) {
     }else if(req.session.admin > 1) {
         loginStatus = true;
     }
-    res.render('backend/order',{
-        loginStatus: loginStatus,              
-        moment: moment,    
-    });
+    var sqlQuery = 'SELECT * FROM order_detail ORDER BY addtime';
+    const newLocal = 'orderlist';
+    con.query(sqlQuery, function (err, rows) {
+        var data = rows;
+        console.log(data);
+        if (err) { console.log(err); }
+        var statusArray = new Array();
+        for (var i = 0; i < data.length; i++) {
+            statusArray.push(statusTransform(data[i].status));
+        }
+        // console.log(statusArray);
+        res.render('backend/order', {
+            loginStatus: loginStatus,
+            username: req.session.username,
+            data: data,
+            statusArray: statusArray,
+            moment: moment,
+            message: '',
+        });
+    })
 });
 
 module.exports = router;

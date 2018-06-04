@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<div id="order_list">
+    <div class="container">
+        <ol class="breadcrumb">
+            <li>
+                <a href="/">首頁</a>
+            </li>
+            <li>
+                <a href="/member">會員中心</a>
+            </li>
+            <li><a href=""></a>訂單列表</li>
+            <li class="active">訂單明細</li>
+        </ol>
+    </div>
+    <div class="col-lg-12">
+        <h2 class="top">訂單列表</h2>
+    </div>
+    <div class="col-lg-10">
+        <h3 class="text-center col-lg-offset-2">訂單明細</h3>
+        <table class="myTable table table-hover col-lg-offset-1">
+            <thead>
+                <tr>
+                    <th scope="col" class="col-lg-1 text-center">訂單編號</th>
+                    <th scope="col" class="col-lg-1 text-center">訂單成立時間</th>
+                    <th scope="col" class="col-lg-1 text-center">收件人</th>
+                    <th scope="col" class="col-lg-3 text-center">收件地址</th>
+                    <th scope="col" class="col-lg-2 text-center">總金額</th>
+                    <th scope="col" class="col-lg-2 text-center">訂單狀態</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% for(var i=0 ; i < data.length;i++) { %>
+                    <tr>
+                        <td scope="row" class="text-center">
+                            <%=data[i].order_id %>
+                                <input type="hidden" name="orderId" value="<%=data[i].order_id %>">
+                        </td>
+                        <td class="text-center">
+                            <%=moment(data[i].addtime).format('YYYY-MM-DD') %>
+                        </td>
+                        <td class="text-center">
+                            <%=data[i].buyer %>
+                        </td>
+                        <td>
+                            <%=data[i].address %>
+                        </td>
+                        <td class="text-center">
+                            <%=data[i].total%>
+                        </td>
+                        <td class="text-center">
+                            <%=statusArray[i] %>
+                        </td>
+                    </tr>
+                    <% } %>
+            </tbody>
+        </table>
+        <h3 class="text-center col-lg-offset-2">商品明細</h3>
+        <table class="myTable table table-hover col-lg-offset-1">
+            <thead>
+                <tr>
+                    <th scope="col" class="col-lg-3 text-center">圖片</th>
+                    <th scope="col" class="col-lg-3 text-center">商品名稱</th>
+                    <th scope="col" class="col-lg-1 text-center">售價</th>
+                    <th scope="col" class="col-lg-1 text-center">購買數量</th>
+                    <th scope="col" class="col-lg-2 text-center">小計金額</th>
+            </thead>
+            <tbody>
+                <% for(var i=0 ; i < data2.length;i++) { %>
+                    <tr>
+                        <td scope="row" class="text-center">
+                            <img class="pro-pic" src="/upload/<%=data2[i].pic %>" alt="">
+                        </td>
+                        <td class="text-center h-center">
+                            <%=data2[i].product_name %>
+                        </td>
+                        <td class="text-center h-center">
+                            <%=data2[i].price %>
+                        </td>
+                        <td class="text-center h-center">
+                            <%=data2[i].amount %>
+                        </td>
+                        <td class="text-center h-center">
+                            <%=data2[i].subtotal %>
+                        </td>
+                    </tr>
+                    <% } %>
+            </tbody>
+        </table>
+    </div>
+</div>

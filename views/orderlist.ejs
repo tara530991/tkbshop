@@ -2,46 +2,50 @@
 <html lang="en">
 <head>
     <title>訂單列表</title>
+    <style>
+        h3{margin-bottom:1.5em !important;margin-top:0.5em !important;}        
+    </style>
 </head>
 <% include header %>
 <body>
-<!-- <form id="mainForm" action="product/orderlist" method="GET"> -->
+<form id="mainForm" action="/product/orderContent" method="POST">
     <div id="wrapper">
         <div id="page">
             <% if(loginStatus == false) {%>
                 <% include loginlayout %>
             <% }else if(loginStatus == true) { %>
-            <div class="container">
-                <ol class="breadcrumb">
-                    <li><a href="/">首頁</a></li>
-                    <li><a href="member">會員中心</a></li>
-                    <li class="active">訂單列表</li>
-                </ol>
-            </div>
-            <div class="col-lg-12">
-                <h2 class="top">訂單列表</h2>
-            </div>
-            <div class="col-lg-10">
-                <section id="panBody">
-                    <div id="news_list">
-                        <h3 class="text-center col-lg-offset-2">訂單明細</h3>
+            <section id="panBody">
+                <div id="order_list">
+                    <div class="container">
+                        <ol class="breadcrumb">
+                            <li><a href="/">首頁</a></li>
+                            <li><a href="/member">會員中心</a></li>
+                            <li class="active">訂單列表</li>
+                        </ol>
+                    </div>
+                    <div class="col-lg-12">
+                        <h2 class="top">訂單列表</h2>
+                    </div>
+                    <div class="col-lg-10">
+                        <h3 class="text-center col-lg-offset-2">訂單明細列表</h3>
                         <table class="myTable table table-hover col-lg-offset-1">
                             <thead>
                                 <tr>
                                     <th scope="col" class="col-lg-1 text-center">訂單編號</th>
-                                    <th scope="col" class="col-lg-1 text-center">訂單成立時間</th>
+                                    <th scope="col" class="col-lg-2 text-center">訂單成立時間</th>
                                     <th scope="col" class="col-lg-1 text-center">收件人</th>
-                                    <th scope="col" class="col-lg-3 text-center">收件地址</th>
-                                    <th scope="col" class="col-lg-2 text-center">總金額</th>
+                                    <th scope="col" class="col-lg-4 text-center">收件地址</th>
+                                    <th scope="col" class="col-lg-1 text-center">總金額</th>
                                     <th scope="col" class="col-lg-2 text-center">訂單狀態</th>
+                                    <th scope="col" class="col-lg-1 text-center">訂單明細</th>
                                 </tr>
                             </thead>
                             <tbody>
+                                <input type="hidden" name="orderId" id="orderId">
                                 <% for(var i=0 ; i < data.length;i++) { %>
                                 <tr>
                                     <td scope="row"class="text-center">
                                         <%=data[i].order_id %>
-                                        <input type="hidden" name="orderId" value="<%=data[i].order_id %>">
                                     </td>
                                     <td class="text-center">
                                         <%=moment(data[i].addtime).format('YYYY-MM-DD') %>
@@ -59,29 +63,29 @@
                                         <%=statusArray[i] %>
                                     </td>
                                     <td>
-                                        <input type="submit" onclick="addOrder('<%=data[i].order_id %>')" value="查看更多">
+                                        <input type="button" onclick="orderContent('<%=data[i].order_id %>')" value="查看更多" class="btn btn-info">
                                     </td>
                                 </tr>
                                 <% } %>
                             </tbody>
                         </table>
                     </div>
-                </section>
-            </div>
+                </div>
+            </section>
+            <% } %>            
         </div>
     </div>
-<!-- </form> -->
-
-
-
+</form>
 
 <script>
     $(function () {
-
+        $('.memenu li').eq(5).addClass('active');  
     })
-    function addOrder(orderId){
-        $("#order").val(orderId);
-        // alert($("#order").val());
+
+    function orderContent(orderId){
+        $("#orderId").val(orderId);
+        console.log($("#orderId").val());
+        $('#mainForm').submit();
     }
 </script>
 </body>

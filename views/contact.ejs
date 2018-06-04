@@ -3,43 +3,41 @@
 <head>
     <title>聯絡我們</title>
     <style>
-        #contact h2 {margin:0;}
-        #contact section{margin:0 250px;}
-        #contact>section>:last-child{margin:1rem 0 5rem;}
-        #suggest span {display:inline-block;margin:0.5rem;}        
+        .myListGroup {max-width: 300px;}
+        .myListGroup a{margin:20px 50px;}      
     </style>
 </head>
 <% include header %>
 <body>
-    <main>
-    <div id="contact">
-        <section id="info">
-            <h2>店家資訊</h2>
-            <div class="map"></div>
-            <div>
-                <span>中文地址：台北市仁愛路9段100號</span><br>
-                <span>電話:(02)12341234</span><br>
-                <span>營業時間：10：00-22：00</span>          
-            </div>
-        </section>
-        <section id="suggest">
-            <h2>客戶反應意見欄</h2>
-            <form action="contact1" method="POST">
-                <span>姓名：</span><input type="text" id="name" name="name"><br>
-                <span>電話：</span><input type="text" id="tel" name="tel"><br>
-                <span>手機：</span><input type="text" id="cell" name="cell"><br>
-                <span>Email：</span><input type="email" id="email" name="email"><br>
-                <span>地址：</span><input type="text" id="address" name="address"><br>
-                <span>內容：</span>
-                <textarea name="content" id="content" cols="30" rows="10"></textarea>
-                <div id="code"></div><span>驗證碼：</span><input type="text" id="verify"><br>
-                <input id="sub" type="submit" value="送出">
-            </form>
-            <%- message %>
-        </section>
-         <!-- 自動回信
-            親愛的小綠您好： 謝謝您寶貴的建議，我們會盡速與您連繫並回覆您的意見 TKB購物平台 感謝您 -->
-         </div>
-    </main>
+<div class="container">
+    <div class="row">
+        <div class="container">
+            <ol class="breadcrumb">
+                <li>
+                    <a href="/">首頁</a>
+                </li>
+                <li class="active">聯絡我們</li>
+            </ol>
+        </div>
+        <div class="col-lg-12">
+            <h2 class="top">聯絡我們</h2>
+        </div>
+        <div class="myListGroup col-lg-4 col-lg-offset-3">
+            <ul class="list-group">
+                <a href="/storeinfo">
+                    <li class="list-group-item">店家資訊</li>
+                </a>
+                <a href="/suggestion">
+                    <li class="list-group-item">顧客意見回覆</li>
+                </a>
+            </ul>
+        </div>
+    </div>
+</div>
+<script>
+    $(function () {
+        $('.memenu li').eq(6).addClass('active');
+    })
+</script>
 </body>
 </html>

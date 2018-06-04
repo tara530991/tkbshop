@@ -52,17 +52,17 @@ router.get('/', function (req, res) {
     con.query(sqlQuery, startcount, function (err, rows) {
       var data = rows;
       // console.log(data);
-        res.render('product',{
-          loginStatus: loginStatus,     
-          username: req.session.username,                                          
-          data : data,
-          count: count,
-          pages: pages,
-          serach: search,
-          moment: moment,
+      res.render('product',{
+        loginStatus: loginStatus,     
+        username: req.session.username,                                          
+        data : data,
+        count: count,
+        pages: pages,
+        serach: search,
+        moment: moment,
       });
     });
-  })
+  });
 });
 
 router.get('/ajaxProduct', function (req, res) {
@@ -82,6 +82,9 @@ router.get('/ajaxProduct', function (req, res) {
     pages: req.query.pages,
     count: req.query.count,
   }
+  if(sql.noPage == null){
+    sql.nowPage = 1;
+  }
   console.log("排序方式：" + sql.sort);
   console.log("前台點選頁數：" + sql.nowPage);
   console.log("總頁數：" + sql.pages);
@@ -89,9 +92,12 @@ router.get('/ajaxProduct', function (req, res) {
   console.log("總資料筆數：" + sql.count);
   var startcount = 0;
   if (sql.nowPage > sql.pages || sql.nowPage == 0){
+    //第一頁與最後一頁做不動作
+    console.log(1);
   }else{
     if (sql.sort == "" && sql.search == ""){
       //只有換頁動作
+    console.log(2);      
       var startcount = (sql.nowPage - 1) * 6; //預設第1頁為0，0、6、12...
       console.log("資料開始抓取起始數：" + startcount);    
       var sqlQuery = 'SELECT * FROM product LIMIT ?,6';
@@ -103,7 +109,7 @@ router.get('/ajaxProduct', function (req, res) {
           username: req.session.username,
           data: data,
           count: sql.count,
-          nowPage: req.query.nowPage,        
+          nowPage: sql.nowPage,        
           pages: sql.pages,
           serach: sql.search,
           moment: moment,
@@ -111,6 +117,7 @@ router.get('/ajaxProduct', function (req, res) {
       });
     } else {
       //包含查詢條件或排序條件的情況
+      console.log(3);
       var sqlQuery = "SELECT COUNT(product_id) AS len FROM product WHERE concat(product_name,description)" + 
       " LIKE '%" + sql.search + "%'";
       con.query(sqlQuery, function (err, rows) {
@@ -130,10 +137,11 @@ router.get('/ajaxProduct', function (req, res) {
         con.query(sqlQuery, startcount, function (err, rows) {  
           if (err) {console.log(err);}      
           var data = rows;
-          // console.log(data);
+          console.log(data);
           res.render('ajax_product',{
             loginStatus: loginStatus,     
             username: req.session.username,                                          
+            nowPage: sql.nowPage,
             data: data, 
             count: count,
             pages: pages,
@@ -210,7 +218,7 @@ router.get('/cart', function (req, res) {
   console.log("登入狀態：" + loginStatus);
   console.log("登入次數：" + req.session.views);  
   var sqlQuery = 'SELECT SUM(PD.price * CH.PRODUCT_AMOUNT) AS subtotal,' +
-    ' CH.PRODUCT_AMOUNT, PD.price, PD.product_name, PD.product_id AS PD_ID' +
+    ' CH.PRODUCT_AMOUNT, PD.price, PD.product_name, PD.pic, PD.product_id AS PD_ID' +
     ' FROM cart_shopping CH LEFT JOIN product PD on CH.PRODUCT_ID=PD.product_id' +
     ' WHERE MEMBER_EMAIL=? && status="on"' +
     ' GROUP BY CH.PRODUCT_ID, PD.product_id,CH.PRODUCT_AMOUNT;';
@@ -221,8 +229,8 @@ router.get('/cart', function (req, res) {
     res.render('cart',{
       loginStatus: loginStatus,
       username: req.session.username,                                          
-      message: '<sapn>尚未登入，請先進行<a href="/member/login">登入</a></sapn>',       
-      message2: '<sapn>購物車裡還沒有東西喔</sapn>',       
+      message: '<span>尚未登入，請先進行<a href="/member/login">登入</a></span>',       
+      message2: '<span>購物車裡還沒有東西喔<br>快來看看我們的<a href="/product">產品</a>吧</span>',       
       data:data,
     });
   })
@@ -251,7 +259,7 @@ router.get('/ajaxUpdateCart', function (req, res) {
     var data = rows;
     if (err) { console.log(err); }
     var sqlQuery = 'SELECT SUM(PD.price * CH.PRODUCT_AMOUNT) AS subtotal,' +
-      ' CH.PRODUCT_AMOUNT, PD.price, PD.product_name, PD.product_id AS PD_ID' +
+      ' CH.PRODUCT_AMOUNT, PD.price, PD.product_name, PD.pic, PD.product_id AS PD_ID' +
       ' FROM cart_shopping CH LEFT JOIN product PD on CH.PRODUCT_ID=PD.product_id' +
       ' WHERE MEMBER_EMAIL=? && status="on"' +
       ' GROUP BY CH.PRODUCT_ID, PD.product_id, CH.PRODUCT_AMOUNT;';
@@ -290,7 +298,7 @@ router.post('/ajaxDeleteCart', function (req, res) {
     var data = rows;
     if (err) { console.log(err); }
     var sqlQuery = 'SELECT SUM(PD.price * CH.PRODUCT_AMOUNT) AS subtotal,' +
-      ' CH.PRODUCT_AMOUNT, PD.price, PD.product_name, PD.product_id AS PD_ID' +
+      ' CH.PRODUCT_AMOUNT, PD.price, PD.product_name, PD.pic, PD.product_id AS PD_ID' +
       ' FROM cart_shopping CH LEFT JOIN product PD on CH.PRODUCT_ID=PD.product_id' +
       ' WHERE MEMBER_EMAIL=? && status="on" ' +
       ' GROUP BY CH.PRODUCT_ID, PD.product_id, CH.PRODUCT_AMOUNT;';
@@ -322,7 +330,7 @@ router.post('/check', function (req, res) {
     email: req.session.email,
   }  
   var sqlQuery = 'SELECT SUM(PD.price * CH.PRODUCT_AMOUNT) AS subtotal,' +
-    ' CH.PRODUCT_AMOUNT, PD.price, PD.product_name, PD.product_id AS PD_ID' +
+    ' CH.PRODUCT_AMOUNT, PD.price, PD.product_name, PD.pic, PD.product_id AS PD_ID' +
     ' FROM cart_shopping CH LEFT JOIN product PD on CH.PRODUCT_ID=PD.product_id' +
     ' WHERE MEMBER_EMAIL=? && status="on" ' +
     ' GROUP BY CH.PRODUCT_ID, PD.product_id, CH.PRODUCT_AMOUNT;';
@@ -565,6 +573,50 @@ router.post('/order', function (req, res) {
       });
     }
   })
+});
+
+router.post('/orderContent', function (req, res) {
+  if (req.session.email) {
+    loginStatus = true;
+    req.session.views++;
+  } else {
+    loginStatus = false;
+    req.session.views = 1;
+  }
+  console.log("登入狀態：" + loginStatus);
+  console.log("登入次數：" + req.session.views);
+  var sql = {
+    orderId: req.body.orderId,
+  }
+  console.log(sql.orderId);
+  var sqlQuery = 'SELECT * FROM order_detail WHERE order_id=?';
+  con.query(sqlQuery, sql.orderId, function (err, rows) {
+    var data = rows;
+    console.log(data);
+    if (err) {console.log(err);}
+    var sqlQuery2 = 'SELECT OP.product_id, OP.amount, P.product_name, P.pic, P.price,' +
+      ' SUM(OP.amount * P.price) AS subtotal FROM order_product OP LEFT JOIN product P' +
+      ' ON OP.product_id = P.product_id WHERE order_id=?' +
+      ' GROUP BY OP.product_id, OP.amount;';
+    con.query(sqlQuery2, sql.orderId, function (err, rows) {
+      var data2 = rows;
+      console.log(data2);
+      if (err) {
+        console.log(err);
+      }
+      var statusArray = new Array();
+      statusArray.push(statusTransform(data[0].status));
+      res.render('ordercontent', {
+        loginStatus: loginStatus,
+        username: req.session.username,
+        moment: moment,
+        statusArray: statusArray,
+        data: data,
+        data2: data2,
+        message: '',
+      });
+    });
+  });
 });
 
 module.exports = router;

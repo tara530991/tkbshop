@@ -130,9 +130,7 @@ router.get('/', function (req, res) {
   console.log("登入次數：" + req.session.views); 
   con.query("SELECT * FROM member WHERE email='" + req.session.email + "'", function (err, rows) {
     var data = rows;
-    if (err) {
-      console.log(err);
-    }
+    if (err) {console.log(err);}
     console.log(data);
     res.render('member', {
       loginStatus: loginStatus,
@@ -155,6 +153,8 @@ router.get('/edit', function (req, res) {
   console.log("登入次數：" + req.session.views); 
   con.query("SELECT * FROM member WHERE email='" + req.session.email + "'", function (err, rows) {
     var data = rows;
+    if (err) { console.log(err); }
+    console.log(data);
     res.render('memberedit',{
       loginStatus: loginStatus,
       username: req.session.username,      
@@ -173,10 +173,10 @@ router.post('/edit1', function (req, res) {
   }
   var querySQL = "UPDATE member SET username=(?),tel=(?),birth=(?),address=(?) WHERE email='" + req.session.email + "'";
   con.query(querySQL,[sql.username, sql.tel, sql.birth, sql.address], function (err, rows) {
-    if(err){
-      console.log(err);
-    }
-    res.render('toIndex',{
+    var data = rows;
+    if (err) { console.log(err); }
+    console.log(data);
+    res.render('toMember',{
       loginStatus: loginStatus,           
       username: req.session.username,                                                        
       message:"成功更新資料",
@@ -227,8 +227,7 @@ router.post('/newpass1', function (req, res) {
           from: "tara530991@gmail.com",
           to: sql.email,
           subject: "密碼更新",
-          html: "<p>親愛的" + sql.username + "你好<br>您的密碼已經更新囉<br>" +
-            "，請在請按此返回官網<a href="/">按我<br>"
+          html: "<p>親愛的" + sql.username + "你好<br>您的密碼已經更新成功囉<br>",
         };
         // console.log(Email);
         transporter.sendMail(Email, function (err, info) {
@@ -238,7 +237,7 @@ router.post('/newpass1', function (req, res) {
             console.log("訊息已經完成傳送: " + info.response);
           }
         });
-        res.render('toIndex', {
+        res.render('toMember', {
           loginStatus: loginStatus,
           username: req.session.username,                                                        
           message: '已成功變更密碼！'
@@ -248,7 +247,7 @@ router.post('/newpass1', function (req, res) {
       res.render('newpassword', {
         loginStatus: loginStatus,
         username: req.session.username,                                                       
-        message: '<sapn>新密碼與確認密碼不一致喔！<br/>麻煩你再重新輸入一次</span>',
+        message: '<sapn>新密碼與確認新密碼不一致喔！<br/>麻煩你再重新輸入一次</span>',
       });
     }
   } else if (req.session.password !== oldP){

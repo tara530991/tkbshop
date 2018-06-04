@@ -3,29 +3,45 @@
 <head>
     <title>常見問題</title>
     <style>
-        #qa h2 {margin:0;}
-        #qa {margin:0 250px;}
-        #qa section {margin:3rem 2rem;}
+        h3>span{font-size:30px;}
+        p>span{font-size:26px;}
+        p{padding-left:30px;font-size:16px;}
+        section{margin-bottom:50px;}
     </style>
 </head>
 <% include header %>
 <body>
-    <div id="qa">
-        <h2>常見問題（FAQ）</h2>
-        <div>
+<div class="container">
+    <div class="row">
+        <div class="container">
+            <ol class="breadcrumb">
+                <li><a href="/">首頁</a></li>
+                <li class="active">常見問題</li>
+            </ol>
+        </div>
+        <div class="col-lg-12">
+            <h2 class="top">常見問題</h2>
+        </div>
+        <div class="col-lg-10 col-lg-offset-1">
             <section>
-                <h4>Q:訂單下訂後，是否還可以取消？</h4>
-                <p>A:您可以在會員中心的訂單一覽中，先確認您的訂單狀態，當訂單狀態為"新訂單"時，是可以直接取消的，若為其他狀態則無法直接進行取消，此時您可以電洽網路客服(02)1234-1234為您處理。</p>
+                <h3 class="h3"><span>Q</span>:訂單下訂後，是否還可以取消？</h3>
+                <p><span>A</span>:您可以在會員中心的訂單一覽中，先確認您的訂單狀態，當訂單狀態為"訂單處理中"時，是可以直接取消的，若為其他狀態則無法直接進行取消，此時您可以電洽網路客服(02)1234-1234為您處理。</p>
             </section>
             <section>
-                <h4>Q:我能選擇的付款方式有哪些？</h4>
-                <p>A:僅提供ATM轉帳方式付款：<br>銀行分行代號:xx(xx銀行xx分行)<br>帳號：xxxx-xxxx-xxxx。</p>
+                <h3 class="h3"><span>Q</span>:我能選擇的付款方式有哪些？</h3>
+                <p><span>A</span>:僅提供ATM轉帳方式付款：<br>銀行分行代號:xx(xx銀行xx分行)<br>帳號：xxxx-xxxx-xxxx。</p>
             </section>
             <section>
-                <h4>Q:我能選擇的取貨方式？</h4>
-                <p>A:僅提供郵局寄送</p>
+                <h3 class="h3"><span>Q</span>:我能選擇的取貨方式？</h3>
+                <p><span>A</span>:僅提供郵局寄送</p>
             </section>
         </div>
     </div>
+</div>
+<script>
+    $(function () {
+        $('.memenu li').eq(7).addClass('active');  
+    })
+</script>
 </body>
 </html>

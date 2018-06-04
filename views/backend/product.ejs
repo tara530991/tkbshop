@@ -22,7 +22,7 @@
         <div class="row fontblack wrap1280">
             <div class="col-lg-12">
                 <div class="panel panel-default">
-                    <div class="panel-heading col-lg-12" id="sortbar">
+                    <!-- <div class="panel-heading col-lg-12" id="sortbar">
                         <div>
                             <label>排序方式
                                 <select name="dataTables-example_length" aria-controls="dataTables-example" class="form-control">
@@ -35,10 +35,10 @@
                         <div>
                             <input type="text" name="search" id="search" class="form-control input-sm">
                             <input type="button" value="查詢" onclick="sortSearch()">
-                            <!-- <input type="search"  placeholder="" aria-controls="dataTables-example"> -->
+                            <input type="search"  placeholder="" aria-controls="dataTables-example">
                         </div>
-                    </div>
-                    <!-- /.panel-heading -->
+                    </div> -->
+                    
                     <div id="panBody" class="panel-body">
                         <table id="product_list" width="100%" class="table table-striped table-bordered table-hover" id="dataTables-example">
                             <thead>
@@ -59,7 +59,7 @@
                                 <input type="hidden" id="productId" name="productId">
                                 <% for(var i=0 ; i<data.length;i++) { %>
                                 <tr class="odd gradeX">
-                                    <td><img class="pro-pic" src="/upload/<%=data[i].pic%>" alt="<%=data[i].product_name %>的圖片"></td>
+                                    <td class="text-center"><img class="pro-pic" src="/upload/<%=data[i].pic%>" alt="<%=data[i].product_name %>的圖片"></td>
                                     <td class="h-center"><%=data[i].product_name %></td>
                                     <td class="h-center"><%=data[i].price %></td>
                                     <td class="h-center"><%=data[i].stock %></td>

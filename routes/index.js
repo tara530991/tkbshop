@@ -132,13 +132,49 @@ router.get('/contact', function (req, res) {
   if (req.session.email) {
     loginStatus = true;
     req.session.views++;
+  } else {
+    loginStatus = false;
+    req.session.views = 1;
+  }
+  console.log("登入狀態：" + loginStatus);
+  console.log("登入次數：" + req.session.views);
+  res.render('contact', {
+    loginStatus: loginStatus,
+    username: req.session.username,
+    views: req.session.views,
+    message: "",
+  });
+});
+
+router.get('/storeinfo', function (req, res) {
+  if (req.session.email) {
+    loginStatus = true;
+    req.session.views++;
+  } else {
+    loginStatus = false;
+    req.session.views = 1;
+  }
+  console.log("登入狀態：" + loginStatus);
+  console.log("登入次數：" + req.session.views);
+  res.render('storeinfo', {
+    loginStatus: loginStatus,
+    username: req.session.username,
+    views: req.session.views,
+    message: "",
+  });
+});
+
+router.get('/suggestion', function (req, res) {
+  if (req.session.email) {
+    loginStatus = true;
+    req.session.views++;
   }else{
     loginStatus = false;
     req.session.views = 1;
   }
   console.log("登入狀態：" + loginStatus);
   console.log("登入次數：" + req.session.views); 
-  res.render('contact', {
+  res.render('suggestion', {
     loginStatus: loginStatus,
     username: req.session.username,    
     views: req.session.views,
@@ -161,7 +197,7 @@ router.post('/contact1', function (req, res) {
       loginStatus: loginStatus,    
       views: req.session.views,
       username: req.session.username,                                         
-      message: "十分感謝您的回復"
+      message: "十分感謝您的回復，我們會盡快答覆您的問題"
     });
   })
 });

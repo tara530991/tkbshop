@@ -3,40 +3,43 @@
 <head>
     <title>會員中心</title>
     <style>
-        #member {margin: 0 250px;}
-        #member section {margin:0 2rem;}
+        .myListGroup {max-width: 300px;}
+        .myListGroup a{margin:20px 50px;}
     </style>
 </head>
 <% include header %>
 <body>
+<form id="mainform" action="/member/login1" method="POST">
     <div class="container">
         <div class="row">
-            <form id="mainform" action="/member/login1" method="POST">
-                <% if　(loginStatus == false) { %>
-                    <% include loginlayout %>
-                <% } else if (loginStatus == true) {%>
-                    <div id="member">
-                        <section>
-                            <ul>
-                                <li><a href="/member/edit">編輯基本資料</a></li>
-                                <li><a href="/member/newpass">修改密碼</a></li>
-                                <li><a href="product/orderlist">訂單查詢</a></li>
-                            </ul>
-                        </section>
-                        <section>
-                            <% for(var i=0 ; i < data.length;i++) { %>
-                                <span id="name">中文全名：<%= data[i].username %></span><br>
-                                <span id="email">E-mail：<%= data[i].email %></span><br>
-                                <span id="tel">室內電話：<%= data[i].tel %></span><br>
-                                <span id="birth">生日：<%= moment(data[i].birth).format('YYYY-MM-DD') %></span><br>
-                                <span id="address">地址：<%= data[i].address %></span>
-                            <% } %>  
-                        </section>
-                    </div>
-                <% } %>
-            </form>
+            <div class="container">
+                <ol class="breadcrumb">
+                    <li><a href="/">首頁</a></li>
+                    <li class="active">會員中心</li>
+                </ol>
+            </div>
+            <div class="col-lg-12">
+                <h2 class="top">會員中心</h2>
+            </div>
+            <% if　(loginStatus == false) { %>
+                <% include loginlayout %>
+            <% } else if (loginStatus == true) {%>
+            <div class="myListGroup col-lg-4 col-lg-offset-3">
+                <ul class="list-group">
+                    <a href="/member/edit"><li class="list-group-item">編輯基本資料</li></a>
+                    <a href="/member/newpass"><li class="list-group-item">修改密碼</li></a>
+                    <a href="product/orderlist"><li class="list-group-item">訂單查詢</li></a>
+                </ul>
+            </div>
+            <% } %>
         </div>
     </div>
+</form>
+<script>
+    $(function () {
+        $('.memenu li').eq(5).addClass('active');
+    })
+</script>
 </body>
 </html>
         

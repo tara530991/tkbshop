@@ -51,6 +51,7 @@
     </section> 
     <section id="panBody">
         <div id="product_list">
+            
             <div class="product-list col-lg-10 col-lg-offset-1">
                 <input type="hidden" id="productId" name="productId">
                 <input type="hidden" id="productAmount" name="productAmount">
@@ -102,15 +103,19 @@
 <script>
     $(function () {        
         btnDisable();
+        $('.memenu li').eq(3).addClass('active');  
     });
 
     function btnDisable() {
         console.log(123);
         var nowPage =　$("#nowPage").val();
         var pages =  $("#pages").val();
+        console.log(nowPage);
+        console.log(pages);
         if(nowPage == 1){
             $("#preBtn").addClass("disabled");
-        }else if(nowPage == pages){
+        }
+        if(nowPage == pages){
             $("#nextBtn").addClass("disabled");                
         }
     }   

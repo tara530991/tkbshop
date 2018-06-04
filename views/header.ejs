@@ -35,10 +35,9 @@
         .header-bar li:first-child {line-height:40px;}
         .header-bar li a{color:#3a3a3a;}
         .top {margin-top:1.5em;margin-bottom:1.5em;}
-        /* .wrap1280{width: 1280px;margin: auto;} */
         #sortbar{margin-top:0.5em;padding:20px 0;}
         .breadcrumb {margin:12em 0 0 !important;}        
-    
+        textarea{width:500px !important;max-width:500px !important;}
     </style>
 </head>
 <body>
@@ -87,7 +86,7 @@
     </div>
     <div class="col-lg-8">
         <ul class="memenu skyblue">
-            <li class="active">
+            <li>
                 <a href="/">首頁</a>
             </li>
             <li class="grid">
@@ -111,5 +110,19 @@
         </ul>
     </div>  
 </div>
+<!-- <script>
+    $(function(){
+        var title = $("h2").text();
+        var href = $(".memenu a[href]").text();;
+        // for(var i = 0;i < 7;i++){
+        //     href = $(".memenu a[href]").text();
+        // }
+        // if(){
 
+        // }
+        $("a[href]").addClass('active');
+        console.log(title);
+        console.log(href);
+    })
+</script> -->
 </body>
