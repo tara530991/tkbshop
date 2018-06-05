@@ -108,4 +108,11 @@
     
     <!-- Custom Theme JavaScript -->
     <script src="/backvendor/dist/js/sb-admin-2.js"></script>
+    <!-- 文字編輯器 -->
+    <script src="/ckeditor/ckeditor.js"></script>
+    <script>
+        CKEDITOR.replace('content', {});
+        //()內的第一個參數會去對照textarea中的name
+        //{}則是客製化設定
+    </script>
 </body>

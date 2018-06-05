@@ -2,6 +2,18 @@
 <html lang="en">
 <head>
     <title>最新消息</title>
+    <style>
+        .newsBlock{height:200px;padding:10px;margin: 10px;}
+        .newsBlock div{height:180px;}
+        .newsBlock img {max-height: 180px;}
+        .newsBlock h3{display:inline-block;}
+        .time{margin-left: 10px;color:#666;}
+        .content{overflow : hidden;text-overflow : ellipsis;width:90%;font-size: 16px;
+            -webkit-line-clamp: 4; display: -webkit-box;-webkit-box-orient: vertical;
+            white-space: normal;margin:10px;}
+        .more{position: absolute;bottom:20px;right:-50px;}
+        .news-list{margin:13em 0 0;}
+    </style>
 </head>
 <% include header %>
 <body>
@@ -15,45 +27,43 @@
     <div class="col-lg-12">
         <h2 class="top">最新消息</h2>
     </div>
-    <div class="col-lg-10">
-        <section id="sortbar" class="col-lg-10 col-lg-offset-4">
-            <div class="col-lg-4">
+    <section id="sortbar">
+        <div class="col-lg-8 col-lg-offset-3">
+            <div class="col-lg-5">
                 <label>排序方式             
-                    <select name="dataTables-example_length" aria-controls="dataTables-example" class="form-control input-sm">
+                    <select  name="sort" id="sort" onchange="sortSearch()" name="dataTables-example_length" aria-controls="dataTables-example" class="form-control input-sm">
                         <option value="">請選擇條件</option>
                         <option value="1">時間(由新至舊)</option>
                         <option value="2">時間(由舊至新)</option>
                     </select>
                 </label>
             </div>
-            <div class="col-lg-4">
+            <div class="col-lg-5">
                 <input type="text" name="search" id="search" class="form-control input-sm">
                 <input type="button" class="btn btn-info btn-sm" value="查詢" onclick="sortSearch()">
-                <!-- <input type="search"  placeholder="" aria-controls="dataTables-example"> -->
             </div>
         </section>
         <section id="panBody">
             <div id="news_list">
-                <table class="table table-hover col-lg-offset-1">
-                    <thead>
-                        <tr>
-                            <th scope="col" class="col-lg-6 text-center">標題</th>
-                            <th scope="col" class="col-lg-2 text-center">日期</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <input type="hidden" id="newsId" name="newsId">
-                        <% for(var i=0 ; i < data.length;i++) { %>
-                        <tr onclick="newsContent(<%=data[i].id %>)">
-                            <th scope="row"><%=data[i].title %></th>
-                            <td class="text-center"><%=moment(data[i].date).format('YYYY-MM-DD')%></td>
-                        </tr>
-                        <% } %>
-                    </tbody>
-                </table>
+                <input type="hidden" id="newsId" name="newsId">
+                <div class="news-list">
+                    <% for(var i=0 ; i < data.length ; i++) { %>
+                    <section class="newsBlock col-lg-8 col-lg-offset-2">
+                        <div class="col-lg-4 text-center">
+                            <img src="upload/hello.png" alt="" class="rounded">
+                        </div>
+                        <div class="col-lg-8">
+                            <h3 class="h3"><%=data[i].title %></h3>
+                            <span class="time"><%=moment(data[i].date).format('YYYY-MM-DD')%></span>
+                            <p class="content"><%-data[i].content %></p>
+                            <input type="button" onclick="newsContent(<%=data[i].id %>)" class="more btn btn-outline btn-default" value="查看更多">
+                        </div>
+                    </section>
+                    <% } %>
+                </div>
             </div>
-        </section>
-    </div>
+        </div>
+    </section>
 </form>
 </body>
 

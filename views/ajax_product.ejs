@@ -20,7 +20,12 @@
                     </h4>
                     <span class="item_price">
                         <%=data[i].price%>元</span>
-                    <input type="text" class="item_quantity" value="1" id="amount" />
+                    <div class="myBtnGroup">
+                        <input type="hidden" class="clickNum">
+                        <button type="button" class="btn btn-default" value="1" onclick="clickAmount(this)">1</button>
+                        <button type="button" class="btn btn-default" value="5" onclick="clickAmount(this)">5</button>
+                        <button type="button" class="btn btn-default" value="10" onclick="clickAmount(this)">10</button>
+                    </div>
                     <input type="button" class="item_add items" value="加入購物車" onclick="addToCart(<%=data[i].product_id %>,this)">
                     <div class="clearfix"> </div>
                 </div>

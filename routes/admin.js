@@ -4,9 +4,20 @@ var con = require('./sql');
 var events = require('events');
 var bodyParser = require('body-parser');
 var urlencodedParser = bodyParser.urlencoded({ extended: false });
-var multer = require('multer');
-var upload = multer({ dest: './public/upload/' });
 var moment = require('moment');
+
+// 圖片上傳
+var multer = require('multer');
+// var upload = multer({ dest: 'public/upload/' });
+var path = require('path');
+const storage = multer.diskStorage({
+  destination: path.join('public/upload/'),
+  filename: function (req, file, cb) {
+    cb(null, file.originalname.replace(path.extname(file.originalname), "") +
+      '-' + Date.now() + path.extname(file.originalname));
+  }
+});
+const upload = multer({ storage: storage }).single('pic');
 
 //管理端
 router.get('/', function (req, res) {
@@ -142,7 +153,7 @@ router.get('/news-add', function (req, res) {
     message: '',
   });
 }); 
-router.post('/news-add1', urlencodedParser, function (req, res) {
+router.post('/news-add1', upload, function (req, res) {
   var loginStatus = false;
     req.session.admin = 1;  
     if (req.session.admin > 1) {
@@ -151,18 +162,25 @@ router.post('/news-add1', urlencodedParser, function (req, res) {
   var sql = {
     title: req.body.title,
     date: req.body.date,
-    content: req .body.content,
+    content: req.body.content,
   };
   console.log(sql);
-  var querySQL = 'INSERT INTO news(title,date,content) VALUE(?,?,?)';
-  con.query(querySQL,[sql.title, sql.date, sql.content],function(err,rows){
-    var data = rows;
-    if(err){
-      console.log(err);
-    }
-    res.render('backend/newsadd',{
-      loginStatus: loginStatus,      
-      message: '<sapn class="alert alert-success">消息已成功發佈</span>',
+  var file = req.file;
+  // console.log(file);
+  console.log('文件類型：' + file.mimetype);
+  console.log('文件副檔名：' + path.extname(file.originalname));
+  console.log('原始文件名：' + file.originalname);
+  console.log('DB儲存文件名稱：' + file.filename);
+  console.log('文件保存路径：' + file.path);
+  upload(req, res, err => {
+    var slqQuery = "INSERT INTO news(title,date,pic,content) VALUE(?,?,?,?)";
+    con.query(slqQuery, [sql.title, sql.date, file.filename, sql.content] , function (err, rows) {
+      if (err) { console.log(err); }
+      var data = rows;
+      res.render('backend/toNews', {
+        loginStatus: loginStatus,
+        message: '消息已成功發佈',
+      });
     });
   });
 }); 

@@ -75,8 +75,8 @@
                         </tbody>
                     </table>
                     <div class="total col-lg-2 col-lg-offset-10">
-                        <input type="hidden" name="total">
                         <span id="total">總價：</span><span>元</span>
+                        <input type="text" name="total">
                     </div>
                     <h3 class="text-center col-lg-offset-2">訂購商品明細</h3>
                     <div class="checkdetail col-lg-4 col-lg-offset-4">
@@ -123,8 +123,8 @@
                 return total;
             });
             $("#total").append("<span id='totalVal'>" + total + "</span>");
-            $("#total>input").val(total);
-            console.log($("#total>input").val(total));
+            $("#total+span+input").val(total);
+            console.log($("#total+input").val(total));
         });
         function formCheck(k){
             var receipt = $('input[name="receipt"]:checked').val();

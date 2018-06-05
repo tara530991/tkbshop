@@ -76,7 +76,7 @@
                             <% } %>
                         </tbody>
                     </table>
-                    <div class="checkbtn col-lg-2 col-lg-offset-10">
+                    <div class="checkbtn col-lg-3 col-lg-offset-10">
                         <span id="total">總價：</span><span>元</span><br>
                         <button type="submit" id="check" onclick="checkAction()" class="btn btn-primary">進入結帳</button>
                     </div>
@@ -158,25 +158,25 @@
 
         function deleteAction(i) {
             var totalAdd = 0;
-            $('#productId').val(i);            
+            $('#productId').val(i);
+            console.log(666);            
             $.ajax({
-                url:'/product/ajaxDeleteCart',
-                method:'POST',
-                type:'text',
+                url: '/product/ajaxDeleteCart',
+                type: 'POST',
+                dataType: 'text',
                 data:{
                     productId: $('#productId').val(),
                 },
                 success: function(data){
                     $('#cart_list').remove();
                     $('#panBody').append(data);$('#productId').val(i);
-
                     $(".subtotal").each(function (i) {
                         totalAdd += parseInt($(this).text());
                         return totalAdd;
                     });
                     $("#total").append("<span>" + totalAdd + "</span>");                    
                 },
-                err: function () {
+                err: function (err) {
                     console.log(err);
                 }
             })

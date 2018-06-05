@@ -74,16 +74,15 @@ router.get('/ajaxNews', function (req, res) {
     sort: req.query.sort,
     search: req.query.search,    
   }
+  console.log("排序方式：" + sql.sort);
+  console.log("搜尋詞：" + sql.search);
   var sqlQuery = "SELECT * FROM news WHERE concat(title,content) LIKE '%" + 
     sql.search + "%' ORDER BY date ";
-  if (sql.sort == 1 || sql.sort == null){
-    sqlQuery += 'DESC;';
-  }else if(sql.sort == 2){
-    sqlQuery += 'ASC;';
-  }
+  if (sql.sort == 1){sqlQuery += 'DESC;';
+  }else if(sql.sort == 2){sqlQuery += 'ASC;';}
   con.query(sqlQuery, sql.search, function(err,rows){
     var data = rows; 
-    console.log(data);
+    // console.log(data);
     res.render('ajax_news', {
       loginStatus: loginStatus,
       username: req.session.username,

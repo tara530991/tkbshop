@@ -185,7 +185,6 @@ router.post('/product-add1', upload, function (req, res) {
         price: req.body.price,
         stock: req.body.stock,
         description: req.body.description,
-        pic: req.body.pic,
         addtime: req.body.addtime,
         ident: req.body.ident,
         sort: req.body.sort,

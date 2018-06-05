@@ -11,8 +11,6 @@ var router = express.Router();
 var session = require('express-session');
 var bodyParser = require('body-parser');
 
-// var expressLayouts = require('express-ejs-layouts');
-
 //前台路由
 var indexRouter = require('./routes/index');
 var memberRouter = require('./routes/member');

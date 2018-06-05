@@ -12,6 +12,7 @@
         .item_add{padding:0.5em 1em !important;} 
         .v-center{position:absolute;bottom: -5em;left:50%;transform:translateX(-50%);}
         .page-item {cursor: pointer;}
+        .myBtnGroup .btn{padding: 6px 10px;margin:5px 0;}
     </style>
 </head>
 <% include header %>
@@ -31,7 +32,7 @@
         <div class="col-lg-8 col-lg-offset-3">
             <div class="col-lg-5">
                 <label>排序方式
-                    <select name="sort" id="sort" aria-controls="dataTables-example" class="form-control input-sm" onchange="sortSearch()">
+                    <select name="sort" id="sort" onchange="sortSearch()" aria-controls="dataTables-example" class="form-control input-sm">
                         <option value="">請選擇條件</option>
                         <option value="1">售價(由低至高)</option>
                         <option value="2">售價(由高至低)</option>
@@ -51,7 +52,6 @@
     </section> 
     <section id="panBody">
         <div id="product_list">
-            
             <div class="product-list col-lg-10 col-lg-offset-1">
                 <input type="hidden" id="productId" name="productId">
                 <input type="hidden" id="productAmount" name="productAmount">
@@ -69,7 +69,12 @@
                         <div class="product-info-cust prt_name">
                             <h4 class="pro_name"><%=data[i].product_name%></h4>
                             <span class="item_price"><%=data[i].price%>元</span>
-                            <input type="text" class="item_quantity" value="1" id="amount"/>
+                            <div class="myBtnGroup">
+                                <input type="hidden" class="clickNum">
+                                <button type="button" class="btn btn-default" value="1" onclick="clickAmount(this)">1</button>
+                                <button type="button" class="btn btn-default" value="5" onclick="clickAmount(this)">5</button>
+                                <button type="button" class="btn btn-default" value="10" onclick="clickAmount(this)">10</button>
+                            </div>
                             <input type="button" class="item_add items" value="加入購物車" onclick="addToCart(<%=data[i].product_id %>,this)">
                             <div class="clearfix"> </div>
                         </div>
@@ -107,11 +112,10 @@
     });
 
     function btnDisable() {
-        console.log(123);
         var nowPage =　$("#nowPage").val();
         var pages =  $("#pages").val();
-        console.log(nowPage);
-        console.log(pages);
+        // console.log(nowPage);
+        // console.log(pages);
         if(nowPage == 1){
             $("#preBtn").addClass("disabled");
         }
@@ -120,16 +124,31 @@
         }
     }   
 
+    //儲存點選的數量
+    function clickAmount(k){
+        var Num = $(k).val();
+        $(k).parent().find('.clickNum').val(Num);
+    }
+
     function addToCart(productId,k){
         $("#productId").val(productId);
-        var amount = $(k).parent().find(".item_quantity").val();
+        var amount = $(k).parent().find('.clickNum').val();
+        console.log(amount);
+        amount = (amount == "") ? 1 :amount;
         $('#productAmount').val(amount);
-        // alert($("#product").val());
+        console.log($("#productAmount").val());
         $('#mainForm').submit();
     }
 
-    function sortSearch(pagesNum) {   
-        $("#nowPage").val(pagesNum);     
+    function sortSearch(pagesNum) {
+        // if(pagesNum == null){
+        //     $('#nowPage').val(1);
+        // }else{
+        //     $("#nowPage").val(pagesNum);     
+        // }
+        var nowPage = (pagesNum == null) ? 1 : pagesNum;
+        $('#nowPage').val(nowPage);
+        console.log($('#nowPage').val());
         $.ajax({
             url: '/product/ajaxProduct',
             method: 'GET',

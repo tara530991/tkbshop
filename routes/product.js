@@ -44,7 +44,7 @@ router.get('/', function (req, res) {
   con.query(sqlQuery,  function (err, rows) {
     var data = rows;
     var count = data[0].len;  //筆數
-    var pages = Math.round(count / 6) + 1;  //總頁數
+    var pages = Math.ceil(count / 6);  //總頁數（ceil無條件進位）
     console.log("資料筆數：" + count);
     console.log("總頁數：" + pages);
     console.log("資料開始抓取起始數：" + startcount);    
@@ -82,9 +82,6 @@ router.get('/ajaxProduct', function (req, res) {
     pages: req.query.pages,
     count: req.query.count,
   }
-  if(sql.noPage == null){
-    sql.nowPage = 1;
-  }
   console.log("排序方式：" + sql.sort);
   console.log("前台點選頁數：" + sql.nowPage);
   console.log("總頁數：" + sql.pages);
@@ -98,7 +95,7 @@ router.get('/ajaxProduct', function (req, res) {
     if (sql.sort == "" && sql.search == ""){
       //只有換頁動作
     console.log(2);      
-      var startcount = (sql.nowPage - 1) * 6; //預設第1頁為0，0、6、12...
+      var startcount = (sql.nowPage　-　1) * 6; //預設第1頁為0，0、6、12...
       console.log("資料開始抓取起始數：" + startcount);    
       var sqlQuery = 'SELECT * FROM product LIMIT ?,6';
       con.query(sqlQuery, startcount, function (err, rows) {
@@ -124,7 +121,7 @@ router.get('/ajaxProduct', function (req, res) {
         if (err) {console.log(err);}      
         var data = rows;
         var count = data[0].len; //筆數
-        var pages = Math.round(count / 6) + 1; //總頁數
+        var pages = Math.ceil(count / 6); //總頁數
         var startcount = (sql.nowPage - 1) * 6; //預設第1頁為0，0、6、12...
         console.log("總資料筆數：" + count);
         console.log("總頁數：" + pages);
@@ -137,7 +134,8 @@ router.get('/ajaxProduct', function (req, res) {
         con.query(sqlQuery, startcount, function (err, rows) {  
           if (err) {console.log(err);}      
           var data = rows;
-          console.log(data);
+          // console.log(data);
+          console.log(sqlQuery);
           res.render('ajax_product',{
             loginStatus: loginStatus,     
             username: req.session.username,                                          
