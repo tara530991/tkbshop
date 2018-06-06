@@ -49,7 +49,7 @@ router.get('/news', function (req, res) {
   }
   console.log("登入狀態：" + loginStatus);
   console.log("登入次數：" + req.session.views); 
-  con.query('SELECT * FROM news LIMIT 10',function(err,rows){
+  con.query('SELECT * FROM news WHERE status=1 LIMIT 10',function(err,rows){
     var data = rows;     
       res.render('news',{
       loginStatus: loginStatus,           

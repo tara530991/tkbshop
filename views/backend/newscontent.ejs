@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>消息內容-後台管理</title>
+    <style>
+        .time{color:#666;font-size: 14px;}
+        button{margin:0.5em 1.2em !important;}   
+        .content, .btn-group, .row h3{margin:1.5em 0;}                         
+    </style>
+</head>
+<% include backheader %>
+<body>
+<form id="mainForm" action="/admin/newsContent" method="get">
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">消息內容</h1>
+                <h3 class="text-center"><%=data[0].title %>
+                    <span class="time">
+                        <%=moment(data[0].date).format('YYYY-MM-DD')%>
+                    </span>
+                </h3>
+            </div>
+        </div>
+        <section>
+            <div class="text-center">
+                <img src="/upload/hello.png" alt="" class="rounded">
+            </div>
+            <div class="content col-lg-10 col-lg-offset-1">
+                <p>
+                    <%-data[0].content %>
+                </p>
+            </div>
+            <div class="btn-group col-lg-6 col-lg-offset-4">
+                <input type="hidden" id="newsId" name="newsId">
+                <button id="btnPre" type="button" class="btn btn-secondary" onclick="newsContent(<%=data[0].id %> - 1)">上一篇</button>
+                <a href="/admin/news-list">
+                    <button type="button" class="btn btn-secondary">回到消息列表</button>
+                </a>
+                <button id="btnNext" type="button" class="btn btn-secondary" onclick="newsContent(<%=data[0].id %> + 1)">下一篇</button>
+            </div>
+        </section>
+    </div>
+</form>
+<script>
+    $(function () {
+        if ('<%=data[0].id %>' == 1) {
+            $('#btnPre').attr('disabled', 'true');
+        } else if ('<%=data[0].id %>' == '<%=count[0].len %>') {
+            $('#btnNext').attr('disabled', 'true');
+        }
+        console.log('<%=data[0].id %>');
+        console.log('<%=count[0].len %>');
+    })
+
+    function newsContent(id) {
+        console.log(id);
+        $('#newsId').val(id);
+        $('#mainForm').submit();
+    }
+</script>
+</body>
+</html>

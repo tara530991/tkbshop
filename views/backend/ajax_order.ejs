@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<table id="order_list" width="100%" class="table table-striped table-bordered table-hover" id="dataTables-example">
+    <thead>
+        <tr>
+            <th width="10%" class="h-center text-center">訂單編號</th>
+            <th width="10%" class="h-center text-center">訂單成立時間</th>
+            <th width="10%" class="h-center text-center">收件人</th>
+            <th width="25%" class="h-center text-center">收件地址</th>
+            <th width="10%" class="h-center text-center">總金額</th>
+            <th width="12%" class="h-center text-center">訂單狀態</th>
+            <th width="5%" class="h-center text-center">操作</th>
+        </tr>
+    </thead>
+    <tbody>
+        <input type="hidden" id="productId" name="productId">
+        <% for(var i=0 ; i<data.length;i++) { %>
+            <tr class="odd gradeX">
+                <td scope="row" class="text-center h-center">
+                    <%=data[i].order_id %>
+                        <input type="hidden" name="orderId" value="<%=data[i].order_id %>">
+                </td>
+                <td class="text-center h-center">
+                    <%=moment(data[i].addtime).format('YYYY-MM-DD') %>
+                </td>
+                <td class="text-center h-center">
+                    <%=data[i].buyer %>
+                </td>
+                <td class="h-center">
+                    <%=data[i].address %>
+                </td>
+                <td class="text-center h-center">
+                    <%=data[i].total%>
+                </td>
+                <td class="text-center h-center">
+                    <%=statusArray[i] %>
+                </td>
+                <td class="text-center h-center">
+                    <input type="button" onclick="content(<%=data[i].order_id %>)" class="myBtn btn btn-info btn-sm" value="檢視">
+                    <input type="button" onclick="modifyAct(<%=data[i].order_id %>)" class="myBtn btn btn-warning btn-sm" value="修改">
+                    <input type="button" onclick="deleteAct(<%=data[i].order_id %>)" class="myBtn btn btn-danger btn-sm" value="刪除">
+                </td>
+            </tr>
+            <%} %>
+    </tbody>
+</table>

@@ -22,13 +22,13 @@ const upload = multer({storage: storage}).single('pic');
 function statusTransform(statusNum) {
     // console.log("狀態" + statusNum);
     switch (statusNum) {
-        case '01': status = "訂單處理中"; break;
-        case '02': status = "待轉帳"; break;
+        case '01': status = "訂單處理（待收款）"; break;
+        case '02': status = "訂單處理（已收款）"; break;
         case '03': status = "物流運送中"; break;
         case '04': status = "訂單完成"; break;
         case '11': status = "退貨申請送出"; break;
-        case '12': status = "退貨申請-收取退貨"; break;
-        case '13': status = "退貨申請-物流取貨"; break;
+        case '12': status = "退貨申請-物流取貨"; break;
+        case '13': status = "退貨申請-貨物退還"; break;
         case '14': status = "退貨申請-退款完成"; break;
         case '99': status = "訂單取消"; break;
     }
@@ -210,6 +210,7 @@ router.post('/product-add1', upload, function (req, res) {
     });
 });
 
+//-------------------訂單---------------------
 router.get('/order-list', function (req, res) {
     req.session.admin = 1;
     if (req.session.admin <= 1){
@@ -217,18 +218,17 @@ router.get('/order-list', function (req, res) {
     }else if(req.session.admin > 1) {
         loginStatus = true;
     }
-    var sqlQuery = 'SELECT * FROM order_detail ORDER BY addtime';
-    const newLocal = 'orderlist';
+    var sqlQuery = 'SELECT * FROM order_detail ORDER BY addtime,order_id ';
     con.query(sqlQuery, function (err, rows) {
         var data = rows;
-        console.log(data);
+        // console.log(data);
         if (err) { console.log(err); }
         var statusArray = new Array();
         for (var i = 0; i < data.length; i++) {
             statusArray.push(statusTransform(data[i].status));
         }
         // console.log(statusArray);
-        res.render('backend/order', {
+        res.render('backend/orderlist', {
             loginStatus: loginStatus,
             username: req.session.username,
             data: data,
@@ -237,6 +237,73 @@ router.get('/order-list', function (req, res) {
             message: '',
         });
     })
+});
+
+router.get('/ajaxOrderList', function (req, res) {
+    req.session.admin = 1;
+    if (req.session.admin <= 1) {
+        loginStatus = false;
+    } else if (req.session.admin > 1) {
+        loginStatus = true;
+    }
+    var sql = {
+        sort: req.query.sort,
+        search: req.query.search,
+        // nowPage: res.query.nowPage,
+        // pages: res.query.pages,
+        // count: res.query.count,
+        status: req.query.status,
+    }
+    console.log(sql);
+    if (sql.status == ''){
+        console.log(1);
+        var sqlQuery = 'SELECT * FROM order_detail WHERE 1=1 ';
+    } else if (sql.status !== ''){
+        sqlQuery = 'AND status=? AND sort=? AND search=?';
+    } else if (sql.status !== ''){
+
+    }
+    sqlQuery += 'ORDER BY addtime, order_id ';
+        con.query(sqlQuery, function (err, rows) {
+            var data = rows;
+            // console.log(data);
+            // console.log(sqlQuery);
+            if (err) { console.log(err); }
+            var statusArray = new Array();
+            for (var i = 0; i < data.length; i++) {
+                statusArray.push(statusTransform(data[i].status));
+            }
+            // console.log(statusArray);
+            res.render('backend/ajax_order', {
+                loginStatus: loginStatus,
+                username: req.session.username,
+                data: data,
+                statusArray: statusArray,
+                moment: moment,
+                message: '',
+            });
+        })
+        console.log(2);        
+        
+        
+        con.query(sqlQuery, sql.status, function (err, rows) {
+            var data = rows;
+            // console.log(data);
+            if (err) { console.log(err); }
+            var statusArray = new Array();
+            for (var i = 0; i < data.length; i++) {
+                statusArray.push(statusTransform(data[i].status));
+            }
+            // console.log(statusArray);
+            res.render('backend/ajax_order', {
+                loginStatus: loginStatus,
+                username: req.session.username,
+                data: data,
+                statusArray: statusArray,
+                moment: moment,
+                message: '',
+            });
+        })
 });
 
 module.exports = router;

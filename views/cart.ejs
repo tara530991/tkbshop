@@ -10,12 +10,13 @@
         .btn-primary{margin:15px 0;}       
         .pro-pic{max-height:80px;max-width:130px;}       
         .h-center{line-height: 80px !important;}    
-        tbody input{max-height: 26px;}                      
+        tbody input{max-height: 26px;}      
+        .amount span{margin:0 5px;}                
     </style>
 </head>
 <% include header %>
 <body>
-<form id="mainform" action="/deleteproduct" method="">
+<form id="mainform" action="" method="">
 <div id="wrapper">
     <div id="page">
         <div class="container">
@@ -63,7 +64,7 @@
                                 </td>
                                 <td class="amount text-center h-center">
                                     <input type="button" value="-" onclick="cut(this,<%=data[i].PD_ID %>)" class="btn btn-info btn-sm"/>
-                                    <%=data[i].PRODUCT_AMOUNT %>
+                                    <span><%=data[i].PRODUCT_AMOUNT %></span>
                                     <input type="button" value="+" onclick="add(this,<%=data[i].PD_ID %>)" class="btn btn-info btn-sm"/>
                                 </td>
                                 <td class="subtotal text-center h-center">

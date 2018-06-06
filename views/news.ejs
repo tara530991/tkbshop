@@ -13,6 +13,8 @@
             white-space: normal;margin:10px;}
         .more{position: absolute;bottom:20px;right:-50px;}
         .news-list{margin:13em 0 0;}
+        .h-center{line-height:180px;}
+        .nopic{background-color:rgba(212, 212, 212, 0.473);}
     </style>
 </head>
 <% include header %>
@@ -31,7 +33,7 @@
         <div class="col-lg-8 col-lg-offset-3">
             <div class="col-lg-5">
                 <label>排序方式             
-                    <select  name="sort" id="sort" onchange="sortSearch()" name="dataTables-example_length" aria-controls="dataTables-example" class="form-control input-sm">
+                    <select name="sort" id="sort" onchange="sortSearch()" name="dataTables-example_length" aria-controls="dataTables-example" class="form-control input-sm">
                         <option value="">請選擇條件</option>
                         <option value="1">時間(由新至舊)</option>
                         <option value="2">時間(由舊至新)</option>
@@ -49,9 +51,15 @@
                 <div class="news-list">
                     <% for(var i=0 ; i < data.length ; i++) { %>
                     <section class="newsBlock col-lg-8 col-lg-offset-2">
+                        <% if (data[i].pic !== "" && data[i].pic !== null) { %>
                         <div class="col-lg-4 text-center">
-                            <img src="upload/hello.png" alt="" class="rounded">
+                            <img src="upload/<%=data[i].pic %>" alt="" class="rounded">
                         </div>
+                        <% } else { %>
+                        <div class="nopic col-lg-4 text-center">
+                            <span class="text-center h-center">尚未上傳圖片</span>
+                        </div>
+                        <% } %>
                         <div class="col-lg-8">
                             <h3 class="h3"><%=data[i].title %></h3>
                             <span class="time"><%=moment(data[i].date).format('YYYY-MM-DD')%></span>
