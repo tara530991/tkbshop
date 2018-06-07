@@ -405,6 +405,136 @@ router.get('/orderModify', function (req, res) {
     });
 });
 
-router.post('/orderModify1', function (req, res) {})
+router.post('/orderModify1', function (req, res) {
+    req.session.admin = 1;
+    if (req.session.admin <= 1) {
+        loginStatus = false;
+    } else if (req.session.admin > 1) {
+        loginStatus = true;
+    }
+    var sql = {
+        username: req.body.username,
+        email: req.body.email,
+        productId: req.body.productId,
+        productAmount: req.body.productAmount,
+        total: req.body.total,
+        buyer: req.body.buyer,
+        address: req.body.address,
+        receipt: req.body.receipt,
+        invoiceTitle: req.body.invoiceTitle,
+        invoiceNumber: req.body.invoiceNumber,
+        payMethod: req.body.payMethod,
+        orderId: req.body.orderId,
+    }
+    console.log(sql);
+    var sqlQuery = 'SELECT OD.*, M.username FROM order_detail OD LEFT JOIN member M on OD.MEMBER_EMAIL=M.email ' +
+        'WHERE order_id=? ';
+    con.query(sqlQuery, sql.orderId, function (err, rows) {        
+        var data = rows;
+        // console.log(data);
+        if (err) { console.log(err); }
+        var statusArray = new Array();
+        for (var i = 0; i < data.length; i++) {
+            statusArray.push(statusTransform(data[i].status));
+        }
+        // console.log(statusArray);
+        var sqlQuery2 = 'SELECT OP.product_id, OP.amount, P.product_name, P.pic, P.price,' +
+            ' SUM(OP.amount * P.price) AS subtotal FROM order_product OP LEFT JOIN product P' +
+            ' ON OP.product_id = P.product_id WHERE order_id=?' +
+            ' GROUP BY OP.product_id, OP.amount;';
+        con.query(sqlQuery2, sql.orderId, function (err, rows) {
+            var data2 = rows;
+            // console.log(data);
+            if (err) { console.log(err); }
+            var sqlQuery3 = 'SELECT OPAY.bankcode, OPAY.bankaccount, OPAY.addtime AS moneyadd FROM order_detail OD ' + 
+                'LEFT JOIN order_payment OPAY on OD.order_id=OPAY.order_id WHERE OD.order_id=?;';
+            con.query(sqlQuery3, sql.orderId, function (err, rows) {
+                var data3 = rows;
+                // console.log(data);
+                if (err) { console.log(err); }
+                res.render('backend/orderlist', {
+                    loginStatus: loginStatus,
+                    username: req.session.username,
+                    data: data,
+                    data2: data2,
+                    data3: data3,
+                    statusArray: statusArray,
+                    moment: moment,
+                    message: '',
+                });
+            });
+        });
+    });
+})
+
+router.get('/ajaxUpdateOrderProduct', function (req, res) {
+    if (req.session.email) {
+      loginStatus = true;
+      req.session.views++;
+    }else{
+      loginStatus = false;
+      req.session.views = 1;
+    }
+    console.log("登入狀態：" + loginStatus);
+    console.log("登入次數：" + req.session.views);  
+    var sql = {
+      orderId: req.query.orderId,    
+      productId: req.query.productId,
+      amount: parseInt(req.query.amount),
+    }
+    // console.log(sql);
+    // var sqlQuery = "UPDATE order_product SET amount=? WHERE order_id=? && product_id=? ;";
+    // con.query(sqlQuery,[sql.amount, sql.orderId, sql.productId], function (err, rows) {
+    //   var data = rows;
+    //   if (err) { console.log(err); }
+    //     if (err) { console.log(err); }
+        res.render('backend/ajax_ordermodify', {
+          loginStatus: loginStatus,
+          username: req.session.username,
+          message: '',
+          data: data,
+        })
+    //   });
+    // })
+  });
+  
+  router.post('/ajaxDeleteCart', function (req, res) {
+    if (req.session.email) {
+      loginStatus = true;
+      req.session.views++;
+    }else{
+      loginStatus = false;
+      req.session.views = 1;
+    }
+    console.log("登入狀態：" + loginStatus);
+    console.log("登入次數：" + req.session.views);  
+    var sql = {
+      email: req.body.email,
+      productId: parseInt(req.body.productId),
+    }
+    console.log(typeof(sql.productId));
+    var sqlQuery = "UPDATE cart_shopping SET status='down',downtime=NOW() WHERE PRODUCT_ID= ? && MEMBER_EMAIL= ? ;";
+    con.query(sqlQuery, [sql.productId,sql.email], function (err, rows) {
+      var data = rows;
+      if (err) { console.log(err); }
+      var sqlQuery = 'SELECT SUM(PD.price * CH.PRODUCT_AMOUNT) AS subtotal,' +
+        ' CH.PRODUCT_AMOUNT, PD.price, PD.product_name, PD.pic, PD.product_id AS PD_ID' +
+        ' FROM cart_shopping CH LEFT JOIN product PD on CH.PRODUCT_ID=PD.product_id' +
+        ' WHERE MEMBER_EMAIL=? && status="on" ' +
+        ' GROUP BY CH.PRODUCT_ID, PD.product_id, CH.PRODUCT_AMOUNT;';
+      con.query(sqlQuery, sql.email, function (err, rows) {
+        var data = rows;
+        console.log(data);
+        if (err) { console.log(err); }
+        res.render('ajax_cart', {
+          loginStatus: loginStatus,
+          username: req.session.username,
+          message: '<sapn>尚未登入，請先進行<a href="/member/login">登入</a></sapn>',
+          data: data,
+        })
+      });
+    })
+})
+    
 
 module.exports = router;

@@ -19,7 +19,7 @@
     </div>
     <section>
         <h3>訂單明細</h3>
-            <input type="hidden" name="newsId" value="<%=data[0].order_id %>">
+            <input type="hidden" id="orderId" name="orderId" value="<%=data[0].order_id %>">
             <label>訂單編號：
                 <input type="text" name="order_id" value="<%=data[0].order_id %>" class="form-control"/>
             </label><br>
@@ -75,7 +75,7 @@
                                 <td class="text-center h-center">
                                     <%=data2[i].product_name %>
                                 </td>
-                                <td class="text-center h-center">
+                                <td class="price text-center h-center">
                                     <%=data2[i].price %>
                                 </td>
                                 <td class="amount text-center h-center">
@@ -97,8 +97,10 @@
                 </table>
                 <div class="">
                     <span id="totalmoney">總金額：</span><span>元</span><br>
-                    <!-- <input type="text" name="total" id="total"> -->
+                    <input type="hidden" name="total" id="total">
                 </div>
+            </div>
+        </div>
         <input type="submit" value="送出" class="btn btn-default">            
     </section>
 </div>
@@ -125,34 +127,45 @@
 
     function add(k, id) {　//k是指input本身，id則是PD_ID
         $('#productId').val(id);　　//把PD_ID放到productId裡面
-        console.log($('#productId').val());
+        var price = $(k).parent().parent().find('.price').text().replace(/ /g, '').replace(/\s/,'');        
         $(id).parent().parent().find('.amount').text().replace(' ', '');  //把產品的id取出
         var amount = parseInt($(k).parent().parent().find('.amount').text()) + 1;  //改變amount的值
         console.log(amount);
-        // console.log($('#productId').text());        
+        var subtotal = amount * price;       
         $(k).parent().parent().find('.amount').text(amount);　//把改好的值放回amount中（前端表格）
-        updateAmount(amount);  //把改變的值傳到令一個函數做ajax的即時更動
+        $(k).parent().parent().find('.subtotal').text(subtotal);        
+        console.log($('#productId').val());
+        console.log(price);
+        console.log(subtotal);
+        updateAmount(price,amount);  //把改變的值傳到令一個函數做ajax的即時更動
     }
 
     function cut(k, id) {
         $('#productId').val(id);
-        console.log($('#productId').val());
-        // console.log($(i).parent().parent().find('.amount').text());
-        $(id).parent().parent().find('.amount').text().replace(' ', '');
-        // console.log($(i).parent().parent().find('.amount').text().replace(' ', ''));
+        var price = $(k).parent().parent().find('.price').text().replace(/ /g, '').replace(/\s/,'');
         var amount = parseInt($(k).parent().parent().find('.amount').text()) - 1;
-        if (amount < 1) {
-            amount = 1;
-        }
+        amount = (amount < 1) ? 1 :amount;
         console.log(amount);
+        var subtotal = amount * price;
         $(k).parent().parent().find('.amount').text(amount);
-        updateAmount(amount);
+        $(k).parent().parent().find('.subtotal').text(subtotal);
+        console.log($('#productId').val());
+        console.log(price);
+        console.log(subtotal);
+        updateAmount(price,amount);
+    }
+    function updateAmount(price,amount) {
+        var totalAdd = 0;
+        $(".subtotal").each(function (i) {
+            totalAdd += parseInt($(this).text());
+            return totalAdd;
+        });
+        $("#total").append("<span>" + totalAdd + "</span>");
     }
 
     function deleteAction(i) {
         // var totalAdd = 0;
         $('#productId').val(i);
-        console.log(666);
         $.ajax({
             url: '/adminP/ajaxDeleteOrderProduct',
             type: 'POST',
