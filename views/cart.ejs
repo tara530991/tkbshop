@@ -35,59 +35,63 @@
             <% include loginlayout %>
         <% }else if(loginStatus == true) { %>
             <% if (data.length == 0) {%>
-                <div class="msg text-center"><%- message2 %></div>
-            <% } else { %>
-            <input type="hidden" id="productId" name="productId" />
-            <div id="panBody" class="panel-body">
-                <div id="cart_list" class="col-lg-10">
-                    <table class="myTable table table-hover col-lg-offset-1">
-                        <thead>
-                            <tr>
-                                <th scope="col" class="col-lg-3 text-center">圖片</th>
-                                <th scope="col" class="col-lg-2 text-center">商品名稱</th>
-                                <th scope="col" class="col-lg-1 text-center">售價</th>
-                                <th scope="col" class="col-lg-2 text-center">購買數量</th>
-                                <th scope="col" class="col-lg-2 text-center">小計金額</th>
-                                <th scope="col" class="col-lg-1 text-center">刪除</th>
-                        </thead>
-                        <tbody>
-                            <tr class="odd gradeX">
-                            <% for(var i=0 ; i < data.length;i++) { %>
-                                <td class="text-center">
-                                    <img class="pro-pic" src="/upload/<%=data[i].pic %>" alt="">
-                                </td>
-                                <td class="text-center h-center">
-                                    <%=data[i].product_name %>
-                                </td>
-                                <td class="text-center h-center">
-                                    <%=data[i].price %>
-                                </td>
-                                <td class="amount text-center h-center">
-                                    <input type="button" value="-" onclick="cut(this,<%=data[i].PD_ID %>)" class="btn btn-info btn-sm"/>
-                                    <span><%=data[i].PRODUCT_AMOUNT %></span>
-                                    <input type="button" value="+" onclick="add(this,<%=data[i].PD_ID %>)" class="btn btn-info btn-sm"/>
-                                </td>
-                                <td class="subtotal text-center h-center">
-                                    <%=data[i].subtotal %>
-                                </td>
-                                <td class="text-center h-center">
-                                    <input type="button" id="delete" onclick="deleteAction(<%=data[i].PD_ID %>)" class="btn btn-warning btn-sm" value="刪除">
-                                </td>
-                            </tr>
-                            <% } %>
-                        </tbody>
-                    </table>
-                    <div class="checkbtn col-lg-3 col-lg-offset-10">
-                        <span id="total">總價：</span><span>元</span><br>
-                        <button type="submit" id="check" onclick="checkAction()" class="btn btn-primary">進入結帳</button>
+                <div class="col-lg-4 col-lg-offset-4 text-center" style="margin-top:5em;">
+                    <span>購物車裡還沒有東西喔
+                        <br> 快來看看我們的<a href="/product">產品</a>吧
+                    </span>
+                </div>
+            <% } else {%>
+                <div id="panBody" class="panel-body">
+                    <div id="cart_list" class="col-lg-10">
+                        <table class="myTable table table-hover col-lg-offset-1">
+                            <thead>
+                                <tr>
+                                    <th scope="col" class="col-lg-3 text-center">圖片</th>
+                                    <th scope="col" class="col-lg-2 text-center">商品名稱</th>
+                                    <th scope="col" class="col-lg-1 text-center">售價</th>
+                                    <th scope="col" class="col-lg-2 text-center">購買數量</th>
+                                    <th scope="col" class="col-lg-2 text-center">小計金額</th>
+                                    <th scope="col" class="col-lg-1 text-center">刪除</th>
+                            </thead>
+                            <tbody>
+                                <input type="hidden" id="productId" name="productId" />
+                                <tr class="odd gradeX">
+                                <% for(var i=0 ; i < data.length;i++) { %>
+                                    <td class="text-center">
+                                        <img class="pro-pic" src="/upload/<%=data[i].pic %>" alt="">
+                                    </td>
+                                    <td class="text-center h-center">
+                                        <%=data[i].product_name %>
+                                    </td>
+                                    <td class="text-center h-center">
+                                        <%=data[i].price %>
+                                    </td>
+                                    <td class="amount text-center h-center">
+                                        <input type="button" value="-" onclick="cut(this,<%=data[i].PD_ID %>)" class="btn btn-info btn-sm"/>
+                                        <span><%=data[i].PRODUCT_AMOUNT %></span>
+                                        <input type="button" value="+" onclick="add(this,<%=data[i].PD_ID %>)" class="btn btn-info btn-sm"/>
+                                    </td>
+                                    <td class="subtotal text-center h-center">
+                                        <%=data[i].subtotal %>
+                                    </td>
+                                    <td class="text-center h-center">
+                                        <input type="button" id="delete" onclick="deleteAction(<%=data[i].PD_ID %>)" class="btn btn-warning btn-sm" value="刪除">
+                                    </td>
+                                </tr>
+                                <% } %>
+                            </tbody>
+                        </table>
+                        <div class="checkbtn col-lg-3 col-lg-offset-10">
+                            <span id="total">總金額：</span><span>元</span><br>
+                            <button type="submit" id="check" onclick="checkAction()" class="btn btn-primary">進入結帳</button>
+                        </div>
                     </div>
                 </div>
-            </div>
+            <% } %>
         <% } %>
     </div>
 </div>
-</form>
-<% } %>        
+</form>       
     <script>
         $(function () {
             var totalAdd = 0;

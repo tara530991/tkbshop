@@ -11,6 +11,7 @@
                 <th scope="col" class="col-lg-1 text-center">刪除</th>
         </thead>
         <tbody>
+            <input type="hidden" id="productId" name="productId" />
             <tr class="odd gradeX">
                 <% for(var i=0 ; i < data.length;i++) { %>
                     <td class="text-center">
@@ -24,7 +25,9 @@
                     </td>
                     <td class="amount text-center h-center">
                         <input type="button" value="-" onclick="cut(this,<%=data[i].PD_ID %>)" class="btn btn-info btn-sm" />
-                        <span><%=data[i].PRODUCT_AMOUNT %></span>
+                        <span>
+                            <%=data[i].PRODUCT_AMOUNT %>
+                        </span>
                         <input type="button" value="+" onclick="add(this,<%=data[i].PD_ID %>)" class="btn btn-info btn-sm" />
                     </td>
                     <td class="subtotal text-center h-center">
@@ -38,7 +41,7 @@
         </tbody>
     </table>
     <div class="checkbtn col-lg-3 col-lg-offset-10">
-        <span id="total">總價：</span>
+        <span id="total">總金額：</span>
         <span>元</span>
         <br>
         <button type="submit" id="check" onclick="checkAction()" class="btn btn-primary">進入結帳</button>

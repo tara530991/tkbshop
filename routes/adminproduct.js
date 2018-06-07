@@ -24,12 +24,12 @@ function statusTransform(statusNum) {
     switch (statusNum) {
         case '01': status = "訂單處理（待收款）"; break;
         case '02': status = "訂單處理（已收款）"; break;
-        case '03': status = "物流運送中"; break;
+        case '03': status = "物流運送"; break;
         case '04': status = "訂單完成"; break;
-        case '11': status = "退貨申請送出"; break;
-        case '12': status = "退貨申請-物流取貨"; break;
-        case '13': status = "退貨申請-貨物退還"; break;
-        case '14': status = "退貨申請-退款完成"; break;
+        case '11': status = "退貨申請"; break;
+        case '12': status = "退貨申請（物流取貨）"; break;
+        case '13': status = "退貨申請（貨物退還）"; break;
+        case '14': status = "退貨申請（退款完成）"; break;
         case '99': status = "訂單取消"; break;
     }
     // console.log("狀態" + status);
@@ -218,7 +218,8 @@ router.get('/order-list', function (req, res) {
     }else if(req.session.admin > 1) {
         loginStatus = true;
     }
-    var sqlQuery = 'SELECT * FROM order_detail ORDER BY addtime,order_id ';
+    var sqlQuery = 'SELECT OD.*, M.username FROM order_detail OD LEFT JOIN member M on OD.MEMBER_EMAIL=M.email ' +
+        'ORDER BY addtime,order_id ';
     con.query(sqlQuery, function (err, rows) {
         var data = rows;
         // console.log(data);
@@ -253,57 +254,157 @@ router.get('/ajaxOrderList', function (req, res) {
         // pages: res.query.pages,
         // count: res.query.count,
         status: req.query.status,
+        orderSearch: req.query.orderSearch,
     }
     console.log(sql);
-    if (sql.status == ''){
-        console.log(1);
-        var sqlQuery = 'SELECT * FROM order_detail WHERE 1=1 ';
-    } else if (sql.status !== ''){
-        sqlQuery = 'AND status=? AND sort=? AND search=?';
-    } else if (sql.status !== ''){
-
+    var sqlQuery = 'SELECT OD.*, M.username FROM order_detail OD LEFT JOIN member M ' + 
+        'on OD.MEMBER_EMAIL=M.email WHERE 1=1 AND Cstatus=1 ';
+    if (sql.status !== ''){
+        console.log(1);        
+        sqlQuery += 'AND status="' + sql.status + '" ';
+    } 
+    if (sql.search !== ''){
+        console.log(2);
+        sqlQuery += 'AND concat(buyer,address) LIKE "%' + sql.search + '%" ';
+    } 
+    if (sql.orderSearch !== '') {
+        console.log(2);
+        sqlQuery += 'AND order_id="' + sql.orderSearch + '" ';
+    } 
+    if (sql.sort !== '') {
+        console.log(4);
+        switch (sql.sort){
+            case 1: sqlQuery += 'ORDER BY addtime DESC';　break;
+            case 2: sqlQuery += 'ORDER BY addtime ASC';　break;
+            case 3: sqlQuery += 'ORDER BY total DESC';　break;
+            case 4: sqlQuery += 'ORDER BY total ASC';　break;
+        }
     }
-    sqlQuery += 'ORDER BY addtime, order_id ';
-        con.query(sqlQuery, function (err, rows) {
-            var data = rows;
-            // console.log(data);
-            // console.log(sqlQuery);
-            if (err) { console.log(err); }
-            var statusArray = new Array();
-            for (var i = 0; i < data.length; i++) {
-                statusArray.push(statusTransform(data[i].status));
-            }
-            // console.log(statusArray);
-            res.render('backend/ajax_order', {
-                loginStatus: loginStatus,
-                username: req.session.username,
-                data: data,
-                statusArray: statusArray,
-                moment: moment,
-                message: '',
-            });
-        })
-        console.log(2);        
-        
-        
-        con.query(sqlQuery, sql.status, function (err, rows) {
-            var data = rows;
-            // console.log(data);
-            if (err) { console.log(err); }
-            var statusArray = new Array();
-            for (var i = 0; i < data.length; i++) {
-                statusArray.push(statusTransform(data[i].status));
-            }
-            // console.log(statusArray);
-            res.render('backend/ajax_order', {
-                loginStatus: loginStatus,
-                username: req.session.username,
-                data: data,
-                statusArray: statusArray,
-                moment: moment,
-                message: '',
-            });
-        })
+    console.log(sqlQuery);
+    con.query(sqlQuery, function (err, rows) {
+        var data = rows;
+        // console.log(data);
+        if (err) { console.log(err); }
+        var statusArray = new Array();
+        for (var i = 0; i < data.length; i++) {
+            statusArray.push(statusTransform(data[i].status));
+        }
+        // console.log(statusArray);
+        res.render('backend/ajax_order', {
+            loginStatus: loginStatus,
+            username: req.session.username,
+            data: data,
+            statusArray: statusArray,
+            moment: moment,
+            sort: sql.sort,
+            search:sql.search,
+            status:sql.status,
+            message: '',
+        });
+    })
 });
+
+router.get('/orderContent', function (req, res) {
+    req.session.admin = 1;
+    if (req.session.admin <= 1) {
+        loginStatus = false;
+    } else if (req.session.admin > 1) {
+        loginStatus = true;
+    }
+    var sql = {
+        orderID: req.query.orderId,
+    }
+    var sqlQuery = 'SELECT OD.*, M.username FROM order_detail OD LEFT JOIN member M on OD.MEMBER_EMAIL=M.email ' +
+        'WHERE order_id=? ';
+    con.query(sqlQuery, sql.orderID, function (err, rows) {
+        var data = rows;
+        // console.log(data);
+        if (err) { console.log(err); }
+        var statusArray = new Array();
+        for (var i = 0; i < data.length; i++) {
+            statusArray.push(statusTransform(data[i].status));
+        }
+        // console.log(statusArray);
+        var sqlQuery = 'SELECT OP.product_id, OP.amount, P.product_name, P.pic, P.price,' +
+            ' SUM(OP.amount * P.price) AS subtotal FROM order_product OP LEFT JOIN product P' +
+            ' ON OP.product_id = P.product_id WHERE order_id=?' +
+            ' GROUP BY OP.product_id, OP.amount;';
+        con.query(sqlQuery2, sql.orderID, function (err, rows) {
+            var data2 = rows;
+            // console.log(data);
+            if (err) { console.log(err); }
+            var sqlQuery3 = 'SELECT OPAY.bankcode, OPAY.backaccount, OPAY.addtime AS moneyadd FROM order_detail OD ' +
+                'LEFT JOIN order_payment OPAY on OD.order_id=OPAY.order_id WHERE order_id=?;';
+            con.query(sqlQuery2, sql.orderID, function (err, rows) {
+                var data3 = rows;
+                // console.log(data);
+                if (err) { console.log(err); }
+                res.render('backend/ordercontent', {
+                    loginStatus: loginStatus,
+                    username: req.session.username,
+                    data: data,
+                    data2: data2,
+                    data3: data3,
+                    statusArray: statusArray,
+                    moment: moment,
+                    message: '',
+                });
+            });
+        });
+    });
+});
+
+router.get('/orderModify', function (req, res) {
+    req.session.admin = 1;
+    if (req.session.admin <= 1) {
+        loginStatus = false;
+    } else if (req.session.admin > 1) {
+        loginStatus = true;
+    }
+    var sql = {
+        orderId: req.query.orderId,
+    }
+    console.log(sql);
+    var sqlQuery = 'SELECT OD.*, M.username FROM order_detail OD LEFT JOIN member M on OD.MEMBER_EMAIL=M.email ' +
+        'WHERE order_id=? ';
+    con.query(sqlQuery, sql.orderId, function (err, rows) {        
+        var data = rows;
+        // console.log(data);
+        if (err) { console.log(err); }
+        var statusArray = new Array();
+        for (var i = 0; i < data.length; i++) {
+            statusArray.push(statusTransform(data[i].status));
+        }
+        // console.log(statusArray);
+        var sqlQuery2 = 'SELECT OP.product_id, OP.amount, P.product_name, P.pic, P.price,' +
+            ' SUM(OP.amount * P.price) AS subtotal FROM order_product OP LEFT JOIN product P' +
+            ' ON OP.product_id = P.product_id WHERE order_id=?' +
+            ' GROUP BY OP.product_id, OP.amount;';
+        con.query(sqlQuery2, sql.orderId, function (err, rows) {
+            var data2 = rows;
+            // console.log(data);
+            if (err) { console.log(err); }
+            var sqlQuery3 = 'SELECT OPAY.bankcode, OPAY.bankaccount, OPAY.addtime AS moneyadd FROM order_detail OD ' + 
+                'LEFT JOIN order_payment OPAY on OD.order_id=OPAY.order_id WHERE OD.order_id=?;';
+            con.query(sqlQuery3, sql.orderId, function (err, rows) {
+                var data3 = rows;
+                // console.log(data);
+                if (err) { console.log(err); }
+                res.render('backend/ordermodify', {
+                    loginStatus: loginStatus,
+                    username: req.session.username,
+                    data: data,
+                    data2: data2,
+                    data3: data3,
+                    statusArray: statusArray,
+                    moment: moment,
+                    message: '',
+                });
+            });
+        });
+    });
+});
+
+router.post('/orderModify1', function (req, res) {})
 
 module.exports = router;

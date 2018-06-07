@@ -49,7 +49,7 @@ router.get('/news', function (req, res) {
   }
   console.log("登入狀態：" + loginStatus);
   console.log("登入次數：" + req.session.views); 
-  con.query('SELECT * FROM news WHERE status=1 LIMIT 10',function(err,rows){
+  con.query('SELECT * FROM news WHERE Cstatus=1 LIMIT 10',function(err,rows){
     var data = rows;     
       res.render('news',{
       loginStatus: loginStatus,           
@@ -76,7 +76,7 @@ router.get('/ajaxNews', function (req, res) {
   }
   console.log("排序方式：" + sql.sort);
   console.log("搜尋詞：" + sql.search);
-  var sqlQuery = "SELECT * FROM news WHERE concat(title,content) LIKE '%" + 
+  var sqlQuery = "SELECT * FROM news WHER Cstatus=1 AND concat(title,content) LIKE '%" + 
     sql.search + "%' ORDER BY date ";
   if (sql.sort == 1){sqlQuery += 'DESC;';
   }else if(sql.sort == 2){sqlQuery += 'ASC;';}
@@ -108,7 +108,7 @@ router.get('/newsContent', function (req, res) {
     newsId: req.query.newsId,
   }
   var count = 0;
-  var sqlQuery = 'SELECT COUNT(id) AS len FROM news;';
+  var sqlQuery = 'SELECT COUNT(id) AS len FROM news WHER Cstatus=1;';
   con.query(sqlQuery, function (err, rows) { 
     count = rows;
     console.log(count);    

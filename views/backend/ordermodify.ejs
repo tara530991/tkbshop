@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>訂單內容修改-後台管理</title>
+    <style>
+        img {max-height:80px;max-width:130px;margin:0.5em 0;}
+        input[type=submit]{margin-bottom:5em;}
+        .amount span{margin:0 5px;}
+    </style>
+</head>
+<% include backheader %>
+<body>
+<form action="/admin/newsModify1" method="POST" enctype="multipart/form-data">
+<div id="page-wrapper">
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header">訂單內容修改</h1>
+        </div>
+    </div>
+    <section>
+        <h3>訂單明細</h3>
+            <input type="hidden" name="newsId" value="<%=data[0].order_id %>">
+            <label>訂單編號：
+                <input type="text" name="order_id" value="<%=data[0].order_id %>" class="form-control"/>
+            </label><br>
+            <label>訂單成立時間：
+                <input type="date" name="addtime" value="<%=moment(data[0].addtime).format('YYYY-MM-DD') %>" class="form-control">
+            </label><br>
+            <label>訂購人：<%=data[0].username %>
+            </label><br>
+            <label>收件人：
+                <input type="text" name="buyer" value="<%=data[0].buyer %>" class="form-control" />
+            </label><br>
+            <label>收件地址：
+                <input type="text" name="address" value="<%=data[0].address %>" class="form-control" />
+            </label><br>
+            <label>總金額：
+                <input type="text" name="total" value="<%=data[0].total %>" class="form-control" disabled/>
+            </label><br>
+            <label>訂單狀態：<%=statusArray[0] %>
+                
+            </label><br>
+        <h3>匯款明細</h3>
+            <label>來源銀行：
+                <input type="text" name="bankcode" value="<%=data3[0].bankcode %>" class="form-control" />
+            </label><br>
+            <label>來源銀行帳戶：
+                <input type="text" name="backaccount" value="<%=data3[0].backaccount %>" class="form-control" />
+            </label><br>
+            <label>入賬時間：
+                <input type="date" name="moneyadd" value="<%=data3[0].moneyadd %>" class="form-control" />
+            </label><br>       
+        <h3>商品明細</h3>
+        <div id="panBody" class="panel-body">
+            <div id="order_list">
+                <table width="100%" class="table table-striped table-bordered table-hover" id="dataTables-example">
+                    <thead>
+                        <tr>
+                            <th width="10%" class="h-center text-center">ID</th>
+                            <th width="10%" class="h-center text-center">商品名稱</th>
+                            <th width="10%" class="h-center text-center">單價</th>
+                            <th width="10%" class="h-center text-center">購買數量</th>
+                            <th width="10%" class="h-center text-center">小計金額</th>
+                            <th width="10%" class="h-center text-center">操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <input type="hidden" id="productId" name="productId" />
+                        <% for(var i=0 ; i<data2.length;i++) { %>
+                            <tr class="odd gradeX">
+                                <td scope="row" class="text-center h-center">
+                                    <%=data2[i].product_id %>
+                                    <input type="hidden" name="orderId" value="<%=data2[i].product_id %>">
+                                </td>
+                                <td class="text-center h-center">
+                                    <%=data2[i].product_name %>
+                                </td>
+                                <td class="text-center h-center">
+                                    <%=data2[i].price %>
+                                </td>
+                                <td class="amount text-center h-center">
+                                    <input type="button" value="-" onclick="cut(this,<%=data2[i].product_id %>)" class="btn btn-info btn-sm" />
+                                    <span>
+                                        <%=data2[i].amount %>
+                                    </span>
+                                    <input type="button" value="+" onclick="add(this,<%=data2[i].product_id %>)" class="btn btn-info btn-sm" />
+                                </td>
+                                <td class="subtotal text-center h-center">
+                                    <%=data2[i].subtotal %>
+                                </td>
+                                <td class="text-center h-center">
+                                    <input type="button" id="delete" onclick="deleteAction(<%=data2[i].product_id %>)" class="btn btn-warning btn-sm" value="刪除">
+                                </td>
+                            </tr>
+                            <%} %>
+                    </tbody>
+                </table>
+                <div class="">
+                    <span id="totalmoney">總金額：</span><span>元</span><br>
+                    <!-- <input type="text" name="total" id="total"> -->
+                </div>
+        <input type="submit" value="送出" class="btn btn-default">            
+    </section>
+</div>
+</form>
+
+<script>
+    $(function(){
+        var totalAdd = 0;
+        var request = new XMLHttpRequest();
+        //取值方法2
+        // console.log(mathScore);
+        // for(var i=0;i<mathScore.length;i++){
+        //     console.log(mathScore[i]);
+        // }
+        $(".subtotal").each(function (i) {
+            totalAdd += parseInt($(this).text());
+            // var total = [];
+            return totalAdd;
+        });
+        $("#totalmoney").append("<span>" + totalAdd + "</span>");
+        $("#total").val(totalAdd);
+            // console.log($("#productId").val());
+    })
+
+    function add(k, id) {　//k是指input本身，id則是PD_ID
+        $('#productId').val(id);　　//把PD_ID放到productId裡面
+        console.log($('#productId').val());
+        $(id).parent().parent().find('.amount').text().replace(' ', '');  //把產品的id取出
+        var amount = parseInt($(k).parent().parent().find('.amount').text()) + 1;  //改變amount的值
+        console.log(amount);
+        // console.log($('#productId').text());        
+        $(k).parent().parent().find('.amount').text(amount);　//把改好的值放回amount中（前端表格）
+        updateAmount(amount);  //把改變的值傳到令一個函數做ajax的即時更動
+    }
+
+    function cut(k, id) {
+        $('#productId').val(id);
+        console.log($('#productId').val());
+        // console.log($(i).parent().parent().find('.amount').text());
+        $(id).parent().parent().find('.amount').text().replace(' ', '');
+        // console.log($(i).parent().parent().find('.amount').text().replace(' ', ''));
+        var amount = parseInt($(k).parent().parent().find('.amount').text()) - 1;
+        if (amount < 1) {
+            amount = 1;
+        }
+        console.log(amount);
+        $(k).parent().parent().find('.amount').text(amount);
+        updateAmount(amount);
+    }
+
+    function deleteAction(i) {
+        // var totalAdd = 0;
+        $('#productId').val(i);
+        console.log(666);
+        $.ajax({
+            url: '/adminP/ajaxDeleteOrderProduct',
+            type: 'POST',
+            dataType: 'text',
+            data: {
+                productId: $('#productId').val(),
+            },
+            success: function (data) {
+                $('#order_list').remove();
+                $('#panBody').append(data); $('#productId').val(i);
+                $(".subtotal").each(function (i) {
+                    totalAdd += parseInt($(this).text());
+                    return totalAdd;
+                });
+                $("#total").append("<span>" + totalAdd + "</span>");
+            },
+            err: function (err) {
+                console.log(err);
+            }
+        })
+    }
+
+</script>
+</body>
+</html>

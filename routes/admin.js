@@ -141,14 +141,14 @@ router.get('/news-list', function (req, res) {
   if (req.session.admin > 1) {
     loginStatus = true;
   }
-  var sqlQuery = 'SELECT * FROM news WHERE status="1" OR status="2";';
+  var sqlQuery = 'SELECT * FROM news WHERE Cstatus="1" OR Cstatus="2";';
   con.query(sqlQuery,function(err,rows){
     var data = rows;
     // console.log(data);
     if(err){console.log(err);}
     var statusArray = new Array();
     for (var i = 0; i < data.length; i++) {
-      statusArray.push(statusTransform(data[i].status));
+      statusArray.push(statusTransform(data[i].Cstatus));
     }
     res.render('backend/newslist',{
       loginStatus: loginStatus,      

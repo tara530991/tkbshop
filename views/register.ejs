@@ -3,35 +3,59 @@
 <head>
     <title>註冊新會員</title>
     <style>
-        #form {margin-left:400px;}
-        #form h2 {margin:0 0 2rem;}
-        #form span {display:inline-block;margin:0.5rem;}
+        .btn{margin:2em 0.5em 5em !important;}
     </style>
 </head>
 <% include header %>
 <body>
-    <div></div>
-    <div id="form">
-        <h2>註冊</h2>
-        <div>
-            <form action="/member/register1" method="POST">
-                <span>中文全名：</span><input type="text" name="username" required><br>
-                <span>帳號（E-mail）：</span><input type="email" name="email" required><span>注意！E-mail作為帳戶名將不可再更動！！</span><br>
-                <span>密碼：</span><input type="text" name="password" required><br >
-                <span>確認密碼：</span><input type="text" name="password2" required><br>
-                <span>室內電話：</span><input type="text" name="tel" required><br>
-                <span>手機：</span><input type="text" name="cell" required><br>
-                <span>生日：</span><input type="date" name="birth" required><br>
-                <span>地址：</span><input type="text" name="address" required><br>
-                <h4>勾選同意使用條款</h4>
-                <textarea cols="30" rows="10" disabled="true">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quis enim dolorem placeat deserunt. Molestiae repudiandae eligendi vel pariatur tenetur iste sequi quisquam iure ipsam explicabo architecto, necessitatibus deserunt doloremque doloribus?
-                </textarea><br>
-                <span>我同意</span><input type="radio" value="0" name="allow" checked hidden><input type="radio" value="1" name="allow"><br>
-                <input type="submit" value="註冊" id="send">
-                <input type="reset" value="清除" id="clear" >
-            </form>
-            <%- message %>
-        </div>
+<form action="/member/register1" method="POST">
+    <div class="container">
+        <ol class="breadcrumb">
+            <li><a href="/">首頁</a></li>
+            <li class="active">註冊</li>
+        </ol>
     </div>
+    <div class="col-lg-12">
+        <h2 class="top">註冊</h2>
+    </div>
+    <div class="col-lg-6 col-lg-offset-3">
+        <label>中文全名：
+            <input type="text" name="username" class="form-control" required>
+        </label><br>
+        <label>帳號（E-mail）：
+            <input type="email" name="email" class="form-control" required>
+            <span>注意！E-mail作為帳戶名將不可再更動！！</span>
+        </label><br>
+        <label>密碼：
+            <input type="text" name="password" class="form-control" required>
+        </label><br>
+        <label>確認密碼：
+            <input type="text" name="password2" class="form-control" required>
+        </label><br>
+        <label>室內電話：
+            <input type="tel" name="tel" class="form-control" required>
+        </label><br>
+        <label>手機：
+            <input type="tel" name="cell" class="form-control" required>
+        </label><br>
+        <label>生日：
+            <input type="date" name="birth" class="form-control" required>
+        </label><br>
+        <label>地址：
+            <input type="text" name="address" class="form-control" required>
+        </label><br>
+        <label>使用條款：</label>
+        <textarea cols="30" rows="10" disabled="true" class="form-control">
+            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quis enim dolorem placeat deserunt. Molestiae repudiandae eligendi vel pariatur tenetur iste sequi quisquam iure ipsam explicabo architecto, necessitatibus deserunt doloremque doloribus?
+        </textarea><br>
+        <label>
+            <input type="radio" value="0" name="allow" checked hidden>
+            <input type="radio" value="1" name="allow">
+            我同意
+        </label><br>
+        <input type="submit" value="註冊" id="send" class="btn btn-primary">
+        <input type="reset" value="清除" id="clear" class="btn btn-warning">
+    </div>  
+</form>
 </body>
 </html>

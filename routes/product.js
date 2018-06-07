@@ -228,7 +228,6 @@ router.get('/cart', function (req, res) {
       loginStatus: loginStatus,
       username: req.session.username,                                          
       message: '<span>尚未登入，請先進行<a href="/member/login">登入</a></span>',       
-      message2: '<span>購物車裡還沒有東西喔<br>快來看看我們的<a href="/product">產品</a>吧</span>',       
       data:data,
     });
   })

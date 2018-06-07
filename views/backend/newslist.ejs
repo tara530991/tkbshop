@@ -28,45 +28,48 @@
             <div class="col-lg-12">
                 <div class="panel panel-default">
                     <div id="panBody" class="panel-body">
-                        <table id="news_list" width="100%" class="table table-striped table-bordered table-hover" id="dataTables-example">
-                            <thead>
-                                <tr>
-                                    <th width="9%" class="h-center text-center">日期</th>
-                                    <th width="10%" class="h-center text-center">標題</th>
-                                    <th width="10%" class="h-center text-center">圖片</th>
-                                    <th width="50%" class="h-center text-center">內容</th>
-                                    <th width="6%" class="h-center text-center">狀態</th>
-                                    <th width="5%" class="h-center text-center">操作</th>
-                                </tr>
-                           </thead>
-                                <input type="hidden" id="newsId" name="newsId">
-                                <input type="hidden" id="status" name="status">
-                                <% for(var i=0 ; i<data.length;i++) { %>
-                                    <tr class="odd gradeX">
-                                        <td class="h-center">
-                                            <%=moment(data[i].date).format('YYYY-MM-DD') %>
-                                        </td>
-                                        <td class="h-center">
-                                            <%=data[i].title %>
-                                        </td>
-                                        <td class="h-center">
-                                            <img src="/upload/<%=data[i].pic %>" alt="">
-                                        </td>
-                                        <td class="content">
-                                            <%-data[i].content %>
-                                        </td>
-                                        <td class="h-center">
-                                            <%=statusArray[i] %>
-                                        </td>
-                                        <td class="text-center h-center">
-                                            <input type="button" onclick="content(<%=data[i].id %>)" class="myBtn btn btn-info btn-sm" value="檢視">      
-                                            <input type="button" onclick="modifyAct(<%=data[i].id %>)" class="myBtn btn btn-warning btn-sm" value="修改">                                            
-                                            <input type="button" onclick="deleteAct(<%=data[i].id %>)" class="myBtn btn btn-danger btn-sm" value="刪除">
-                                        </td>
+                        <div id="news_list">
+                            <table width="100%" class="table table-striped table-bordered table-hover" id="dataTables-example">
+                                <thead>
+                                    <tr>
+                                        <th width="9%" class="h-center text-center">日期</th>
+                                        <th width="10%" class="h-center text-center">標題</th>
+                                        <th width="10%" class="h-center text-center">圖片</th>
+                                        <th width="50%" class="h-center text-center">內容</th>
+                                        <th width="6%" class="h-center text-center">狀態</th>
+                                        <th width="5%" class="h-center text-center">操作</th>
                                     </tr>
-                                    <%} %>
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody>
+                                    <input type="hidden" id="newsId" name="newsId">
+                                    <input type="hidden" id="status" name="status">
+                                    <% for(var i=0 ; i<data.length;i++) { %>
+                                        <tr class="odd gradeX">
+                                            <td class="h-center">
+                                                <%=moment(data[i].date).format('YYYY-MM-DD') %>
+                                            </td>
+                                            <td class="h-center">
+                                                <%=data[i].title %>
+                                            </td>
+                                            <td class="h-center">
+                                                <img src="/upload/<%=data[i].pic %>" alt="">
+                                            </td>
+                                            <td class="content">
+                                                <%-data[i].content %>
+                                            </td>
+                                            <td class="h-center">
+                                                <%=statusArray[i] %>
+                                            </td>
+                                            <td class="text-center h-center">
+                                                <input type="button" onclick="content(<%=data[i].id %>)" class="myBtn btn btn-info btn-sm" value="檢視">      
+                                                <input type="button" onclick="modifyAct(<%=data[i].id %>)" class="myBtn btn btn-warning btn-sm" value="修改">                                            
+                                                <input type="button" onclick="deleteAct(<%=data[i].id %>)" class="myBtn btn btn-danger btn-sm" value="刪除">
+                                            </td>
+                                        </tr>
+                                        <%} %>
+                                </tbody>
+                            </table>
+                        </div>                        
                     </div>
                 </div>
             </div>
