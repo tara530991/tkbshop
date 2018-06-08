@@ -35,6 +35,16 @@ function statusTransform(statusNum) {
     // console.log("狀態" + status);
     return status;
 }
+function receiptTransform(receiptNum) {
+    // console.log("狀態" + statusNum);
+    var receipt = '';
+    switch (receiptNum) {
+        case '2': receipt = "二聯式"; break;
+        case '3': receipt = "三聯式"; break;
+    }
+    // console.log("狀態" + status);
+    return receipt;
+}
 
 //管理端
 router.get('/category-list', function (req, res) {
@@ -265,7 +275,7 @@ router.get('/ajaxOrderList', function (req, res) {
     } 
     if (sql.search !== ''){
         console.log(2);
-        sqlQuery += 'AND concat(buyer,address) LIKE "%' + sql.search + '%" ';
+        sqlQuery += 'AND buyer LIKE "%' + sql.search + '%" ';
     } 
     if (sql.orderSearch !== '') {
         console.log(2);
@@ -274,10 +284,10 @@ router.get('/ajaxOrderList', function (req, res) {
     if (sql.sort !== '') {
         console.log(4);
         switch (sql.sort){
-            case 1: sqlQuery += 'ORDER BY addtime DESC';　break;
-            case 2: sqlQuery += 'ORDER BY addtime ASC';　break;
-            case 3: sqlQuery += 'ORDER BY total DESC';　break;
-            case 4: sqlQuery += 'ORDER BY total ASC';　break;
+            case '1': sqlQuery += 'ORDER BY addtime DESC';　break;
+            case '2': sqlQuery += 'ORDER BY addtime ASC';　break;
+            case '3': sqlQuery += 'ORDER BY total DESC';　break;
+            case '4': sqlQuery += 'ORDER BY total ASC';　break;
         }
     }
     console.log(sqlQuery);
@@ -365,6 +375,7 @@ router.get('/orderModify', function (req, res) {
         orderId: req.query.orderId,
     }
     console.log(sql);
+    console.log("test");
     var sqlQuery = 'SELECT OD.*, M.username FROM order_detail OD LEFT JOIN member M on OD.MEMBER_EMAIL=M.email ' +
         'WHERE order_id=? ';
     con.query(sqlQuery, sql.orderId, function (err, rows) {        
@@ -372,8 +383,12 @@ router.get('/orderModify', function (req, res) {
         // console.log(data);
         if (err) { console.log(err); }
         var statusArray = new Array();
+        var receiptArray = new Array();
         for (var i = 0; i < data.length; i++) {
             statusArray.push(statusTransform(data[i].status));
+        } 
+        for (var l = 0; l < data.length; l++) {
+            receiptArray.push(receiptTransform(data[l].receipt));
         }
         // console.log(statusArray);
         var sqlQuery2 = 'SELECT OP.product_id, OP.amount, P.product_name, P.pic, P.price,' +
@@ -387,6 +402,7 @@ router.get('/orderModify', function (req, res) {
             var sqlQuery3 = 'SELECT OPAY.bankcode, OPAY.bankaccount, OPAY.addtime AS moneyadd FROM order_detail OD ' + 
                 'LEFT JOIN order_payment OPAY on OD.order_id=OPAY.order_id WHERE OD.order_id=?;';
             con.query(sqlQuery3, sql.orderId, function (err, rows) {
+                console.log("test");
                 var data3 = rows;
                 // console.log(data);
                 if (err) { console.log(err); }
@@ -397,6 +413,7 @@ router.get('/orderModify', function (req, res) {
                     data2: data2,
                     data3: data3,
                     statusArray: statusArray,
+                    receiptArray: receiptArray,
                     moment: moment,
                     message: '',
                 });
@@ -413,45 +430,50 @@ router.post('/orderModify1', function (req, res) {
         loginStatus = true;
     }
     var sql = {
-        username: req.body.username,
-        email: req.body.email,
-        productId: req.body.productId,
-        productAmount: req.body.productAmount,
-        total: req.body.total,
+        orderId: req.body.orderId,
         buyer: req.body.buyer,
         address: req.body.address,
+        total: req.body.total,
         receipt: req.body.receipt,
         invoiceTitle: req.body.invoiceTitle,
         invoiceNumber: req.body.invoiceNumber,
-        payMethod: req.body.payMethod,
-        orderId: req.body.orderId,
+        status: req.body.status,
+        bankcode: req.body.bankcode,
+        backaccount: req.body.backaccount,
+        moneyadd: req.body.moneyadd,
+    }
+    var sql2 = {
+        deleteId: req.body.deleteId,
+        productId: req.body.productId,
+        productAmount: req.body.productAmount,
     }
     console.log(sql);
+    console.log(sql2);
     var sqlQuery = 'SELECT OD.*, M.username FROM order_detail OD LEFT JOIN member M on OD.MEMBER_EMAIL=M.email ' +
         'WHERE order_id=? ';
-    con.query(sqlQuery, sql.orderId, function (err, rows) {        
-        var data = rows;
-        // console.log(data);
-        if (err) { console.log(err); }
-        var statusArray = new Array();
-        for (var i = 0; i < data.length; i++) {
-            statusArray.push(statusTransform(data[i].status));
-        }
-        // console.log(statusArray);
-        var sqlQuery2 = 'SELECT OP.product_id, OP.amount, P.product_name, P.pic, P.price,' +
-            ' SUM(OP.amount * P.price) AS subtotal FROM order_product OP LEFT JOIN product P' +
-            ' ON OP.product_id = P.product_id WHERE order_id=?' +
-            ' GROUP BY OP.product_id, OP.amount;';
-        con.query(sqlQuery2, sql.orderId, function (err, rows) {
-            var data2 = rows;
-            // console.log(data);
-            if (err) { console.log(err); }
-            var sqlQuery3 = 'SELECT OPAY.bankcode, OPAY.bankaccount, OPAY.addtime AS moneyadd FROM order_detail OD ' + 
-                'LEFT JOIN order_payment OPAY on OD.order_id=OPAY.order_id WHERE OD.order_id=?;';
-            con.query(sqlQuery3, sql.orderId, function (err, rows) {
-                var data3 = rows;
-                // console.log(data);
-                if (err) { console.log(err); }
+    // con.query(sqlQuery, sql.orderId, function (err, rows) {        
+    //     var data = rows;
+    //     // console.log(data);
+    //     if (err) { console.log(err); }
+    //     var statusArray = new Array();
+    //     for (var i = 0; i < data.length; i++) {
+    //         statusArray.push(statusTransform(data[i].status));
+    //     }
+    //     // console.log(statusArray);
+    //     var sqlQuery2 = 'SELECT OP.product_id, OP.amount, P.product_name, P.pic, P.price,' +
+    //         ' SUM(OP.amount * P.price) AS subtotal FROM order_product OP LEFT JOIN product P' +
+    //         ' ON OP.product_id = P.product_id WHERE order_id=?' +
+    //         ' GROUP BY OP.product_id, OP.amount;';
+    //     con.query(sqlQuery2, sql.orderId, function (err, rows) {
+    //         var data2 = rows;
+    //         // console.log(data);
+    //         if (err) { console.log(err); }
+    //         var sqlQuery3 = 'SELECT OPAY.bankcode, OPAY.bankaccount, OPAY.addtime AS moneyadd FROM order_detail OD ' + 
+    //             'LEFT JOIN order_payment OPAY on OD.order_id=OPAY.order_id WHERE OD.order_id=?;';
+    //         con.query(sqlQuery3, sql.orderId, function (err, rows) {
+    //             var data3 = rows;
+    //             // console.log(data);
+    //             if (err) { console.log(err); }
                 res.render('backend/orderlist', {
                     loginStatus: loginStatus,
                     username: req.session.username,
@@ -462,79 +484,9 @@ router.post('/orderModify1', function (req, res) {
                     moment: moment,
                     message: '',
                 });
-            });
-        });
-    });
+    //         });
+        // });
+    // });
 })
-
-router.get('/ajaxUpdateOrderProduct', function (req, res) {
-    if (req.session.email) {
-      loginStatus = true;
-      req.session.views++;
-    }else{
-      loginStatus = false;
-      req.session.views = 1;
-    }
-    console.log("登入狀態：" + loginStatus);
-    console.log("登入次數：" + req.session.views);  
-    var sql = {
-      orderId: req.query.orderId,    
-      productId: req.query.productId,
-      amount: parseInt(req.query.amount),
-    }
-    // console.log(sql);
-    // var sqlQuery = "UPDATE order_product SET amount=? WHERE order_id=? && product_id=? ;";
-    // con.query(sqlQuery,[sql.amount, sql.orderId, sql.productId], function (err, rows) {
-    //   var data = rows;
-    //   if (err) { console.log(err); }
-    //     if (err) { console.log(err); }
-        res.render('backend/ajax_ordermodify', {
-          loginStatus: loginStatus,
-          username: req.session.username,
-          message: '',
-          data: data,
-        })
-    //   });
-    // })
-  });
-  
-  router.post('/ajaxDeleteCart', function (req, res) {
-    if (req.session.email) {
-      loginStatus = true;
-      req.session.views++;
-    }else{
-      loginStatus = false;
-      req.session.views = 1;
-    }
-    console.log("登入狀態：" + loginStatus);
-    console.log("登入次數：" + req.session.views);  
-    var sql = {
-      email: req.body.email,
-      productId: parseInt(req.body.productId),
-    }
-    console.log(typeof(sql.productId));
-    var sqlQuery = "UPDATE cart_shopping SET status='down',downtime=NOW() WHERE PRODUCT_ID= ? && MEMBER_EMAIL= ? ;";
-    con.query(sqlQuery, [sql.productId,sql.email], function (err, rows) {
-      var data = rows;
-      if (err) { console.log(err); }
-      var sqlQuery = 'SELECT SUM(PD.price * CH.PRODUCT_AMOUNT) AS subtotal,' +
-        ' CH.PRODUCT_AMOUNT, PD.price, PD.product_name, PD.pic, PD.product_id AS PD_ID' +
-        ' FROM cart_shopping CH LEFT JOIN product PD on CH.PRODUCT_ID=PD.product_id' +
-        ' WHERE MEMBER_EMAIL=? && status="on" ' +
-        ' GROUP BY CH.PRODUCT_ID, PD.product_id, CH.PRODUCT_AMOUNT;';
-      con.query(sqlQuery, sql.email, function (err, rows) {
-        var data = rows;
-        console.log(data);
-        if (err) { console.log(err); }
-        res.render('ajax_cart', {
-          loginStatus: loginStatus,
-          username: req.session.username,
-          message: '<sapn>尚未登入，請先進行<a href="/member/login">登入</a></sapn>',
-          data: data,
-        })
-      });
-    })
-})
-    
 
 module.exports = router;

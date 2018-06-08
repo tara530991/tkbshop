@@ -29,6 +29,17 @@ function statusTransform(statusNum) {
   return status;
 }
 
+function statusTransform2(statusNum) {
+  // console.log("狀態" + statusNum);
+  switch (statusNum) {
+    case 0: status = '未回覆'; break;
+    case 1: status = '處理中'; break;
+    case 2: status = '完成'; break;
+  }
+  // console.log("狀態" + status);
+  return status;
+}
+
 //管理端
 router.get('/', function (req, res) {
   var loginStatus = false;
@@ -333,7 +344,6 @@ router.post('/ajaxDeleteNews', upload, function (req, res) {
       });
     });
   });
-
 })
 
 //--------------------顧客意見----------------------
@@ -343,16 +353,26 @@ router.get('/suggest-list', function (req, res) {
     if (req.session.admin > 1) {
       loginStatus = true;
     }
-  con.query('SELECT * FROM suggest',function(err,rows){
+  var sqlQuery = 'SELECT * FROM suggest'
+  con.query(sqlQuery,function(err,rows){
     var data = rows;
-    if (err) {
-      console.log(err);
+    if (err) {console.log(err);}
+    var statusArray = new Array();
+    for (var i = 0; i < data.length; i++) {
+      statusArray.push(statusTransform2(data[i].status));
     }
-    res.render('backend/suggest',{
-      loginStatus: loginStatus,      
-      moment: moment,
-      data:data,
-      message: '',    
+    var sqlQuery2 = 'SELECT * FROM suggest_reply'
+    con.query(sqlQuery2, function (err, rows) {
+      var data2 = rows;
+      if (err) { console.log(err); }
+      res.render('backend/suggest',{
+        loginStatus: loginStatus,      
+        moment: moment,
+        data: data,
+        data2:data2,
+        statusArray: statusArray,
+        message: '',    
+      });
     });
   });
 });

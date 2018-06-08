@@ -34,7 +34,7 @@ CREATE TABLE `product` (
   `category` varchar(45) DEFAULT NULL,
   `addtime` date DEFAULT NULL,
   PRIMARY KEY (`product_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -43,7 +43,7 @@ CREATE TABLE `product` (
 
 LOCK TABLES `product` WRITE;
 /*!40000 ALTER TABLE `product` DISABLE KEYS */;
-INSERT INTO `product` VALUES (11,'可頌',10,50,'香酥可口','pic01-1527730586074.jpg','AA0002',1,'麵包','2018-05-31'),(12,'紅豆麵包',25,23,'甜而不膩','pic02-1527734041525.jpg','AA0006',6,'麵包','2018-05-31'),(13,'紅絲絨/片',100,12,'高貴不貴','pic21-1527736926518.jpg','BB0001',3,'蛋糕','2018-05-31'),(14,'巧克力瑪芬',23,14,'小巧玲瓏','pic08-1527739988002.jpg','BB0002',4,'蛋糕','2018-05-31'),(15,'水果瑞士捲',280,3,'多樣水果','pic16-1527740273074.jpg','CC0003',3,'蛋糕','2018-05-31'),(16,'藍莓酥皮千層',35,7,'酥脆爽口','pic13-1527755531042.jpg','AA0003',8,'麵包','2018-05-31'),(17,'爆漿布朗尼',60,9,'戀愛滋味','pic14-1527755706745.jpg','AA0004',4,'蛋糕','2018-05-31'),(20,'雜糧麵包',42,16,'健康五穀','pic19-1527832711521.jpg','AA0004',2,'麵包','2018-06-01');
+INSERT INTO `product` VALUES (1,'可頌',10,50,'香酥可口','pic01-1527730586074.jpg','AA0002',1,'麵包','2018-05-31'),(2,'紅豆麵包',25,23,'甜而不膩','pic02-1527734041525.jpg','AA0006',6,'麵包','2018-05-31'),(3,'紅絲絨/片',100,12,'高貴不貴','pic21-1527736926518.jpg','BB0001',3,'蛋糕','2018-05-31'),(4,'巧克力瑪芬',23,14,'小巧玲瓏','pic08-1527739988002.jpg','BB0002',4,'蛋糕','2018-05-31'),(5,'水果瑞士捲',280,3,'多樣水果','pic16-1527740273074.jpg','CC0003',3,'蛋糕','2018-05-31'),(6,'藍莓酥皮千層',35,7,'酥脆爽口','pic13-1527755531042.jpg','AA0003',8,'麵包','2018-05-31'),(7,'爆漿布朗尼',60,9,'戀愛滋味','pic14-1527755706745.jpg','AA0004',4,'蛋糕','2018-05-31'),(8,'雜糧麵包',42,16,'健康五穀','pic19-1527832711521.jpg','AA0004',2,'麵包','2018-06-01'),(9,'栗子蒙布朗',75,6,'綿密口感','pic07-1528162122582.jpg','AA0006',9,'蛋糕','2018-06-05');
 /*!40000 ALTER TABLE `product` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -56,4 +56,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-06-01 18:06:52
+-- Dump completed on 2018-06-08 18:21:55

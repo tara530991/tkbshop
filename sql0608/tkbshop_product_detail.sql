@@ -16,27 +16,31 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `test`
+-- Table structure for table `product_detail`
 --
 
-DROP TABLE IF EXISTS `test`;
+DROP TABLE IF EXISTS `product_detail`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `test` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `pic` varchar(45) COLLATE utf8_unicode_ci DEFAULT NULL,
+CREATE TABLE `product_detail` (
+  `id` int(11) NOT NULL,
+  `product_id` int(11) NOT NULL,
+  `uptime` date DEFAULT NULL,
+  `downtime` date DEFAULT NULL,
+  `addtime` date DEFAULT NULL,
+  `changetime` date DEFAULT NULL,
+  `user` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `test`
+-- Dumping data for table `product_detail`
 --
 
-LOCK TABLES `test` WRITE;
-/*!40000 ALTER TABLE `test` DISABLE KEYS */;
-INSERT INTO `test` VALUES (1,'pic-1527671041702.jpg'),(2,'maxresdefault2-1527671636334.jpg'),(3,'cheese-1527672157755.jpg'),(4,'cheese-1527672210690.jpg'),(5,'bread-1527672217413.png');
-/*!40000 ALTER TABLE `test` ENABLE KEYS */;
+LOCK TABLES `product_detail` WRITE;
+/*!40000 ALTER TABLE `product_detail` DISABLE KEYS */;
+/*!40000 ALTER TABLE `product_detail` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -48,4 +52,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-06-01 18:06:53
+-- Dump completed on 2018-06-08 18:21:55

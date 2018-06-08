@@ -16,30 +16,30 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `news`
+-- Table structure for table `order_payment`
 --
 
-DROP TABLE IF EXISTS `news`;
+DROP TABLE IF EXISTS `order_payment`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `news` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `title` varchar(25) DEFAULT NULL,
-  `date` datetime DEFAULT NULL,
-  `pic` varchar(45) DEFAULT NULL,
-  `content` text,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+CREATE TABLE `order_payment` (
+  `id` int(10) NOT NULL AUTO_INCREMENT,
+  `order_id` varchar(20) NOT NULL,
+  `bankcode` int(5) DEFAULT NULL,
+  `bankaccount` varchar(45) DEFAULT NULL,
+  `addtime` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`,`order_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=37 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `news`
+-- Dumping data for table `order_payment`
 --
 
-LOCK TABLES `news` WRITE;
-/*!40000 ALTER TABLE `news` DISABLE KEYS */;
-INSERT INTO `news` VALUES (1,'哈囉大家好','2018-04-12 00:00:00','','hohohoh\r\n'),(2,'你好','2018-05-16 00:00:00',NULL,'你好嗎');
-/*!40000 ALTER TABLE `news` ENABLE KEYS */;
+LOCK TABLES `order_payment` WRITE;
+/*!40000 ALTER TABLE `order_payment` DISABLE KEYS */;
+INSERT INTO `order_payment` VALUES (32,'R201806070001',NULL,NULL,NULL),(33,'R201806070002',NULL,NULL,NULL),(34,'P201806080001',NULL,NULL,NULL),(35,'Q201806080001',NULL,NULL,NULL),(36,'Q201806080002',NULL,NULL,NULL);
+/*!40000 ALTER TABLE `order_payment` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -51,4 +51,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-06-01 18:06:53
+-- Dump completed on 2018-06-08 18:21:55

@@ -6,12 +6,11 @@
         img {max-height:80px;max-width:130px;margin:0.5em 0;}
         input[type=submit]{margin-bottom:5em;}
         .amount span{margin:0 5px;}
-        .h-center{vertical-align: middle !important;}  
     </style>
 </head>
 <% include backheader %>
 <body>
-<form action="/adminP/orderModify1" method="POST">
+<form action="/admin/newsModify1" method="POST" enctype="multipart/form-data">
 <div id="page-wrapper">
     <div class="row">
         <div class="col-lg-12">
@@ -27,7 +26,8 @@
             <label>訂單成立時間：
                 <input type="date" name="addtime" value="<%=moment(data[0].addtime).format('YYYY-MM-DD') %>" class="form-control">
             </label><br>
-            <label>訂購人：<%=data[0].username %></label><br>
+            <label>訂購人：<%=data[0].username %>
+            </label><br>
             <label>收件人：
                 <input type="text" name="buyer" value="<%=data[0].buyer %>" class="form-control" />
             </label><br>
@@ -37,40 +37,13 @@
             <label>總金額：
                 <input type="text" name="total" value="<%=data[0].total %>" class="form-control" disabled/>
             </label><br>
-            <label>發票類型：<%=receiptArray[0] %>
-                <input type="radio" name="receipt" value="0" checked style="display: none;">                
-                <input type="radio" name="receipt" value="2">
-                <span>二聯式</span>
-                <input type="radio" name="receipt" value="3">
-                <span>三聯式</span>
-            </label>
-            <br>
-            <label>發票抬頭：
-                <input type="text" name="invoiceTitle" value="<%=data[0].invoiceTitle %>" class="form-control"/>
-            </label>
-            <br>
-            <label>統一編號：
-                <input type="text" name="invoiceNumber" value="<%=data[0].invoiceNumber %>" class="form-control"/>
-            </label>
-            <br>
-            <label>訂單狀態：<b><%=statusArray[0] %></b>
-                <select name="status" class="form-control">
-                    <option value="">修改訂單狀態</option>
-                    <option value="01">訂單處理（待收款）</option>
-                    <option value="02">訂單處理（已收款）</option>
-                    <option value="03">物流運送</option>
-                    <option value="04">訂單完成</option>
-                    <option value="11">退貨申請</option>
-                    <option value="12">退貨申請（物流取貨）</option>
-                    <option value="13">退貨申請（貨物退還）</option>
-                    <option value="14">退貨申請（退款完成）</option>
-                    <option value="99">訂單取消</option>
-                </select>
+            <label>訂單狀態：<%=statusArray[0] %>
+                
             </label><br>
         <h3>匯款明細</h3>
             <label>來源銀行：
                 <input type="text" name="bankcode" value="<%=data3[0].bankcode %>" class="form-control" />
-            </label>　
+            </label><br>
             <label>來源銀行帳戶：
                 <input type="text" name="backaccount" value="<%=data3[0].backaccount %>" class="form-control" />
             </label><br>
@@ -86,18 +59,18 @@
                             <th width="10%" class="h-center text-center">ID</th>
                             <th width="10%" class="h-center text-center">商品名稱</th>
                             <th width="10%" class="h-center text-center">單價</th>
-                            <th width="10%" class="h-center text-center">原先購買數量</th>                            
-                            <th width="10%" class="h-center text-center">更改購買數量</th>
+                            <th width="10%" class="h-center text-center">購買數量</th>
                             <th width="10%" class="h-center text-center">小計金額</th>
                             <th width="10%" class="h-center text-center">操作</th>
                         </tr>
                     </thead>
                     <tbody>
+                        <input type="hidden" id="productId" name="productId" />
                         <% for(var i=0 ; i<data2.length;i++) { %>
                             <tr class="odd gradeX">
                                 <td scope="row" class="text-center h-center">
                                     <%=data2[i].product_id %>
-                                    <input type="hidden" name="productId" value="<%=data2[i].product_id %>">
+                                    <input type="hidden" name="orderId" value="<%=data2[i].product_id %>">
                                 </td>
                                 <td class="text-center h-center">
                                     <%=data2[i].product_name %>
@@ -105,108 +78,116 @@
                                 <td class="price text-center h-center">
                                     <%=data2[i].price %>
                                 </td>
-                                <td class="text-center h-center">
-                                    <%=data2[i].amount %>
-                                                                       
-                                </td>
                                 <td class="amount text-center h-center">
-                                    <input type="hidden" name="productAmount" class="productAmount" value="<%=data2[i].amount %>">
                                     <input type="button" value="-" onclick="cut(this,<%=data2[i].product_id %>)" class="btn btn-info btn-sm" />
                                     <span>
-                                        <%=data2[i].amount %> 
+                                        <%=data2[i].amount %>
                                     </span>
                                     <input type="button" value="+" onclick="add(this,<%=data2[i].product_id %>)" class="btn btn-info btn-sm" />
                                 </td>
                                 <td class="subtotal text-center h-center">
-                                    <span><%=data2[i].subtotal %></span>
+                                    <%=data2[i].subtotal %>
                                 </td>
                                 <td class="text-center h-center">
-                                    <input type="button" onclick="deleteAction(this,<%=data2[i].product_id %>)" class="btn btn-warning btn-sm" value="刪除">
+                                    <input type="button" id="delete" onclick="deleteAction(<%=data2[i].product_id %>)" class="btn btn-warning btn-sm" value="刪除">
                                 </td>
                             </tr>
                             <%} %>
                     </tbody>
                 </table>
                 <div class="">
-                    <span id="totalmoney">總金額：元</span><br>
+                    <span id="totalmoney">總金額：</span><span>元</span><br>
                     <input type="hidden" name="total" id="total">
                 </div>
             </div>
         </div>
-        <input type="button" onclick="confirmAct(this)" value="送出" class="btn btn-default">            
+        <input type="submit" value="送出" class="btn btn-default">            
     </section>
 </div>
 </form>
 
 <script>
     $(function(){
-       updateAmount();
-       
-    })
-
-    function add(k, id) {　
-        console.log($(k));
-        $('#productId').val(id);
-        var price = $(k).parent().parent().find('.price').text().replace(/ /g, '').replace(/\s/, '');
-        var amount = parseInt($(k).parent().parent().find('.amount').text()) + 1;
-        var subtotal = amount * price;
-        $(k).parent().parent().find('.amount span').text(amount);
-        $(k).parent().parent().find('.subtotal').text(subtotal);
-        $(k).parent().parent().find('.productAmount').val(amount);
-        console.log($('#productId').val());
-        console.log(amount);
-        console.log(price);
-        console.log(subtotal);
-        updateAmount();
-    }
-
-    function cut(k, id) {
-        console.log($(k));
-        $('#productId').val(id);
-        var price = $(k).parent().parent().find('.price').text().replace(/ /g, '').replace(/\s/,'');
-        var amount = parseInt($(k).parent().parent().find('.amount').text()) - 1;
-        amount = (amount < 1) ? 1 :amount;
-        var subtotal = amount * price;
-        $(k).parent().parent().find('.amount span').text(amount);
-        $(k).parent().parent().find('.subtotal').text(subtotal);
-        $(k).parent().parent().find('.productAmount').val(amount);
-        console.log($('#productId').val());
-        console.log(amount);
-        console.log(price);
-        console.log(subtotal);
-        updateAmount();
-    }
-
-    function updateAmount() {
         var totalAdd = 0;
+        var request = new XMLHttpRequest();
+        //取值方法2
+        // console.log(mathScore);
+        // for(var i=0;i<mathScore.length;i++){
+        //     console.log(mathScore[i]);
+        // }
         $(".subtotal").each(function (i) {
             totalAdd += parseInt($(this).text());
             // var total = [];
             return totalAdd;
         });
-        $("#totalmoney").text("總金額：" + totalAdd + "元");
+        $("#totalmoney").append("<span>" + totalAdd + "</span>");
         $("#total").val(totalAdd);
+            // console.log($("#productId").val());
+    })
+
+    function add(k, id) {　//k是指input本身，id則是PD_ID
+        $('#productId').val(id);　　//把PD_ID放到productId裡面
+        var price = $(k).parent().parent().find('.price').text().replace(/ /g, '').replace(/\s/,'');        
+        $(id).parent().parent().find('.amount').text().replace(' ', '');  //把產品的id取出
+        var amount = parseInt($(k).parent().parent().find('.amount').text()) + 1;  //改變amount的值
+        console.log(amount);
+        var subtotal = amount * price;       
+        $(k).parent().parent().find('.amount').text(amount);　//把改好的值放回amount中（前端表格）
+        $(k).parent().parent().find('.subtotal').text(subtotal);        
+        console.log($('#productId').val());
+        console.log(price);
+        console.log(subtotal);
+        updateAmount(price,amount);  //把改變的值傳到令一個函數做ajax的即時更動
     }
 
-    function deleteAction(k, i) {
-        var deletesub = parseInt($(k).parent().parent().find('.subtotal').text().replace(/ /g, '').replace(/\s/, ''));
-        var total = parseInt($("#totalmoney").text().replace('總金額：','').replace('元','')) - deletesub;
-        console.log(i);
-        console.log(deletesub);
-        console.log(total);
-        if(total == 0){
-            alert('訂單金額不可以為零!!\n小提醒：只要修改尚未送出，資料就不會真的被改變\n只要按F5重整就可以回覆未更動的狀態喔!');
-        }else{
-            $(k).parent().parent().fadeOut();
-            $("#totalmoney").text("總金額：" + total + "元");
-            $("tbody").append('<input type="hidden" name="deleteId" value="' + i + '">');
-        }
+    function cut(k, id) {
+        $('#productId').val(id);
+        var price = $(k).parent().parent().find('.price').text().replace(/ /g, '').replace(/\s/,'');
+        var amount = parseInt($(k).parent().parent().find('.amount').text()) - 1;
+        amount = (amount < 1) ? 1 :amount;
+        console.log(amount);
+        var subtotal = amount * price;
+        $(k).parent().parent().find('.amount').text(amount);
+        $(k).parent().parent().find('.amount').text(subtotal);
+        // $(k).parent().parent().find('.subtotal').replace(/[0-9]/,subtotal);
+        console.log($('#productId').val());
+        console.log(price);
+        console.log(subtotal);
+        updateAmount(price,amount);
     }
-    
-    function confirmAct(k){
-        confirm("確認送出修改過的訂單嗎？");
-        $(k).attr('type','submit');
-        $('#mainForm').submit();
+
+    function updateAmount(price,amount) {
+        var totalAdd = 0;
+        $(".subtotal").each(function (i) {
+            totalAdd += parseInt($(this).text());
+            return totalAdd;
+        });
+        $("#total").append("<span>" + totalAdd + "</span>");
+    }
+
+    function deleteAction(i) {
+        // var totalAdd = 0;
+        $('#productId').val(i);
+        $.ajax({
+            url: '/adminP/ajaxDeleteOrderProduct',
+            type: 'POST',
+            dataType: 'text',
+            data: {
+                productId: $('#productId').val(),
+            },
+            success: function (data) {
+                $('#order_list').remove();
+                $('#panBody').append(data); $('#productId').val(i);
+                $(".subtotal").each(function (i) {
+                    totalAdd += parseInt($(this).text());
+                    return totalAdd;
+                });
+                $("#total").append("<span>" + totalAdd + "</span>");
+            },
+            err: function (err) {
+                console.log(err);
+            }
+        })
     }
 
 </script>

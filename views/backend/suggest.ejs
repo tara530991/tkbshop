@@ -27,60 +27,119 @@
                                     <tr>
                                         <th>姓名</th>
                                         <th>新增日期</th>
-                                        <th>E-mail</th>
-                                        <th>電話</th>
-                                        <th>手機</th>
-                                        <th>地址</th>
+                                        <th>最後回覆日期</th>
                                         <th>處理狀態</th>
-                                        <th>意見內容</th>
+                                        <th>問題類型</th>
+                                        <th>回覆狀況</th>
                                     </tr>
                                 </thead>
-                                <tbody>
-                                    <% for(var i=0 ; i<data.length;i++) { %>
-                                        <tr class="odd gradeX">
-                                            <td>
-                                                <%=data[i].name %>
-                                            </td>
-                                            <td>
-                                                <%=moment(data[i].uptime).format('YYYY-MM-DD') %>
-                                            </td>
-                                            <td>
-                                                <%=data[i].email %>
-                                            </td>
-                                            <td>
-                                                <%=data[i].tel %>
-                                            </td>
-                                            <td>
-                                                <%=data[i].cell %>
-                                            </td>
-                                            <td>
-                                                <%=data[i].address %>
-                                            </td>
-                                            <td>
-                                                <%=data[i].status %>                                                    
-                                            </td>
-                                            <td>
-                                                <%=data[i].content %>
-                                            </td>
-                                        </tr>
-                                        <%} %>
-                                </tbody>
-                            </table>
-                            <!-- /.table-responsive -->
-                        </div>
-                        <!-- /.panel-body -->
-                    </div>
-                    <!-- /.panel -->
-                </div>
-                <!-- /.col-lg-12 -->
-            </div>
-            <!-- /.row -->
-        </div>
-        <!-- /#page-wrapper -->
+                                
+<!-- <div class="panel panel-default">
+    <div class="panel-heading">
+        <h4 class="panel-title">
+            <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">Collapsible Group Item #1</a>
+        </h4>
     </div>
-    <!-- /#wrapper -->
+    <div id="collapseOne" class="panel-collapse collapse in">
+        <div class="panel-body">
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis
+            aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint
+            occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+        </div>
+    </div>
+</div> -->
+<tbody>
+    <% for(var i=0 ; i<data.length;i++) { %>
+        <tr class="odd gradeX">
+            <td>
+                <%=data[i].name %>
+            </td>
+            <td>
+                <%=moment(data[i].uptime).format('YYYY-MM-DD') %>
+            </td>
+            <td>
+                <%=moment(data[i].lasttime).format('YYYY-MM-DD') %>
+            </td>
+             <td>
+                <%=statusArray[i] %>
+            </td>
+            <td>
+                <%=data[i].category %>
+            </td>
+            <td>
+                <a data-toggle="collapse" data-parent="#accordion" href="#collapse<%=data[i].id%>">
+                    <input type="button" class="myBtn btn btn-info btn-sm" value="檢視">
+                </a>
+            </td>
+        </tr>
+    <%} %>    
+</tbody>
+<thead>
+    <tr>
+        <th>電話</th>
+        <th>手機</th>
+        <th>地址</th>
+        <th>E-mail</th>
+        <th>意見內容</th>
+    </tr>
+</thead>
+<tbody>
+    <% for(var i=0 ; i<data.length;i++) { %>    
+        <tr class="odd gradeX">
+            <td>
+                <%=data[i].email %>
+            </td>
+            <td>
+                <%=data[i].tel %>
+            </td>
+            <td>
+                <%=data[i].cell %>
+            </td>
+            <td>
+                <%=data[i].address %>
+            </td> 
+            <td>
+                <%-data[i].content %>
+            </td>
+        </tr>
+    <%} %>
+</tbody>
+<thead>
+    <tr>
+        <th>回覆次數</th>
+        <th>回覆日期</th>
+        <th>回覆方式</th>
+        <th>回覆內容</th>
+    </tr>
+</thead>
+<tbody>
+    <% for(var i=0 ; i<data2.length;i++) { %>
+        <tr class="odd gradeX">
+            <td>
+                <%=data2[i].sort %>
+            </td>
+            <td>
+                <%=moment(data2[i].date).format('YYYY-MM-DD') %>
+            </td>
+            <td>
+                <%=data2[i].method %>
+            </td>
+            <td>
+                <%-data2[i].content %>
+            </td>
+        </tr>  
+    <%} %>
+</tbody>
 
-    <!-- Page-Level Demo Scripts - Tables - Use for reference -->
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
         $(document).ready(function () {
             $('#dataTables-example').DataTable({

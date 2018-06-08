@@ -16,31 +16,26 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `product_detail`
+-- Table structure for table `member_detail`
 --
 
-DROP TABLE IF EXISTS `product_detail`;
+DROP TABLE IF EXISTS `member_detail`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `product_detail` (
-  `id` int(11) NOT NULL,
-  `product_id` int(11) NOT NULL,
-  `uptime` date DEFAULT NULL,
-  `downtime` date DEFAULT NULL,
-  `addtime` date DEFAULT NULL,
-  `changetime` date DEFAULT NULL,
-  `user` varchar(45) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+CREATE TABLE `member_detail` (
+  `ID` int(11) NOT NULL,
+  `member_id` int(10) DEFAULT NULL,
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `product_detail`
+-- Dumping data for table `member_detail`
 --
 
-LOCK TABLES `product_detail` WRITE;
-/*!40000 ALTER TABLE `product_detail` DISABLE KEYS */;
-/*!40000 ALTER TABLE `product_detail` ENABLE KEYS */;
+LOCK TABLES `member_detail` WRITE;
+/*!40000 ALTER TABLE `member_detail` DISABLE KEYS */;
+/*!40000 ALTER TABLE `member_detail` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -52,4 +47,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-06-01 18:06:53
+-- Dump completed on 2018-06-08 18:21:56

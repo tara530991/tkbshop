@@ -16,29 +16,32 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `product_category`
+-- Table structure for table `suggest_reply`
 --
 
-DROP TABLE IF EXISTS `product_category`;
+DROP TABLE IF EXISTS `suggest_reply`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `product_category` (
+CREATE TABLE `suggest_reply` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `category` varchar(10) NOT NULL,
-  `sort` varchar(5) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `category_UNIQUE` (`category`)
-) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8;
+  `suggest_id` int(11) DEFAULT NULL,
+  `sort` int(3) DEFAULT NULL,
+  `person` varchar(5) DEFAULT NULL COMMENT 'a：會員方回覆\nb：官方回覆',
+  `method` varchar(5) DEFAULT NULL,
+  `date` date DEFAULT NULL,
+  `content` text,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `product_category`
+-- Dumping data for table `suggest_reply`
 --
 
-LOCK TABLES `product_category` WRITE;
-/*!40000 ALTER TABLE `product_category` DISABLE KEYS */;
-INSERT INTO `product_category` VALUES (1,'蛋糕','2'),(2,'餅乾','3'),(3,'麵包','1'),(17,'咖啡','4');
-/*!40000 ALTER TABLE `product_category` ENABLE KEYS */;
+LOCK TABLES `suggest_reply` WRITE;
+/*!40000 ALTER TABLE `suggest_reply` DISABLE KEYS */;
+INSERT INTO `suggest_reply` VALUES (1,NULL,NULL,NULL,'email','2018-02-06','感謝您的回饋，我們將了解情況後在行通知');
+/*!40000 ALTER TABLE `suggest_reply` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -50,4 +53,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-06-01 18:06:52
+-- Dump completed on 2018-06-08 18:21:56
